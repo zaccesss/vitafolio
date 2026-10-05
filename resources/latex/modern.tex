@@ -1,0 +1,35 @@
+% Vitafolio modern template: an accent rule under each heading.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\definecolor{accent}{HTML}{14213D}
+\definecolor{brass}{HTML}{7A5B2E}
+\setlist{leftmargin=1.2em,itemsep=1pt,topsep=2pt}
+\titleformat{\section}{\color{accent}\large\bfseries}{}{0em}{}[{\color{brass}\titlerule[1pt]}]
+\titlespacing{\section}{0pt}{14pt}{6pt}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+{\color{accent}\Huge\bfseries {{NAME}}}\\[4pt]
+{\color{brass}\large {{HEADLINE}}}\\[6pt]
+{\small {{CONTACT}}}
+
+\section{Profile}
+{{SUMMARY}}
+
+\section{Experience}
+{{EXPERIENCE}}
+
+\section{Projects}
+{{PROJECTS}}
+
+\section{Education}
+{{EDUCATION}}
+
+\section{Skills}
+{{SKILLS}}
+\end{document}
