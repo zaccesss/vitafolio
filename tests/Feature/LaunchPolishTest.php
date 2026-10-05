@@ -74,4 +74,14 @@ class LaunchPolishTest extends TestCase
             $this->assertStringContainsString('x-show="'.$choice.'"', $html);
         }
     }
+
+    public function test_the_host_address_redirects_to_the_site_address_in_production(): void
+    {
+        config(['app.env' => 'production', 'app.url' => 'https://vitafolio.example.test']);
+
+        $this->get('http://vitafolio.onrender.test/privacy?x=1')
+            ->assertStatus(301)->assertRedirect('https://vitafolio.example.test/privacy?x=1');
+        $this->get('http://vitafolio.onrender.test/up')->assertOk();
+        $this->get('https://vitafolio.example.test/privacy')->assertOk();
+    }
 }
