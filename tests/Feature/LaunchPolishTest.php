@@ -84,4 +84,18 @@ class LaunchPolishTest extends TestCase
         $this->get('http://vitafolio.onrender.test/up')->assertOk();
         $this->get('https://vitafolio.example.test/privacy')->assertOk();
     }
+
+    public function test_the_sitemap_lists_help_guides_and_last_modified_dates(): void
+    {
+        $this->get(route('sitemap'))->assertOk()
+            ->assertSee(route('help.topic', 'getting-started'), false)
+            ->assertSee(route('copyright'), false)
+            ->assertSee('<lastmod>'.config('vitafolio.content_updated').'</lastmod>', false);
+    }
+
+    public function test_the_copyright_line_links_to_the_copyright_page(): void
+    {
+        $this->get(route('home'))->assertOk()->assertSee('href="'.route('copyright').'"', false);
+        $this->get(route('copyright'))->assertOk()->assertSee('MIT Licence');
+    }
 }

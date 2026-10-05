@@ -20,6 +20,10 @@ return [
     // a public status page for the site, linked from the footer when set
     'status_url' => env('SITE_STATUS_URL'),
 
+    // when the site's own pages last changed, sent to search engines as each page's last-modified
+    // date in the sitemap; move it forward whenever page content changes so they recrawl
+    'content_updated' => '2026-10-06',
+
     'security_contact' => env('SITE_SECURITY_EMAIL', env('SITE_CONTACT_EMAIL')),
 
     'turnstile' => [

@@ -9,6 +9,9 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 - A full-width header with an account menu showing your photo, name and handle, a four-column footer and a settings area with a page for each setting instead of two long forms.
 - Pages for features, contact, a help centre with nine guides and a search box, what is new and the documentation, all linked from the footer and the sitemap.
 - Complete terms of use and privacy policy, written for UK GDPR, with a contents list on each.
+- A copyright and licences page, linked from the copyright line and the Legal column of the footer. It covers who owns CVs, the MIT licence for the code and the name and logo. It also lists every third-party font and library.
+- The sitemap lists the nine help guides and the copyright page. Every entry carries a last-modified date.
+- The CV and LaTeX editors have a Help link. Links that would leave an editor, such as Preview, open in a new tab and say so, so unsaved work is never lost.
 - In production the host's own address redirects to the site address with the path kept. Pages there had loaded without styles, because styles are served from the site address.
 - The theme button shows a sun, a moon or a screen for light, dark and system, so the current choice is clear at a glance.
 - The LaTeX editor labels its shortcuts with Cmd on Apple devices and Ctrl elsewhere. They work even when focus is outside the editor, so the browser never saves the page instead.
