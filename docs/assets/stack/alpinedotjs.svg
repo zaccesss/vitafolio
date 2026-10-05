@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-labelledby="t">
   <title id="t">Alpine.js</title>
   <style>
-    .logo { animation: float 4s ease-in-out 1.40s infinite; transform-origin: 48px 48px; }
-    .ring { animation: glow 4s ease-in-out 1.40s infinite; }
-    @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-3px) scale(1.04); } }
-    @keyframes glow { 0%, 100% { stroke-opacity: .35; } 50% { stroke-opacity: 1; } }
-    @media (prefers-reduced-motion: reduce) { .logo, .ring { animation: none; } }
+    .logo { animation: bob 3s ease-in-out -3.00s infinite; transform-origin: 48px 48px; }
+    .sweep { animation: sweep 6s linear -3.00s infinite; }
+    @keyframes bob { 0%, 100% { transform: translateY(3px) scale(.96); } 50% { transform: translateY(-5px) scale(1.06); } }
+    @keyframes sweep { to { stroke-dashoffset: -100; } }
+    @media (prefers-reduced-motion: reduce) { .logo, .sweep { animation: none; } }
   </style>
-  <rect x="2" y="2" width="92" height="92" rx="22" fill="#ffffff"/>
-  <rect class="ring" x="2" y="2" width="92" height="92" rx="22" fill="none" stroke="#b08d57" stroke-width="2.5"/>
-  <g class="logo"><g transform="translate(24 24) scale(2)"><path fill="#2D7D93" d="m24 12-5.72 5.746-5.724-5.741 5.724-5.75L24 12zM5.72 6.254 0 12l5.72 5.746h11.44L5.72 6.254z"/></g></g>
+  <rect x="3" y="3" width="90" height="90" rx="22" fill="#ffffff" stroke="#e4e1da" stroke-width="3"/>
+  <rect class="sweep" x="3" y="3" width="90" height="90" rx="22" fill="none" stroke="#b08d57" stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray="22 78"/>
+  <g class="logo"><g transform="translate(26 26) scale(1.8333)"><path fill="#2D7D93" d="m24 12-5.72 5.746-5.724-5.741 5.724-5.75L24 12zM5.72 6.254 0 12l5.72 5.746h11.44L5.72 6.254z"/></g></g>
 </svg>

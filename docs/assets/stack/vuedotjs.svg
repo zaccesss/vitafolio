@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-labelledby="t">
   <title id="t">Vue</title>
   <style>
-    .logo { animation: float 4s ease-in-out 0.70s infinite; transform-origin: 48px 48px; }
-    .ring { animation: glow 4s ease-in-out 0.70s infinite; }
-    @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-3px) scale(1.04); } }
-    @keyframes glow { 0%, 100% { stroke-opacity: .35; } 50% { stroke-opacity: 1; } }
-    @media (prefers-reduced-motion: reduce) { .logo, .ring { animation: none; } }
+    .logo { animation: bob 3s ease-in-out -1.50s infinite; transform-origin: 48px 48px; }
+    .sweep { animation: sweep 6s linear -1.50s infinite; }
+    @keyframes bob { 0%, 100% { transform: translateY(3px) scale(.96); } 50% { transform: translateY(-5px) scale(1.06); } }
+    @keyframes sweep { to { stroke-dashoffset: -100; } }
+    @media (prefers-reduced-motion: reduce) { .logo, .sweep { animation: none; } }
   </style>
-  <rect x="2" y="2" width="92" height="92" rx="22" fill="#ffffff"/>
-  <rect class="ring" x="2" y="2" width="92" height="92" rx="22" fill="none" stroke="#b08d57" stroke-width="2.5"/>
-  <g class="logo"><g transform="translate(24 24) scale(2)"><path fill="#42B883" d="M24,1.61H14.06L12,5.16,9.94,1.61H0L12,22.39ZM12,14.08,5.16,2.23H9.59L12,6.41l2.41-4.18h4.43Z"/></g></g>
+  <rect x="3" y="3" width="90" height="90" rx="22" fill="#ffffff" stroke="#e4e1da" stroke-width="3"/>
+  <rect class="sweep" x="3" y="3" width="90" height="90" rx="22" fill="none" stroke="#b08d57" stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray="22 78"/>
+  <g class="logo"><g transform="translate(26 26) scale(1.8333)"><path fill="#42B883" d="M24,1.61H14.06L12,5.16,9.94,1.61H0L12,22.39ZM12,14.08,5.16,2.23H9.59L12,6.41l2.41-4.18h4.43Z"/></g></g>
 </svg>

@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-labelledby="t">
   <title id="t">Sentry</title>
   <style>
-    .logo { animation: float 4s ease-in-out 1.05s infinite; transform-origin: 48px 48px; }
-    .ring { animation: glow 4s ease-in-out 1.05s infinite; }
-    @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-3px) scale(1.04); } }
-    @keyframes glow { 0%, 100% { stroke-opacity: .35; } 50% { stroke-opacity: 1; } }
-    @media (prefers-reduced-motion: reduce) { .logo, .ring { animation: none; } }
+    .logo { animation: bob 3s ease-in-out -3.75s infinite; transform-origin: 48px 48px; }
+    .sweep { animation: sweep 6s linear -3.75s infinite; }
+    @keyframes bob { 0%, 100% { transform: translateY(3px) scale(.96); } 50% { transform: translateY(-5px) scale(1.06); } }
+    @keyframes sweep { to { stroke-dashoffset: -100; } }
+    @media (prefers-reduced-motion: reduce) { .logo, .sweep { animation: none; } }
   </style>
-  <rect x="2" y="2" width="92" height="92" rx="22" fill="#ffffff"/>
-  <rect class="ring" x="2" y="2" width="92" height="92" rx="22" fill="none" stroke="#b08d57" stroke-width="2.5"/>
-  <g class="logo"><g transform="translate(24 24) scale(2)"><path fill="#362D59" d="M13.91 2.505c-.873-1.448-2.972-1.448-3.844 0L6.904 7.92a15.478 15.478 0 0 1 8.53 12.811h-2.221A13.301 13.301 0 0 0 5.784 9.814l-2.926 5.06a7.65 7.65 0 0 1 4.435 5.848H2.194a.365.365 0 0 1-.298-.534l1.413-2.402a5.16 5.16 0 0 0-1.614-.913L.296 19.275a2.182 2.182 0 0 0 .812 2.999 2.24 2.24 0 0 0 1.086.288h6.983a9.322 9.322 0 0 0-3.845-8.318l1.11-1.922a11.47 11.47 0 0 1 4.95 10.24h5.915a17.242 17.242 0 0 0-7.885-15.28l2.244-3.845a.37.37 0 0 1 .504-.13c.255.14 9.75 16.708 9.928 16.9a.365.365 0 0 1-.327.543h-2.287c.029.612.029 1.223 0 1.831h2.297a2.206 2.206 0 0 0 1.922-3.31z"/></g></g>
+  <rect x="3" y="3" width="90" height="90" rx="22" fill="#ffffff" stroke="#e4e1da" stroke-width="3"/>
+  <rect class="sweep" x="3" y="3" width="90" height="90" rx="22" fill="none" stroke="#b08d57" stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray="22 78"/>
+  <g class="logo"><g transform="translate(26 26) scale(1.8333)"><path fill="#362D59" d="M13.91 2.505c-.873-1.448-2.972-1.448-3.844 0L6.904 7.92a15.478 15.478 0 0 1 8.53 12.811h-2.221A13.301 13.301 0 0 0 5.784 9.814l-2.926 5.06a7.65 7.65 0 0 1 4.435 5.848H2.194a.365.365 0 0 1-.298-.534l1.413-2.402a5.16 5.16 0 0 0-1.614-.913L.296 19.275a2.182 2.182 0 0 0 .812 2.999 2.24 2.24 0 0 0 1.086.288h6.983a9.322 9.322 0 0 0-3.845-8.318l1.11-1.922a11.47 11.47 0 0 1 4.95 10.24h5.915a17.242 17.242 0 0 0-7.885-15.28l2.244-3.845a.37.37 0 0 1 .504-.13c.255.14 9.75 16.708 9.928 16.9a.365.365 0 0 1-.327.543h-2.287c.029.612.029 1.223 0 1.831h2.297a2.206 2.206 0 0 0 1.922-3.31z"/></g></g>
 </svg>
