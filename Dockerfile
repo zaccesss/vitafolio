@@ -3,7 +3,7 @@
 # was chosen after scanning: it carries far fewer known vulnerabilities than apache on debian.
 
 # front-end assets
-FROM node:22-alpine AS assets
+FROM node:26-alpine AS assets
 WORKDIR /app
 COPY package.json package-lock.json .npmrc ./
 RUN npm ci --no-audit --no-fund
