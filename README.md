@@ -85,7 +85,7 @@ flowchart LR
 ## Running it locally
 
 You need PHP 8.4 with the `gd`, `intl`, `pdo_mysql`, `zip` and `bcmath` extensions, Composer,
-Node.js 22 and MySQL 8.
+Node.js 26 and MySQL 8.
 
 ```sh
 git clone https://github.com/zaccesss/vitafolio.git

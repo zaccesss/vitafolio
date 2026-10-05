@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-labelledby="t">
   <title id="t">Vite</title>
   <style>
-    .logo { animation: float 4s ease-in-out 1.75s infinite; transform-origin: 48px 48px; }
-    .ring { animation: glow 4s ease-in-out 1.75s infinite; }
-    @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-3px) scale(1.04); } }
-    @keyframes glow { 0%, 100% { stroke-opacity: .35; } 50% { stroke-opacity: 1; } }
-    @media (prefers-reduced-motion: reduce) { .logo, .ring { animation: none; } }
+    .logo { animation: bob 3s ease-in-out -3.75s infinite; transform-origin: 48px 48px; }
+    .sweep { animation: sweep 6s linear -3.75s infinite; }
+    @keyframes bob { 0%, 100% { transform: translateY(3px) scale(.96); } 50% { transform: translateY(-5px) scale(1.06); } }
+    @keyframes sweep { to { stroke-dashoffset: -100; } }
+    @media (prefers-reduced-motion: reduce) { .logo, .sweep { animation: none; } }
   </style>
-  <rect x="2" y="2" width="92" height="92" rx="22" fill="#ffffff"/>
-  <rect class="ring" x="2" y="2" width="92" height="92" rx="22" fill="none" stroke="#b08d57" stroke-width="2.5"/>
-  <g class="logo"><g transform="translate(24 24) scale(2)"><path fill="#9135FF" d="M13.056 23.238a.57.57 0 0 1-1.02-.355v-5.202c0-.63-.512-1.143-1.144-1.143H5.148a.57.57 0 0 1-.464-.903l3.777-5.29c.54-.753 0-1.804-.93-1.804H.57a.574.574 0 0 1-.543-.746.6.6 0 0 1 .08-.157L5.008.78a.57.57 0 0 1 .467-.24h14.589a.57.57 0 0 1 .466.903l-3.778 5.29c-.54.755 0 1.806.93 1.806h5.745c.238 0 .424.138.513.322a.56.56 0 0 1-.063.603z"/></g></g>
+  <rect x="3" y="3" width="90" height="90" rx="22" fill="#ffffff" stroke="#e4e1da" stroke-width="3"/>
+  <rect class="sweep" x="3" y="3" width="90" height="90" rx="22" fill="none" stroke="#b08d57" stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray="22 78"/>
+  <g class="logo"><g transform="translate(26 26) scale(1.8333)"><path fill="#9135FF" d="M13.056 23.238a.57.57 0 0 1-1.02-.355v-5.202c0-.63-.512-1.143-1.144-1.143H5.148a.57.57 0 0 1-.464-.903l3.777-5.29c.54-.753 0-1.804-.93-1.804H.57a.574.574 0 0 1-.543-.746.6.6 0 0 1 .08-.157L5.008.78a.57.57 0 0 1 .467-.24h14.589a.57.57 0 0 1 .466.903l-3.778 5.29c-.54.755 0 1.806.93 1.806h5.745c.238 0 .424.138.513.322a.56.56 0 0 1-.063.603z"/></g></g>
 </svg>
