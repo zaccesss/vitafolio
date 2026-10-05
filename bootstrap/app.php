@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureAccountIsUsable;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\ThrottleAuthForms;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,9 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // tls ends at the host's proxy, so its forwarded headers say whether the visit was
-        // https and which address it came from
-        $middleware->trustProxies(at: '*');
+        // tls ends at the host's proxy, so its forwarded headers say whether the visit was https
+        // and which address it came from. only those two are trusted: a forwarded host header
+        // could otherwise become the host used in password reset links
+        $middleware->trustProxies(at: '*', headers: Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_PORT);
+        $middleware->append(ThrottleAuthForms::class);
+        $middleware->appendToGroup('web', EnsureAccountIsUsable::class);
         $middleware->append(SecurityHeaders::class);
         // the nightly tidy-up is called by a scheduler with a bearer token, not from a page with a form
         $middleware->validateCsrfTokens(except: ['cron']);

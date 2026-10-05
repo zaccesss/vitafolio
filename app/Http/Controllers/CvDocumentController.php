@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cv;
 use App\Models\CvDocument;
 use App\Support\DocumentStore;
+use App\Support\ViewRecorder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -69,6 +70,7 @@ class CvDocumentController extends Controller
         abort_unless($cv->isVisibleTo($request->user()), 404);
         $document = CvDocument::where('cv_id', $cv->id)->firstOrFail(['id', 'filename', 'mime', 'storage', 'public_id']);
         $bytes = DocumentStore::read($document);
+        ViewRecorder::record($cv, $request, $request->user(), 'file');
         // a file that cannot be fetched right now is a temporary fault, not a missing page
         abort_if($bytes === null, 503);
 

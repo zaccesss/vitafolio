@@ -20,10 +20,15 @@ class SecurityHeaders
         $headers = [
             'X-Content-Type-Options' => 'nosniff',
             'X-Frame-Options' => 'DENY',
-            'Referrer-Policy' => 'strict-origin-when-cross-origin',
-            'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(), payment=()',
+            // the reset page carries a token in its address, so it sends no referrer at all
+            'Referrer-Policy' => $request->routeIs('password.reset') ? 'no-referrer' : 'strict-origin-when-cross-origin',
+            'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), serial=(), interest-cohort=()',
             'Cross-Origin-Opener-Policy' => 'same-origin',
         ];
+        // pages are for this site alone; photos, share images and qr codes are meant to be embedded elsewhere
+        if (! $request->routeIs('avatar', 'cv.og', 'cv.qr')) {
+            $headers['Cross-Origin-Resource-Policy'] = 'same-origin';
+        }
 
         // the vite dev server injects its own scripts, so the strict policy only applies to built assets
         if (! Vite::isRunningHot()) {
@@ -47,7 +52,12 @@ class SecurityHeaders
                 "form-action 'self'",
                 "base-uri 'self'",
                 "object-src 'none'",
+                // breaks in the policy are reported to the error tracker when a reporting address is set
+                ...(config('vitafolio.csp_report_uri') ? ['report-uri '.config('vitafolio.csp_report_uri'), 'report-to csp'] : []),
             ]);
+            if (config('vitafolio.csp_report_uri')) {
+                $headers['Reporting-Endpoints'] = 'csp="'.config('vitafolio.csp_report_uri').'"';
+            }
         }
 
         if ($request->isSecure()) {

@@ -1,6 +1,6 @@
 @props(['user', 'size' => 'md', 'accent' => null])
 @php
-    $sizes = ['sm' => 'size-10 text-sm', 'md' => 'size-16 text-xl', 'lg' => 'size-28 text-4xl'];
+    $sizes = ['xs' => 'size-8 text-xs', 'sm' => 'size-10 text-sm', 'md' => 'size-16 text-xl', 'lg' => 'size-28 text-4xl'];
     $classes = 'shrink-0 rounded-full '.$sizes[$size];
 @endphp
 @if ($user->hasAvatar())

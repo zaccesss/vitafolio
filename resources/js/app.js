@@ -10,6 +10,36 @@ Alpine.data('menu', () => ({
     get navClass() { return this.open ? '' : 'hidden'; },
 }));
 
+// filters the help centre's topic cards as you type; the count is announced for screen readers
+Alpine.data('helpSearch', () => ({
+    query: '',
+    shown: 0,
+    init() { this.$watch('query', () => this.filter()); this.filter(); },
+    filter() {
+        const words = this.query.toLowerCase().split(/\s+/).filter(Boolean);
+        const items = this.$root.querySelectorAll('[data-help-topic]');
+        this.shown = 0;
+        items.forEach((item) => {
+            const match = words.every((word) => item.dataset.helpTopic.includes(word));
+            item.hidden = !match;
+            if (match) this.shown += 1;
+        });
+    },
+    get announcement() {
+        if (!this.query) return '';
+        return this.shown === 1 ? '1 topic matches.' : `${this.shown} topics match.`;
+    },
+}));
+
+// the signed-in menu: a disclosure rather than an aria menu, so it is plain links read in order
+Alpine.data('accountMenu', () => ({
+    open: false,
+    toggle() { this.open = !this.open; },
+    close() { this.open = false; },
+    get expanded() { return String(this.open); },
+    get closed() { return !this.open; },
+}));
+
 const THEMES = ['system', 'light', 'dark'];
 const THEME_NAMES = { system: 'System', light: 'Light', dark: 'Dark' };
 
@@ -148,6 +178,53 @@ document.querySelectorAll('[data-vue]').forEach(async (el) => {
     // the server-rendered fallback inside the element is replaced once the component is ready
     createApp(component.default, props).mount(el);
 });
+
+// a thin bar at the top shows that the next page is on its way. a download also fires
+// beforeunload without leaving the page, so the bar hides itself again after a while
+const progress = document.getElementById('page-progress');
+let progressTimer;
+function stopProgress() {
+    if (!progress) return;
+    progress.hidden = true;
+    progress.classList.remove('is-loading');
+    clearTimeout(progressTimer);
+}
+window.addEventListener('beforeunload', () => {
+    if (!progress) return;
+    progress.hidden = false;
+    progress.classList.add('is-loading');
+    progressTimer = setTimeout(stopProgress, 10000);
+});
+
+// a submitted form disables its button and says what it is doing, so it cannot be sent twice.
+// the check runs after every other submit handler, so a cancelled confirmation leaves it alone
+const BUSY = { save: 'Saving', send: 'Sending', upload: 'Uploading', create: 'Creating', add: 'Adding', change: 'Changing', set: 'Setting', update: 'Updating', delete: 'Deleting', remove: 'Removing', compile: 'Compiling', sign: 'Signing', connect: 'Connecting', import: 'Importing', duplicate: 'Duplicating', confirm: 'Confirming', reset: 'Resetting', report: 'Reporting', publish: 'Publishing' };
+function restoreButtons() {
+    document.querySelectorAll('button[aria-busy="true"]').forEach((button) => {
+        button.disabled = false;
+        button.removeAttribute('aria-busy');
+        if (button.dataset.label) button.textContent = button.dataset.label;
+    });
+}
+document.addEventListener('submit', (event) => {
+    setTimeout(() => {
+        if (event.defaultPrevented) return;
+        const form = event.target;
+        if (!(form instanceof HTMLFormElement)) return;
+        const button = event.submitter instanceof HTMLButtonElement ? event.submitter : form.querySelector('button[type="submit"], button:not([type])');
+        if (!button) return;
+        const label = (button.textContent || '').trim();
+        const word = label.split(/\s+/)[0].toLowerCase();
+        button.dataset.label = button.textContent;
+        button.setAttribute('aria-busy', 'true');
+        button.disabled = true;
+        button.textContent = BUSY[word] ? `${BUSY[word]}${label.slice(word.length)}…` : 'Please wait…';
+        // a form that downloads a file never leaves the page, so the button comes back on its own
+        setTimeout(restoreButtons, 10000);
+    }, 0);
+});
+// a page restored from the back-forward cache shows its buttons and bar as they were before
+window.addEventListener('pageshow', () => { stopProgress(); restoreButtons(); });
 
 // confirm before destructive actions and print buttons work without alpine too
 document.querySelectorAll('form[data-confirm]').forEach((form) => {

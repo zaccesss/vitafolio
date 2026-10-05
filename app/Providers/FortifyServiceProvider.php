@@ -8,12 +8,15 @@ use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
+use Laravel\Fortify\Contracts\FailedPasswordResetLinkRequestResponse;
+use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Fortify;
 use Laravel\Passkeys\Contracts\PasskeyUser;
 use Laravel\Passkeys\Passkeys;
@@ -25,7 +28,28 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // signing out also asks the browser to drop cached pages and site storage, for shared devices
+        $this->app->singleton(LogoutResponse::class, fn () => new class implements LogoutResponse
+        {
+            public function toResponse($request)
+            {
+                $response = $request->wantsJson() ? new JsonResponse('', 204) : redirect(config('fortify.redirects.logout') ?? '/');
+
+                return $response->withHeaders(['Clear-Site-Data' => '"cache", "storage"']);
+            }
+        });
+
+        // a reset request answers the same way whether or not the address has an account, so the
+        // form cannot be used to find out which addresses are registered
+        $this->app->singleton(FailedPasswordResetLinkRequestResponse::class, fn () => new class implements FailedPasswordResetLinkRequestResponse
+        {
+            public function toResponse($request)
+            {
+                return $request->wantsJson()
+                    ? new JsonResponse(['message' => trans('passwords.sent')], 200)
+                    : back()->with('status', trans('passwords.sent'));
+            }
+        });
     }
 
     /**

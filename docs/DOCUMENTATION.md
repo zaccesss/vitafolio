@@ -70,9 +70,21 @@ Your own visits are never counted.
 
 ### Keeping your account safe
 
-The **Account** page lets you change your password, turn on two-factor authentication, add passkeys,
-connect sign-in providers, sign out of other devices, download all your data as JSON and delete your
-account.
+**Settings** (from the account menu in the top corner) has a page for each setting: public profile,
+photo, handle, name and email, password and two-factor authentication, passkeys, connected accounts,
+signed-in devices and your data, where you can download everything as JSON or delete your account.
+
+### Analytics
+
+**Analytics** (also from the account menu) shows CV views, profile views, PDF downloads and QR code
+scans for the last 7, 30 or 90 days, with the previous period for comparison, views per CV, where
+visitors came from and the busiest day. Every chart has a table with the same numbers. Each visitor
+counts once a day, using a code that changes daily. Your own visits never count.
+
+### Help and documentation
+
+The **Help centre** at `/help` has guides for every part of the site and a search box. `/features`,
+`/contact`, `/changelog` and `/docs` (this document) are linked from the footer.
 
 ## Architecture
 
@@ -117,6 +129,7 @@ erDiagram
     cvs ||--o{ projects : shows
     cvs }o--o{ tags : "tagged with"
     cvs ||--o{ cv_views : counts
+    users ||--o{ profile_views : counts
     cvs ||--o{ reports : receives
 ```
 
@@ -127,7 +140,8 @@ erDiagram
 | `cv_documents` | One file per CV. `storage` says whether the bytes are on Cloudinary (`public_id`) or in the `data` column |
 | `projects` | Up to twelve per CV, each with optional media on Cloudinary, its size and a description for people who cannot see it |
 | `tags` and `cv_tag` | Skills, with spelling variants such as "JS" and "JavaScript" folded into one tag |
-| `cv_views` | One row per visitor per CV per day. The visitor is a salted daily hash, never an address |
+| `cv_views` | One row per visitor per CV per kind (view, QR scan, PDF download or file open) per day. The visitor is a salted daily hash, never an address |
+| `profile_views` | The same, for profile pages |
 | `reports` | Visitor reports with a reason, optional details and a hashed reporter |
 | `social_accounts` | One row per connected provider, keyed by the provider's own id for the person |
 | `passkeys` | One row per passkey, with its name and when it was last used |
@@ -230,7 +244,8 @@ editor for anyone who finds it easier with a screen reader.
 | Links | Only `http` and `https` links are kept. Each is labelled from its real address, so a lookalike cannot pose as a known site |
 | Sessions | Stored in the database, encrypted and ended everywhere on suspension |
 | Spam | Cloudflare Turnstile on sign-up and contact forms, a hidden honeypot field and rate limits |
-| Container | Runs as an unprivileged user and is scanned for known vulnerabilities before each release |
+| Container | Runs as an unprivileged user. CI scans the image, the PHP packages and the npm packages for known vulnerabilities on every pull request |
+| Sessions and devices | Remember-me cookies last 30 days. A password reset signs every device out; a password change signs every other device out. Settings lists every signed-in device and can end any one |
 
 | Rate limit | Allowance |
 | --- | --- |
@@ -321,8 +336,23 @@ To deploy on a container host such as Render:
 6. After the first deploy, open a shell and run `php artisan vitafolio:make-admin you@example.com`.
 
 > [!WARNING]
-> Keep `APP_KEY` safe and never change it on a live site. It encrypts sessions and two-factor secrets
-> and salts view counts, so changing it signs everyone out and breaks every two-factor setup.
+> Keep `APP_KEY` safe. It encrypts sessions and two-factor secrets and salts view counts. To rotate it,
+> set `APP_PREVIOUS_KEYS` to the old key, set the new key, redeploy, then drop the old key after
+> `SESSION_LIFETIME` has passed. Set `PASSKEYS_USER_HANDLE_SECRET` before the first passkey is created
+> and never change it. Otherwise every passkey stops matching its account.
+
+### Rotating secrets
+
+| Secret | Where it lives | How to rotate |
+| --- | --- | --- |
+| `APP_KEY` | Host environment | As above, with `APP_PREVIOUS_KEYS` |
+| Database password | Aiven, then `DB_PASSWORD` on the host | Reset in Aiven, update the host, redeploy |
+| `CLOUDINARY_API_SECRET` | Cloudinary, then the host | Regenerate in Cloudinary settings, update the host |
+| `RESEND_API_KEY` | Resend, then the host | Create a new key, update the host, delete the old key |
+| OAuth client secrets | Each provider's console, then the host | Create a new secret, update the host, delete the old one |
+| `TURNSTILE_SECRET` | Cloudflare, then the host | Rotate the widget secret, update the host |
+| `CRON_TOKEN` | The host and the repository secret | Generate a new value and set it in both places |
+| `SENTRY_LARAVEL_DSN`, `INDEXNOW_KEY` | The host | Replace at any time; nothing else depends on them |
 
 The LaTeX engine files come from the [texlyre-busytex](https://github.com/TeXlyre/texlyre-busytex)
 release. Host them anywhere that serves static files with CORS allowed, such as GitHub Pages. Then set
@@ -333,12 +363,31 @@ release. Host them anywhere that serves static files with CORS allowed, such as 
 | Task | How |
 | --- | --- |
 | Nightly tidy-up | `POST /cron` with `Authorization: Bearer <CRON_TOKEN>` runs `vitafolio:tidy`, which clears released handles, view stats older than 13 months, expired sessions, cache rows and reset tokens. The [nightly workflow](../.github/workflows/nightly-tidy.yml) calls it |
-| Uptime | `/up` answers 200 when the app boots, for an uptime monitor. Checking it every few minutes also stops a free host from putting the app to sleep |
-| Errors | Sent to Sentry when `SENTRY_LARAVEL_DSN` is set, without personal data |
+| Uptime | `/up` answers 200 when the app boots and the database answers a query, for an uptime monitor. Checking it every few minutes also stops a free host from putting the app to sleep |
+| Errors | Sent to Sentry when `SENTRY_LARAVEL_DSN` is set, without personal data. Content security policy breaks are reported there too when `CSP_REPORT_URI` is set |
+| Maintenance mode | From a shell on the host: `php artisan down --retry=120 --secret=<word>` shows the maintenance page to everyone except visitors who first open `/<word>`. `php artisan up` ends it. The cache driver with the database store means it applies to every copy of the app and survives a redeploy |
+| Audit log | Every sign-in, failed sign-in, lockout, sign-out, sign-in change and moderation action is one `audit.*` line in the log, with ids rather than personal details. Account holders are also emailed about every sign-in change and about sign-ins from a browser they have not used before |
 | Moderation | `/admin` lists open reports and hidden CVs. Admins can hide or restore a CV, remove a photo, dismiss a report and suspend or reinstate an account. Admins are emailed when a report arrives |
 | Admins | `php artisan vitafolio:make-admin <email>`, with `--revoke` to remove the role |
 | Brand images | Edit the SVGs in `resources/brand`, then run `scripts/brand-assets.sh` |
 | Dependencies | Dependabot opens weekly pull requests for Composer, npm, the Docker images and GitHub Actions |
+
+## Incident response
+
+If personal data may have been exposed, lost or changed without permission:
+
+1. **Contain it.** Rotate every secret that may be involved using the table above, run
+   `php artisan tinker --execute="DB::table('sessions')->truncate(); DB::table('password_reset_tokens')->truncate();"`
+   from a shell on the host so every session and reset link is dead. Suspend any account being misused.
+2. **Assess it.** Work out what data, how many people, for how long and what the effect on them could be.
+   The audit log and Sentry are the first places to look.
+3. **Record it.** Write down the date you became aware, the facts, the effect and what was done, whether or
+   not it is reported. UK GDPR requires this record for every breach.
+4. **Decide on reporting.** If the breach is likely to put people at risk, report it to the
+   [ICO](https://ico.org.uk/for-organisations/report-a-breach/) within 72 hours of becoming aware of it.
+5. **Tell the people affected** without undue delay when the risk to them is high, saying what happened, what
+   it means for them and what to do, such as resetting their password.
+6. **Fix the cause** and write a short post-mortem in the changelog or an issue.
 
 ## Testing and quality checks
 
@@ -355,7 +404,8 @@ parsing and image handling.
 | Front-end build | `npm run build` |
 | Image build | `docker build .` |
 
-CI runs every check on each pull request.
+CI runs every check on each pull request, plus `composer audit`, `npm audit`, a Trivy scan of the production
+image and a Gitleaks scan for committed secrets.
 
 ## Design decisions
 

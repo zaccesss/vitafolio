@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Support\JsonResume;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +19,7 @@ class AccountController extends Controller
 {
     public function edit(Request $request): View
     {
-        return view('account', ['user' => $request->user()]);
+        return view('settings.account', ['user' => $request->user()]);
     }
 
     /** for accounts made through social sign-in, which have never had a password of their own */
@@ -26,13 +29,13 @@ class AccountController extends Controller
         $request->validateWithBag('setPassword', ['password' => ['required', 'string', Password::default(), 'confirmed']]);
         $request->user()->forceFill(['password' => Hash::make($request->input('password')), 'has_password' => true])->save();
 
-        return redirect()->to(route('account').'#password-title')->with('status', 'Password set. You can now sign in with your email address and this password too.');
+        return redirect()->route('settings.security')->with('status', 'Password set. You can now sign in with your email address and this password too.');
     }
 
     /** lands back on the passkeys section once the password has been confirmed or after one was added */
     public function passkeys(Request $request): RedirectResponse
     {
-        $redirect = redirect()->to(route('account').'#passkeys');
+        $redirect = redirect()->route('settings.passkeys');
 
         return $request->boolean('added') ? $redirect->with('status', 'passkey-registered') : $redirect;
     }
@@ -47,19 +50,58 @@ class AccountController extends Controller
             ->where('id', '<>', $request->session()->getId())
             ->delete();
 
-        return redirect()->route('account')->with('status', 'other-sessions-ended');
+        return redirect()->route('settings.sessions')->with('status', 'other-sessions-ended');
+    }
+
+    /** the signed-in devices page, with every active session and which one is this browser */
+    public function sessions(Request $request): View
+    {
+        return view('settings.sessions', ['user' => $request->user(), 'sessions' => self::sessionsFor($request->user()), 'current' => $request->session()->getId()]);
+    }
+
+    /** signs out one device; the current one is left alone, it has its own sign out */
+    public function endSession(Request $request, string $id): RedirectResponse
+    {
+        abort_if($id === $request->session()->getId(), 404);
+        DB::table('sessions')->where('user_id', $request->user()->id)->where('id', $id)->delete();
+
+        return redirect()->route('settings.sessions')->with('status', 'That device has been signed out.');
+    }
+
+    /** active sessions with the browser description made readable, newest first */
+    public static function sessionsFor(User $user): Collection
+    {
+        return DB::table('sessions')->where('user_id', $user->id)->orderByDesc('last_activity')
+            ->get(['id', 'ip_address', 'user_agent', 'last_activity'])
+            ->map(function ($row) {
+                $ua = (string) $row->user_agent;
+                $browser = collect(['Edg/' => 'Edge', 'OPR/' => 'Opera', 'Firefox/' => 'Firefox', 'Chrome/' => 'Chrome', 'Safari/' => 'Safari'])
+                    ->first(fn ($name, $needle) => str_contains($ua, $needle), 'A browser');
+                $os = collect(['iPhone' => 'iPhone', 'iPad' => 'iPad', 'Android' => 'Android', 'Mac OS' => 'macOS', 'Windows' => 'Windows', 'Linux' => 'Linux'])
+                    ->first(fn ($name, $needle) => str_contains($ua, $needle), 'an unknown device');
+                $row->device = $browser.' on '.$os;
+                $row->last_active = Carbon::createFromTimestamp($row->last_activity);
+
+                return $row;
+            });
     }
 
     /** everything stored about the account, as a download, for the right of access */
     public function export(Request $request): JsonResponse
     {
-        $user = $request->user()->load(['cvs.tags', 'cvs.document', 'cvs.projects']);
+        $user = $request->user()->load(['cvs.tags', 'cvs.document', 'cvs.projects', 'socialAccounts', 'passkeys']);
 
         return response()->json([
             'exported_at' => now()->toIso8601String(),
             'account' => $user->only(['name', 'email', 'email_verified_at', 'created_at']),
             'profile' => $user->only(['handle', 'pronouns', 'headline', 'bio', 'location', 'university', 'availability', 'links', 'profile_visibility']),
             'two_factor_enabled' => $user->two_factor_confirmed_at !== null,
+            'photo' => $user->hasAvatar() ? ['type' => $user->avatar_type, 'version' => $user->avatar_version] : null,
+            'connected_accounts' => $user->socialAccounts->map(fn ($a) => $a->only(['provider', 'email', 'created_at'])),
+            'passkeys' => $user->passkeys->map(fn ($p) => $p->only(['name', 'created_at', 'last_used_at'])),
+            'previous_handles' => DB::table('handle_history')->where('user_id', $user->id)->get(['handle', 'released_at']),
+            'signed_in_devices' => self::sessionsFor($user)->map(fn ($s) => ['device' => $s->device, 'ip_address' => $s->ip_address, 'last_active' => $s->last_active]),
+            'reports_made' => [],
             'cvs' => $user->cvs->map(fn ($cv) => [
                 'resume' => JsonResume::export($cv->setRelation('user', $user)),
                 'settings' => $cv->only(['title', 'slug', 'visibility', 'show_email', 'theme', 'accent', 'font', 'section_order', 'view_count', 'created_at', 'updated_at']),

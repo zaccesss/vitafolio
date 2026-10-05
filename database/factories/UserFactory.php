@@ -28,6 +28,12 @@ class UserFactory extends Factory
         ];
     }
 
+    /** reloads the row so column defaults such as role and has_password are present on the model */
+    public function configure(): static
+    {
+        return $this->afterCreating(fn (User $user) => $user->refresh());
+    }
+
     public function unverified(): static
     {
         return $this->state(fn () => ['email_verified_at' => null]);

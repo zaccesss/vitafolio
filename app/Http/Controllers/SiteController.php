@@ -37,7 +37,12 @@ class SiteController extends Controller
     public function robots(): Response
     {
         // signed-in areas carry noindex too; this just saves crawlers the trip
-        $lines = ['User-agent: *', 'Disallow: /dashboard', 'Disallow: /cvs/', 'Disallow: /account', 'Disallow: /admin', 'Disallow: /profile', '', 'Sitemap: '.route('sitemap')];
+        $lines = [];
+        // crawlers that collect training data are kept off public cvs; search engines are not
+        foreach (['GPTBot', 'CCBot', 'Google-Extended', 'Bytespider', 'Applebot-Extended', 'meta-externalagent'] as $bot) {
+            array_push($lines, 'User-agent: '.$bot, 'Disallow: /', '');
+        }
+        array_push($lines, 'User-agent: *', 'Disallow: /dashboard', 'Disallow: /cvs/', 'Disallow: /settings', 'Disallow: /admin', 'Disallow: /analytics', '', 'Sitemap: '.route('sitemap'));
 
         return response(implode("\n", $lines)."\n", 200, ['Content-Type' => 'text/plain; charset=utf-8', 'Cache-Control' => 'public, max-age=86400']);
     }
