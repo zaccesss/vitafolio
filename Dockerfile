@@ -37,8 +37,11 @@ COPY docker/start.sh /usr/local/bin/start
 WORKDIR /app
 COPY --from=vendor /app ./
 COPY --from=assets /app/public/build ./public/build
-# everything runs as an unprivileged user on an unprivileged port, so nothing needs root
-RUN adduser -D -u 10001 vitafolio \
+# everything runs as an unprivileged user on an unprivileged port, so nothing needs root. the
+# binary's port-binding capability is removed too: hosts that start containers with no extra
+# privileges, such as render, refuse to run a binary that asks for one
+RUN setcap -r /usr/local/bin/frankenphp \
+    && adduser -D -u 10001 vitafolio \
     && rm -f public/hot \
     && chown -R vitafolio:vitafolio storage bootstrap/cache /data/caddy /config/caddy \
     && chmod +x /usr/local/bin/start
