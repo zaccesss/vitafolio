@@ -217,6 +217,19 @@
     @media (prefers-reduced-motion: reduce) { .page-progress.is-loading { animation: none; width: 100%; opacity: 0.6; } }
     button[aria-busy='true'] { @apply cursor-progress opacity-70; }
 
+    /* reading progress on long pages: a static line scaled from the left, so it needs no motion */
+    .reading-progress { @apply fixed top-0 left-0 z-[80] h-1 w-full origin-left bg-link; transform: scaleX(0); }
+    .back-to-top { @apply fixed right-5 bottom-5 z-40 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-header text-xl text-white shadow-lg hover:brightness-125 focus-visible:outline-2 focus-visible:outline-offset-2; }
+    .mobile-cta { @apply fixed inset-x-4 bottom-4 z-40 shadow-lg; }
+    body:has(.mobile-cta) .back-to-top { @apply bottom-20 lg:bottom-5; }
+    .confirm-dialog { @apply m-auto w-[min(28rem,calc(100%-2rem))] rounded-2xl border border-line bg-surface p-6 text-ink shadow-xl; }
+    .confirm-dialog::backdrop { background: rgb(0 0 0 / 0.55); }
+    pre.has-copy { @apply relative; }
+    .copy-code { @apply absolute top-2 right-2 min-h-8 px-3 py-1 text-sm; }
+    details.faq summary { @apply list-none; }
+    details.faq summary::before { content: '+'; @apply mr-3 inline-block w-4 font-bold text-link; }
+    details.faq[open] summary::before { content: '\2212'; }
+
         .skip-link { @apply fixed left-4 z-[100] rounded-xl bg-brand-strong px-4 py-3 font-semibold text-white no-underline; top: -5rem; }
     .skip-link:focus { top: 1rem; }
 

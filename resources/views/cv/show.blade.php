@@ -179,6 +179,7 @@
                 @endif
 
                 @if (! $isOwner && ! $cv->show_email)
+                    <a href="#message" class="mobile-cta btn btn-primary no-print lg:hidden">Message {{ $user->firstName() }}</a>
                     <section id="message" class="card p-5" aria-labelledby="message-title">
                         <h2 id="message-title" class="text-base">Message {{ $user->firstName() }}</h2>
                         <p class="mt-1 text-sm text-muted">Your message is sent by email. Their address stays private. They can reply to you directly.</p>

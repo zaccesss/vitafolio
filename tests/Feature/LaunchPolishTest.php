@@ -1,0 +1,60 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Cv;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Tests\TestCase;
+
+class LaunchPolishTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_the_faq_expands_and_is_marked_up_for_search_engines(): void
+    {
+        $this->get(route('help.topic', 'faq'))->assertOk()
+            ->assertSee('<details class="faq', false)
+            ->assertSee('"@type":"FAQPage"', false);
+    }
+
+    public function test_long_pages_carry_breadcrumbs_and_reading_progress(): void
+    {
+        $this->get(route('privacy'))->assertOk()
+            ->assertSee('aria-label="Breadcrumb"', false)
+            ->assertSee('"@type":"BreadcrumbList"', false)
+            ->assertSee('data-reading', false);
+    }
+
+    public function test_the_home_page_describes_the_site_and_its_search(): void
+    {
+        $this->get(route('home'))->assertOk()
+            ->assertSee('"@type":"WebSite"', false)
+            ->assertSee('"@type":"SearchAction"', false);
+    }
+
+    public function test_every_page_has_the_confirmation_dialog_and_back_to_top(): void
+    {
+        $this->get(route('features'))->assertOk()
+            ->assertSee('id="confirm-dialog"', false)
+            ->assertSee('id="back-to-top"', false);
+    }
+
+    public function test_the_thank_you_page_is_kept_out_of_search(): void
+    {
+        $this->get(route('contact.sent'))->assertOk()->assertSee('Message sent')->assertSee('noindex', false);
+    }
+
+    public function test_a_tagged_link_is_named_by_its_tag(): void
+    {
+        $cv = Cv::factory()->create();
+
+        $this->get(route('cv.show', $cv).'?utm_source=Newsletter')->assertOk();
+        $this->assertSame('tagged: newsletter', DB::table('cv_views')->where('cv_id', $cv->id)->value('referrer_host'));
+
+        // anything that is not a plain tag is ignored rather than stored
+        $other = Cv::factory()->create();
+        $this->get(route('cv.show', $other).'?utm_source=%3Cscript%3E')->assertOk();
+        $this->assertNull(DB::table('cv_views')->where('cv_id', $other->id)->value('referrer_host'));
+    }
+}

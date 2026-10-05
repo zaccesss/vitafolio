@@ -214,5 +214,16 @@
             </div>
         </div>
     </footer>
+    <div id="reading-progress" class="reading-progress no-print" aria-hidden="true" hidden></div>
+    <button type="button" id="back-to-top" class="back-to-top no-print" hidden><span aria-hidden="true">&uarr;</span><span class="sr-only">Back to top</span></button>
+    <p id="copy-status" class="sr-only" role="status"></p>
+    <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+        <h2 id="confirm-title" class="text-xl">Are you sure?</h2>
+        <p id="confirm-text" class="mt-2 text-muted"></p>
+        <form method="dialog" class="mt-6 flex flex-wrap justify-end gap-3">
+            <button value="cancel" class="btn btn-secondary" autofocus>Cancel</button>
+            <button value="ok" class="btn btn-danger">Yes, continue</button>
+        </form>
+    </dialog>
 </body>
 </html>
