@@ -210,7 +210,14 @@
     .alert-error { @apply bg-bad-bg text-bad; }
     .alert-info { @apply bg-info-bg text-info; }
 
-    .skip-link { @apply fixed left-4 z-[100] rounded-xl bg-brand-strong px-4 py-3 font-semibold text-white no-underline; top: -5rem; }
+    /* the page-load bar: a brass line that grows across the top while the next page arrives */
+    .page-progress { @apply fixed top-0 left-0 z-[90] h-1 w-0 bg-brass; }
+    .page-progress.is-loading { animation: progress-grow 8s cubic-bezier(0.1, 0.6, 0.3, 1) forwards; }
+    @keyframes progress-grow { 0% { width: 0; } 20% { width: 40%; } 60% { width: 75%; } 100% { width: 92%; } }
+    @media (prefers-reduced-motion: reduce) { .page-progress.is-loading { animation: none; width: 100%; opacity: 0.6; } }
+    button[aria-busy='true'] { @apply cursor-progress opacity-70; }
+
+        .skip-link { @apply fixed left-4 z-[100] rounded-xl bg-brand-strong px-4 py-3 font-semibold text-white no-underline; top: -5rem; }
     .skip-link:focus { top: 1rem; }
 
     .nav-link { @apply rounded-lg px-3 py-2 text-[0.97rem] text-white no-underline; }

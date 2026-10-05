@@ -52,6 +52,7 @@
 </head>
 <body class="flex min-h-screen flex-col">
     <a class="skip-link" href="#main">Skip to main content</a>
+    <div id="page-progress" class="page-progress" role="progressbar" aria-label="Loading the next page" aria-hidden="true" hidden></div>
 
     @php
         $mainLinks = array_filter([
