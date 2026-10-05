@@ -6,6 +6,9 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Added
 
+- Discussion forms for General, Ideas, Q&A and Show and tell, with questions and ideas pointed to
+  Discussions from the support and contributing guides and the issue chooser.
+
 - Accounts with email verification, breach-checked passwords, two-factor authentication, passkeys and
   sign-in through Google, GitHub, Microsoft or LinkedIn. A provider only joins an existing account when
   it confirms the email is verified.

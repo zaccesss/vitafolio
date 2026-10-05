@@ -1,0 +1,8 @@
+body:
+  - type: textarea
+    id: message
+    attributes:
+      label: What's on your mind
+      description: Introductions, how you use your CVs, thoughts on where Vitafolio is heading or anything else.
+    validations:
+      required: true
