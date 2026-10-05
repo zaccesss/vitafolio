@@ -227,6 +227,11 @@
     pre.has-copy { @apply relative; }
     .copy-code { @apply absolute top-2 right-2 min-h-8 px-3 py-1 text-sm; }
     details.faq summary { @apply list-none; }
+    /* safari draws its own triangle on summary unless this marker is hidden too */
+    details.faq summary::-webkit-details-marker { display: none; }
+    .theme-icon { animation: theme-in 0.25s ease-out; }
+    @keyframes theme-in { from { opacity: 0; transform: rotate(-45deg) scale(0.8); } }
+    @media (prefers-reduced-motion: reduce) { .theme-icon { animation: none; } }
     details.faq summary::before { content: '+'; @apply mr-3 inline-block w-4 font-bold text-link; }
     details.faq[open] summary::before { content: '\2212'; }
 
@@ -288,6 +293,14 @@
 @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
 
 /* print shows the cv only, black on white */
+/* windows high contrast replaces every colour, so states shown by a background need an outline */
+@media (forced-colors: active) {
+    .page-progress, .reading-progress { background: Highlight; }
+    [aria-current='page'], .segment-link[aria-current], .menu-link[aria-current] { outline: 2px solid Highlight; outline-offset: 2px; }
+    .badge, .card, .confirm-dialog { border: 1px solid CanvasText; }
+    button[aria-busy='true'] { opacity: 1; }
+}
+
 @media print {
     .site-header, .site-footer, .no-print, .skip-link { display: none !important; }
     body { background: #fff !important; color: #000 !important; font-size: 11pt; }

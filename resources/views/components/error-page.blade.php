@@ -11,7 +11,7 @@
     <script src="{{ asset('theme-init.js') }}"></script>
     @vite(['resources/css/app.css'])
 </head>
-<body class="flex min-h-screen flex-col">
+<body class="flex min-h-dvh flex-col">
     <main id="main" class="container-page flex max-w-xl flex-1 flex-col items-center justify-center py-16 text-center">
         <a href="{{ url('/') }}" class="flex items-center gap-3 no-underline">
             <x-brand-mark :size="40" />
