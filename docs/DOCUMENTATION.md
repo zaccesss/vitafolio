@@ -338,7 +338,7 @@ release. Host them anywhere that serves static files with CORS allowed, such as 
 | Moderation | `/admin` lists open reports and hidden CVs. Admins can hide or restore a CV, remove a photo, dismiss a report and suspend or reinstate an account. Admins are emailed when a report arrives |
 | Admins | `php artisan vitafolio:make-admin <email>`, with `--revoke` to remove the role |
 | Brand images | Edit the SVGs in `resources/brand`, then run `scripts/brand-assets.sh` |
-| Dependencies | Dependabot opens weekly pull requests for Composer, npm, the Docker images and GitHub Actions once it is set up |
+| Dependencies | Dependabot opens weekly pull requests for Composer, npm, the Docker images and GitHub Actions |
 
 ## Testing and quality checks
 
