@@ -22,7 +22,10 @@
                     <span class="ml-2">{{ preg_replace('#^https?://#', '', route('cv.show', $cv)) }}</span>
                 </p>
             </div>
-            <a class="btn btn-secondary" href="{{ route('cv.show', $cv) }}">View this CV</a>
+            <div class="flex flex-wrap gap-3">
+                <a class="btn btn-secondary" href="{{ route('help.topic', 'building-a-cv') }}" target="_blank" rel="noopener">Help<x-new-tab /></a>
+                <a class="btn btn-secondary" href="{{ route('cv.show', $cv) }}" target="_blank" rel="noopener">View this CV<x-new-tab /></a>
+            </div>
         </div>
 
         <nav class="mt-8 flex gap-1 overflow-x-auto border-b-2 border-line" aria-label="Edit sections">
@@ -36,7 +39,7 @@
                 <x-error-summary />
 
                 @if ($tab === 'details')
-                    <p class="alert alert-info mb-6">Your name, photo, location, university and links come from <a href="{{ route('profile.edit') }}">your profile</a> and are shared by all your CVs.</p>
+                    <p class="alert alert-info mb-6">Your name, photo, location, university and links come from <a href="{{ route('profile.edit') }}" target="_blank" rel="noopener">your profile<x-new-tab /></a> and are shared by all your CVs.</p>
                     <form method="POST" action="{{ route('cvs.details', $cv) }}" class="card grid gap-5 p-6 sm:grid-cols-2">
                         @csrf @method('PUT')
                         <x-field name="headline" label="Headline for this CV" :value="$cv->headline" maxlength="120"
@@ -51,7 +54,7 @@
                         <x-field class="sm:col-span-2" name="education" label="Education" type="textarea" :value="$cv->education" rows="5" maxlength="5000" counter />
                         <div class="flex flex-wrap gap-3 sm:col-span-2">
                             <button type="submit" class="btn btn-primary">Save content</button>
-                            <a class="btn btn-secondary" href="{{ route('cv.show', $cv) }}">Preview</a>
+                            <a class="btn btn-secondary" href="{{ route('cv.show', $cv) }}" target="_blank" rel="noopener">Preview<x-new-tab /></a>
                         </div>
                     </form>
 
@@ -227,7 +230,7 @@
                     <section class="card p-6" aria-labelledby="import-title">
                         <h2 id="import-title" class="text-xl">Import from JSON Resume</h2>
                         <p class="mt-2 text-muted">
-                            <a href="https://jsonresume.org/" rel="noopener">JSON Resume</a> is an open format many CV tools can export.
+                            <a href="https://jsonresume.org/" target="_blank" rel="noopener">JSON Resume<x-new-tab /></a> is an open format many CV tools can export.
                             Importing fills in this CV's headline, profile, experience, education and skills, replacing what is there. Your location and links are added to your profile only where it is still empty.
                         </p>
                         <form method="POST" action="{{ route('cvs.import', $cv) }}" enctype="multipart/form-data" class="mt-6 grid gap-4" data-confirm="Importing replaces the matching sections of this CV. Continue?">

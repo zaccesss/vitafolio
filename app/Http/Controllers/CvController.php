@@ -89,7 +89,7 @@ class CvController extends Controller
         $profiles = User::where('profile_visibility', 'public')->whereNotNull('email_verified_at')
             ->whereNull('suspended_at')->get(['handle', 'updated_at']);
 
-        return response()->view('sitemap', ['cvs' => $cvs, 'profiles' => $profiles], 200, [
+        return response()->view('sitemap', ['cvs' => $cvs, 'profiles' => $profiles, 'updated' => config('vitafolio.content_updated')], 200, [
             'Content-Type' => 'application/xml',
             'Cache-Control' => 'public, max-age=3600',
         ]);
