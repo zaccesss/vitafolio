@@ -1,0 +1,13 @@
+title: "[Show and tell] "
+body:
+  - type: textarea
+    id: share
+    attributes:
+      label: What you made
+      description: A CV, theme, LaTeX template or your own deployment. Share a public or unlisted link, never a private one.
+    validations:
+      required: true
+  - type: textarea
+    id: lessons
+    attributes:
+      label: What you learned

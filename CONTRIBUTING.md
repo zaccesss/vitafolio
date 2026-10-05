@@ -10,7 +10,9 @@ Bug fixes, accessibility improvements, clearer wording and well-scoped features 
 - Translations of the interface wording are not supported yet; open an issue first if you want to help
   with that
 
-For a larger feature, open an issue first so the approach can be agreed before you build it.
+For a larger feature, start a thread in [Ideas](https://github.com/zaccesss/vitafolio/discussions/categories/ideas)
+first so the approach can be agreed before you build it. Questions go in
+[Q&A](https://github.com/zaccesss/vitafolio/discussions/categories/q-a).
 
 ## Setting up
 
