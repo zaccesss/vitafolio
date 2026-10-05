@@ -1,0 +1,34 @@
+% Vitafolio compact template: small margins and tight spacing to fit one page.
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=1.3cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\setlist{leftmargin=1em,itemsep=0pt,topsep=1pt,parsep=0pt}
+\titleformat{\section}{\normalsize\bfseries\scshape}{}{0em}{}[\vspace{-2pt}\titlerule]
+\titlespacing{\section}{0pt}{6pt}{3pt}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+\begin{center}
+{\Large\bfseries {{NAME}}}\\
+{{HEADLINE}}\\
+{\footnotesize {{CONTACT}}}
+\end{center}
+
+\section{Profile}
+{{SUMMARY}}
+
+\section{Experience}
+{{EXPERIENCE}}
+
+\section{Projects}
+{{PROJECTS}}
+
+\section{Education}
+{{EDUCATION}}
+
+\section{Skills}
+{{SKILLS}}
+\end{document}

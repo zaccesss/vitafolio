@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#14213D"/>
+  <rect y="516" width="1200" height="4" fill="#E8C98F"/>
+  <rect y="520" width="1200" height="110" fill="#0B1220"/>
+  <g transform="translate(80 150) scale(4.2) translate(-14 -16)"><path d="M14 16h22l12 12v22a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V20a4 4 0 0 1 4-4z" fill="#FFFFFF"/><path d="M36 16v12h12" fill="#B08D57"/><path d="M20 34l8 12 8-12" fill="none" stroke="#14213D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <text x="300" y="250" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="104" font-weight="700" fill="#FFFFFF" letter-spacing="-2">Vitafolio</text>
+  <text x="304" y="318" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="38" fill="#D6DDEA">Every version of your CV, in one place.</text>
+  <text x="80" y="585" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="28" fill="#E8C98F">Profiles · Uploaded and LaTeX CVs · Projects · One link to share</text>
+</svg>

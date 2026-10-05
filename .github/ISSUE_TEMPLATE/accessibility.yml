@@ -1,0 +1,27 @@
+name: Accessibility problem
+description: Something is hard or impossible to use with a screen reader, keyboard, zoom or other setting
+title: "a11y: "
+labels: ["accessibility", "bug"]
+body:
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      placeholder: "e.g. the photo cropper, the directory filters, a CV in the Modern theme"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What got in the way
+    validations:
+      required: true
+  - type: input
+    id: setup
+    attributes:
+      label: Assistive technology and settings
+      placeholder: "e.g. NVDA with Firefox, VoiceOver on iOS, keyboard only, 200% zoom, reduced motion"
+  - type: textarea
+    id: better
+    attributes:
+      label: What would work better
