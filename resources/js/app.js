@@ -10,6 +10,36 @@ Alpine.data('menu', () => ({
     get navClass() { return this.open ? '' : 'hidden'; },
 }));
 
+// filters the help centre's topic cards as you type; the count is announced for screen readers
+Alpine.data('helpSearch', () => ({
+    query: '',
+    shown: 0,
+    init() { this.$watch('query', () => this.filter()); this.filter(); },
+    filter() {
+        const words = this.query.toLowerCase().split(/\s+/).filter(Boolean);
+        const items = this.$root.querySelectorAll('[data-help-topic]');
+        this.shown = 0;
+        items.forEach((item) => {
+            const match = words.every((word) => item.dataset.helpTopic.includes(word));
+            item.hidden = !match;
+            if (match) this.shown += 1;
+        });
+    },
+    get announcement() {
+        if (!this.query) return '';
+        return this.shown === 1 ? '1 topic matches.' : `${this.shown} topics match.`;
+    },
+}));
+
+// the signed-in menu: a disclosure rather than an aria menu, so it is plain links read in order
+Alpine.data('accountMenu', () => ({
+    open: false,
+    toggle() { this.open = !this.open; },
+    close() { this.open = false; },
+    get expanded() { return String(this.open); },
+    get closed() { return !this.open; },
+}));
+
 const THEMES = ['system', 'light', 'dark'];
 const THEME_NAMES = { system: 'System', light: 'Light', dark: 'Dark' };
 

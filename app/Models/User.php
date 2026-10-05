@@ -159,7 +159,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             return true;
         }
 
-        return $this->profile_visibility !== 'private' && ! $this->isSuspended();
+        return $this->profile_visibility !== 'private' && ! $this->isSuspended() && $this->hasVerifiedEmail();
     }
 
     public function canChangeHandle(): bool

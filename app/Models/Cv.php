@@ -59,7 +59,9 @@ class Cv extends Model
         // cloudinary, so those are cleaned up here before the rows disappear
         static::deleting(function (Cv $cv) {
             DocumentStore::delete($cv);
-            $media = $cv->projects()->whereNotNull('media_public_id')->get(['media_public_id', 'media_type']);
+            $own = $cv->projects()->whereNotNull('media_public_id')->get(['id', 'media_public_id', 'media_type']);
+            // a copied cv shares its assets, so only those nothing else points at are destroyed
+            $media = $own->reject(fn ($p) => Project::where('media_public_id', $p->media_public_id)->whereNotIn('id', $own->pluck('id'))->exists());
             if ($media->isNotEmpty() && Cloudinary::enabled()) {
                 defer(fn () => $media->each(fn ($p) => Cloudinary::destroy($p->media_public_id, $p->media_type)));
             }

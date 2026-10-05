@@ -16,4 +16,6 @@ tests
 .phpunit.result.cache
 .DS_Store
 *.md
+!CHANGELOG.md
+!docs/DOCUMENTATION.md
 !resources/**/*.md

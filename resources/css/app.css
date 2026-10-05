@@ -153,7 +153,7 @@
     .font-cv-serif { font-family: var(--font-serif); }
     .font-cv-mono { font-family: var(--font-mono); font-size: 0.94em; }
 
-    .container-page { @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8; }
+    .container-page { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
 
     .card { @apply rounded-card border border-line bg-surface p-6; box-shadow: var(--shadow-card); }
 
@@ -217,9 +217,20 @@
     .nav-link:hover { background: rgb(255 255 255 / 0.12); }
     .nav-link[aria-current='page'] { @apply font-semibold underline underline-offset-8; background: rgb(255 255 255 / 0.16); }
     .site-header :focus-visible { outline-color: #fff; }
+    .account-menu { @apply absolute right-0 mt-2 w-72 overflow-hidden rounded-xl border border-line bg-surface text-ink shadow-card; }
+    .account-menu :focus-visible { outline-color: var(--c-focus); }
+    .settings-link { @apply block rounded-lg px-3 py-2 text-ink no-underline; }
+    .settings-link:hover { @apply bg-raised; }
+    .settings-link[aria-current='page'] { @apply bg-raised font-semibold; box-shadow: inset 3px 0 0 var(--c-brand); }
+    .menu-link { @apply block px-4 py-2 text-ink no-underline; }
+    .menu-link:hover { @apply bg-raised; }
+    .menu-link[aria-current='page'] { @apply font-semibold; box-shadow: inset 3px 0 0 var(--c-brand); }
 
     .tab-link { @apply -mb-0.5 border-b-[3px] border-transparent px-4 py-3 font-semibold whitespace-nowrap text-muted no-underline; }
     .tab-link:hover { @apply text-ink; }
+    .segment-link { @apply rounded-lg px-3 py-1.5 text-sm font-semibold text-muted no-underline; }
+    .segment-link:hover { @apply text-ink; }
+    .segment-link[aria-current='page'] { @apply bg-brand text-on-brand; }
     .tab-link[aria-current='page'] { @apply border-brand text-ink; }
 
     .prose-cv { @apply max-w-none whitespace-pre-line text-ink; }

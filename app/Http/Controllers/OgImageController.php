@@ -69,7 +69,7 @@ class OgImageController extends Controller
 
         return response((string) ob_get_clean(), 200, [
             'Content-Type' => 'image/png',
-            'Cache-Control' => 'public, max-age=3600',
+            'Cache-Control' => $cv->visibility === 'public' && ! $cv->hidden_at ? 'public, max-age=3600' : 'private, no-store',
         ]);
     }
 

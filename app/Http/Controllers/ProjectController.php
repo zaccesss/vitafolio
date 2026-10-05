@@ -109,6 +109,12 @@ class ProjectController extends Controller
             Cloudinary::destroy($uploaded['public_id'], 'video');
             throw ValidationException::withMessages(['media' => 'Videos can be up to '.$maxSeconds.' seconds long. Trim it to the highlights and try again.'])->errorBag($bag);
         }
+        // the allowance was checked before the upload; a second check after it catches uploads
+        // that ran at the same time and would otherwise add up past the limit
+        if (! $request->user()->canStore($uploaded['bytes'], (int) $project->media_size)) {
+            Cloudinary::destroy($uploaded['public_id'], $type);
+            throw ValidationException::withMessages(['media' => CvDocumentController::fullMessage()])->errorBag($bag);
+        }
         $this->removeMedia($project);
         $project->update([
             'media_url' => $uploaded['url'],
@@ -121,7 +127,8 @@ class ProjectController extends Controller
 
     private function removeMedia(Project $project): void
     {
-        if ($project->media_public_id && Cloudinary::enabled()) {
+        // a copied cv shares the asset, so it is only destroyed once nothing else points at it
+        if ($project->media_public_id && Cloudinary::enabled() && ! Project::where('media_public_id', $project->media_public_id)->where('id', '<>', $project->id)->exists()) {
             Cloudinary::destroy($project->media_public_id, $project->media_type);
         }
         $project->update(['media_url' => null, 'media_public_id' => null, 'media_type' => null, 'media_size' => null]);
