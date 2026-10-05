@@ -11,6 +11,7 @@
         <p class="mt-1 max-w-3xl text-muted">
             Write your CV in LaTeX and compile it to a PDF right here. Compiling happens in your browser, so your work stays on your device until you save.
             The first compile downloads the LaTeX engine (around 120 MB, then cached). Saving stores your source and attaches the latest compiled PDF to this CV.
+            <a href="{{ route('help.topic', 'files-and-latex') }}" target="_blank" rel="noopener">LaTeX help<x-new-tab /></a>
         </p>
 
         <div class="mt-6" data-vue="LatexStudio" data-props="{{ json_encode([

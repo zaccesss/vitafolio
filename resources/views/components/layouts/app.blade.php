@@ -172,6 +172,7 @@
                 ['Privacy policy', route('privacy')],
                 ['Terms of use', route('terms')],
                 ['Cookies', route('cookies')],
+                ['Copyright', route('copyright')],
                 ['Accessibility', route('accessibility')],
             ],
             'More' => array_filter([
@@ -203,13 +204,10 @@
         <div class="border-t border-line">
             <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-5 text-sm text-muted sm:px-6 lg:px-8">
                 <p>
-                    &copy; {{ date('Y') }}
+                    <a href="{{ route('copyright') }}">&copy; {{ date('Y') }} {{ config('vitafolio.owner.name') }}</a>.
                     @if (config('vitafolio.owner.url'))
-                        <a href="{{ config('vitafolio.owner.url') }}" rel="noopener">{{ config('vitafolio.owner.name') }}</a>.
-                    @else
-                        {{ config('vitafolio.owner.name') }}.
+                        Made by <a href="{{ config('vitafolio.owner.url') }}" rel="noopener">{{ preg_replace('#^https?://(www\.)?#', '', rtrim(config('vitafolio.owner.url'), '/')) }}</a>.
                     @endif
-                    All rights reserved.
                 </p>
             </div>
         </div>
