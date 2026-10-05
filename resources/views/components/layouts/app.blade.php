@@ -50,7 +50,7 @@
     @endif
     {{ $head ?? '' }}
 </head>
-<body class="flex min-h-screen flex-col">
+<body class="flex min-h-dvh flex-col">
     <a class="skip-link" href="#main">Skip to main content</a>
     <div id="page-progress" class="page-progress" role="progressbar" aria-label="Loading the next page" aria-hidden="true" hidden></div>
 
@@ -68,7 +68,7 @@
         ]) : [];
     @endphp
     {{-- full width, so the logo and the theme toggle sit in the corners on every screen size --}}
-    <header class="site-header sticky top-0 z-50 bg-header text-white no-print" x-data="menu">
+    <header class="site-header sticky top-0 z-50 bg-header text-white no-print" x-data="menu" @keydown.escape.window="close">
         <div class="flex min-h-16 items-center gap-2 px-4 sm:px-6 lg:px-8">
             <a href="{{ route('home') }}" class="mr-4 inline-flex shrink-0 items-center gap-2.5 text-xl font-bold tracking-tight text-white no-underline">
                 <x-brand-mark /><span>{{ $siteName }}</span>

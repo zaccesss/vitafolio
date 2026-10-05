@@ -1,6 +1,16 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue';
 
+// apple devices use Cmd where windows and linux use Ctrl; the editor's Mod- bindings already
+// follow that, so the labels do too
+const isApple = /Mac|iPhone|iPad|iPod/.test(navigator.userAgentData?.platform ?? navigator.platform ?? '');
+const modKey = isApple ? 'Cmd' : 'Ctrl';
+function onPageKey(event) {
+    if (event.defaultPrevented || event.altKey || !(isApple ? event.metaKey : event.ctrlKey)) return;
+    if (event.key === 'Enter') { event.preventDefault(); compile(); }
+    else if (event.key.toLowerCase() === 's') { event.preventDefault(); save(); }
+}
+
 const props = defineProps({
     saveUrl: { type: String, required: true },
     csrf: { type: String, required: true },
@@ -65,7 +75,9 @@ onMounted(async () => {
     window.addEventListener('beforeunload', warnUnsaved);
 });
 
+onMounted(() => window.addEventListener('keydown', onPageKey));
 onBeforeUnmount(() => {
+    window.removeEventListener('keydown', onPageKey);
     view?.destroy();
     if (pdfUrl.value) URL.revokeObjectURL(pdfUrl.value);
     window.removeEventListener('beforeunload', warnUnsaved);
@@ -182,11 +194,11 @@ async function save() {
                 </select>
             </div>
             <div class="ml-auto flex flex-wrap gap-2">
-                <button type="button" class="btn btn-secondary" :disabled="busy" @click="compile">
-                    Compile <span class="hidden text-sm font-normal sm:inline">(Ctrl+Enter)</span>
+                <button type="button" class="btn btn-secondary" :disabled="busy" aria-keyshortcuts="Control+Enter Meta+Enter" @click="compile">
+                    Compile <span class="hidden text-sm font-normal sm:inline">({{ modKey }}+Enter)</span>
                 </button>
-                <button type="button" class="btn btn-primary" :disabled="busy" @click="save">
-                    Save <span class="hidden text-sm font-normal sm:inline">(Ctrl+S)</span>
+                <button type="button" class="btn btn-primary" :disabled="busy" aria-keyshortcuts="Control+S Meta+S" @click="save">
+                    Save <span class="hidden text-sm font-normal sm:inline">({{ modKey }}+S)</span>
                 </button>
             </div>
             <p class="w-full text-sm text-muted" role="status" aria-live="polite">{{ status || (dirty ? 'You have unsaved changes.' : 'All changes saved.') }}</p>

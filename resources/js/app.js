@@ -6,6 +6,7 @@ import Alpine from '@alpinejs/csp';
 Alpine.data('menu', () => ({
     open: false,
     toggle() { this.open = !this.open; },
+    close() { this.open = false; },
     get expanded() { return String(this.open); },
     get navClass() { return this.open ? '' : 'hidden'; },
 }));
@@ -50,6 +51,9 @@ Alpine.data('themeToggle', () => ({
         window.__setTheme?.(this.choice);
     },
     get label() { return THEME_NAMES[this.choice]; },
+    get isLight() { return this.choice === 'light'; },
+    get isDark() { return this.choice === 'dark'; },
+    get isSystem() { return this.choice === 'system'; },
     get ariaLabel() { return `Theme: ${THEME_NAMES[this.choice]}. Select to change.`; },
 }));
 
@@ -236,7 +240,12 @@ document.querySelectorAll('form[data-confirm]').forEach((form) => {
             return;
         }
         event.preventDefault();
-        const proceed = () => { form.dataset.confirmed = 'yes'; form.requestSubmit(event.submitter ?? undefined); };
+        // older browsers lack requestSubmit; submit() skips the handlers, which is fine once confirmed
+        const proceed = () => {
+            form.dataset.confirmed = 'yes';
+            if (typeof form.requestSubmit === 'function') form.requestSubmit(event.submitter ?? undefined);
+            else form.submit();
+        };
         if (!confirmDialog || typeof confirmDialog.showModal !== 'function') {
             if (window.confirm(form.dataset.confirm)) proceed();
             return;
