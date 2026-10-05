@@ -6,6 +6,17 @@
     };
 @endphp
 <x-layouts.app :canonical="route('home')">
+    <x-slot:head>
+        {{-- tells search engines the site's name, logo and that the directory can be searched; a data block, never executed --}}
+        <script type="application/ld+json">{!! json_encode([
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                ['@type' => 'WebSite', 'name' => config('app.name'), 'url' => route('home'),
+                    'potentialAction' => ['@type' => 'SearchAction', 'target' => route('home').'?q={search_term_string}', 'query-input' => 'required name=search_term_string']],
+                ['@type' => 'Organization', 'name' => config('app.name'), 'url' => route('home'), 'logo' => asset('icon-512.png')],
+            ],
+        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+    </x-slot:head>
     @unless ($filtering || $cvs->currentPage() > 1)
         <section class="container-page grid items-center gap-10 py-14 lg:grid-cols-2 lg:py-20" aria-labelledby="hero-title">
             <div>

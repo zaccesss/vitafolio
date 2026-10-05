@@ -210,7 +210,7 @@ document.addEventListener('submit', (event) => {
     setTimeout(() => {
         if (event.defaultPrevented) return;
         const form = event.target;
-        if (!(form instanceof HTMLFormElement)) return;
+        if (!(form instanceof HTMLFormElement) || form.method === 'dialog') return;
         const button = event.submitter instanceof HTMLButtonElement ? event.submitter : form.querySelector('button[type="submit"], button:not([type])');
         if (!button) return;
         const label = (button.textContent || '').trim();
@@ -226,11 +226,67 @@ document.addEventListener('submit', (event) => {
 // a page restored from the back-forward cache shows its buttons and bar as they were before
 window.addEventListener('pageshow', () => { stopProgress(); restoreButtons(); });
 
-// confirm before destructive actions and print buttons work without alpine too
+// destructive actions ask first in a proper dialog: keyboard trapped, escape cancels and focus
+// returns to the button afterwards. browsers without dialog support fall back to confirm()
+const confirmDialog = document.getElementById('confirm-dialog');
 document.querySelectorAll('form[data-confirm]').forEach((form) => {
     form.addEventListener('submit', (event) => {
-        if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+        if (form.dataset.confirmed === 'yes') {
+            delete form.dataset.confirmed;
+            return;
+        }
+        event.preventDefault();
+        const proceed = () => { form.dataset.confirmed = 'yes'; form.requestSubmit(event.submitter ?? undefined); };
+        if (!confirmDialog || typeof confirmDialog.showModal !== 'function') {
+            if (window.confirm(form.dataset.confirm)) proceed();
+            return;
+        }
+        confirmDialog.querySelector('#confirm-text').textContent = form.dataset.confirm;
+        confirmDialog.returnValue = '';
+        confirmDialog.addEventListener('close', () => { if (confirmDialog.returnValue === 'ok') proceed(); }, { once: true });
+        confirmDialog.showModal();
     });
+});
+
+// back to top appears once a page has been scrolled well down
+const backToTop = document.getElementById('back-to-top');
+const readingBar = document.getElementById('reading-progress');
+const reading = document.querySelector('[data-reading]');
+if (readingBar && reading) readingBar.hidden = false;
+function onScroll() {
+    if (backToTop) backToTop.hidden = window.scrollY < 800;
+    if (readingBar && reading) {
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        readingBar.style.transform = `scaleX(${total > 0 ? Math.min(1, window.scrollY / total) : 0})`;
+    }
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+backToTop?.addEventListener('click', () => {
+    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+    document.querySelector('.site-header a')?.focus({ preventScroll: true });
+});
+
+// every code block in long-form pages gets a copy button
+const copyStatus = document.getElementById('copy-status');
+document.querySelectorAll('.prose pre').forEach((pre) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'copy-code btn btn-sm btn-secondary no-print';
+    button.textContent = 'Copy';
+    button.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? pre.textContent);
+            button.textContent = 'Copied';
+            if (copyStatus) copyStatus.textContent = 'Code copied to the clipboard';
+            setTimeout(() => { button.textContent = 'Copy'; if (copyStatus) copyStatus.textContent = ''; }, 2000);
+        } catch {
+            button.textContent = 'Select and copy';
+        }
+    });
+    pre.classList.add('has-copy');
+    pre.append(button);
 });
 document.querySelectorAll('[data-print]').forEach((button) => {
     button.hidden = false;

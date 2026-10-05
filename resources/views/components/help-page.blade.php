@@ -8,12 +8,7 @@
 @endphp
 <x-layouts.app :title="$title.' | Help'" :description="$summary">
     <div class="container-page py-8">
-        <nav aria-label="Breadcrumb" class="text-sm text-muted">
-            <ol class="flex flex-wrap gap-2">
-                <li><a href="{{ route('help') }}">Help centre</a> <span aria-hidden="true">/</span></li>
-                <li aria-current="page">{{ $title }}</li>
-            </ol>
-        </nav>
+        <x-breadcrumbs :items="[['Help centre', route('help')], [$title, null]]" />
         <div class="mt-6 grid gap-10 lg:grid-cols-[15rem_minmax(0,1fr)]">
             <nav aria-label="Help topics" class="lg:sticky lg:top-24 lg:self-start">
                 <ul>
@@ -23,7 +18,7 @@
                     <li class="mt-3 border-t border-line pt-3"><a class="settings-link" href="{{ route('contact.show') }}">Contact us</a></li>
                 </ul>
             </nav>
-            <article class="prose prose-lg max-w-3xl prose-headings:font-semibold prose-headings:text-ink prose-p:text-ink prose-li:text-ink prose-a:text-link prose-strong:text-ink dark:prose-invert">
+            <article data-reading class="prose prose-lg max-w-3xl prose-headings:font-semibold prose-headings:text-ink prose-p:text-ink prose-li:text-ink prose-a:text-link prose-strong:text-ink dark:prose-invert">
                 <h1>{{ $title }}</h1>
                 <p class="lead !text-muted">{{ $summary }}</p>
                 {{ $slot }}
