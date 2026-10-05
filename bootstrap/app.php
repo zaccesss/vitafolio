@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureAccountIsUsable;
+use App\Http\Middleware\RedirectToCanonicalHost;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\ThrottleAuthForms;
 use Illuminate\Foundation\Application;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // and which address it came from. only those two are trusted: a forwarded host header
         // could otherwise become the host used in password reset links
         $middleware->trustProxies(at: '*', headers: Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_PORT);
+        $middleware->prepend(RedirectToCanonicalHost::class);
         $middleware->append(ThrottleAuthForms::class);
         $middleware->appendToGroup('web', EnsureAccountIsUsable::class);
         $middleware->append(SecurityHeaders::class);
