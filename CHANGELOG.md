@@ -4,6 +4,10 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+### Fixed
+
+- The production image starts on hosts that drop every Linux capability, such as Render. The server binary no longer asks for the port-binding capability it never uses.
+
 ### Added
 
 - Discussion forms for General, Ideas, Q&A and Show and tell, with questions and ideas pointed to
