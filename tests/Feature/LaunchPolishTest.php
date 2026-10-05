@@ -57,4 +57,21 @@ class LaunchPolishTest extends TestCase
         $this->get(route('cv.show', $other).'?utm_source=%3Cscript%3E')->assertOk();
         $this->assertNull(DB::table('cv_views')->where('cv_id', $other->id)->value('referrer_host'));
     }
+
+    public function test_the_accessibility_statement_lists_shortcuts_for_every_system(): void
+    {
+        $this->get(route('accessibility'))->assertOk()
+            ->assertSee('id="keyboard"', false)
+            ->assertSee('Windows and Linux')
+            ->assertSee('Cmd+Enter')
+            ->assertSee('id="browsers"', false);
+    }
+
+    public function test_the_theme_button_has_an_icon_for_each_choice(): void
+    {
+        $html = $this->get(route('features'))->assertOk()->getContent();
+        foreach (['isLight', 'isDark', 'isSystem'] as $choice) {
+            $this->assertStringContainsString('x-show="'.$choice.'"', $html);
+        }
+    }
 }

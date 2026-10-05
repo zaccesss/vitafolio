@@ -9,6 +9,10 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 - A full-width header with an account menu showing your photo, name and handle, a four-column footer and a settings area with a page for each setting instead of two long forms.
 - Pages for features, contact, a help centre with nine guides and a search box, what is new and the documentation, all linked from the footer and the sitemap.
 - Complete terms of use and privacy policy, written for UK GDPR, with a contents list on each.
+- The theme button shows a sun, a moon or a screen for light, dark and system, so the current choice is clear at a glance.
+- The LaTeX editor labels its shortcuts with Cmd on Apple devices and Ctrl elsewhere. They work even when focus is outside the editor, so the browser never saves the page instead.
+- The accessibility statement lists every keyboard shortcut for Windows, Linux and Mac, including the Safari setting that stops Tab skipping links. It also states the supported browsers.
+- Escape closes the mobile menu. Windows contrast themes keep the current page, progress and busy states visible. Pages fill phone screens correctly when the address bar hides. Safari no longer shows an extra arrow on FAQ questions.
 - A confirmation dialog for destructive actions in place of the browser's own prompt. Escape cancels and focus returns to the button.
 - Breadcrumbs with structured data on help, legal and documentation pages. The home page describes the site and its search to search engines. The FAQ expands one question at a time and is marked up as an FAQ.
 - A reading progress line on long pages, a back-to-top button and copy buttons on code blocks.
