@@ -10,7 +10,6 @@ use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -74,9 +73,6 @@ class FortifyServiceProvider extends ServiceProvider
 
         // passkey sign-in has its own controller, so suspended accounts are refused here as well
         Passkeys::authorizeLoginUsing(fn (Request $request, PasskeyUser $user) => $user instanceof User && ! $user->isSuspended());
-
-        // "keep me signed in" lasts 30 days rather than the framework's five years
-        Auth::guard('web')->setRememberDuration(60 * 24 * 30);
 
         Fortify::loginView(fn () => view('auth.login'));
         Fortify::registerView(fn () => view('auth.register'));

@@ -19,6 +19,10 @@ class EnsureAccountIsUsable
 
     public function handle(Request $request, Closure $next): Response
     {
+        // "keep me signed in" lasts 30 days rather than the framework's five years. set here, per
+        // request, because touching the guard while the app boots needs an encryption key to exist
+        Auth::guard('web')->setRememberDuration(60 * 24 * 30);
+
         $user = $request->user();
         if ($user === null) {
             return $next($request);
