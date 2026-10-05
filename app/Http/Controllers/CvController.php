@@ -23,7 +23,8 @@ class CvController extends Controller
     {
         abort_unless($cv->isVisibleTo($request->user()), 404);
         $cv->load(['user', 'tags', 'projects', 'document']);
-        ViewRecorder::record($cv, $request, $request->user());
+        // a printed qr code carries ?src=qr, so scans are counted apart from ordinary visits
+        ViewRecorder::record($cv, $request, $request->user(), $request->query('src') === 'qr' ? 'qr' : 'view');
 
         return view('cv.show', [
             'cv' => $cv,
@@ -36,6 +37,7 @@ class CvController extends Controller
     {
         abort_unless($cv->isVisibleTo($request->user()), 404);
         $cv->load(['user', 'tags', 'projects']);
+        ViewRecorder::record($cv, $request, $request->user(), 'pdf');
 
         // the photo is embedded as data so mpdf never fetches anything over the network
         $picture = null;
@@ -74,9 +76,9 @@ class CvController extends Controller
             'svgAddXmlHeader' => true,
         ]);
 
-        return response((new QRCode($options))->render(route('cv.show', $cv)), 200, [
+        return response((new QRCode($options))->render(route('cv.show', ['cv' => $cv, 'src' => 'qr'])), 200, [
             'Content-Type' => 'image/svg+xml',
-            'Cache-Control' => 'public, max-age=86400',
+            'Cache-Control' => $cv->visibility === 'public' && ! $cv->hidden_at ? 'public, max-age=86400' : 'private, no-store',
         ]);
     }
 

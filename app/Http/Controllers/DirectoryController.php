@@ -13,10 +13,11 @@ class DirectoryController extends Controller
 {
     public function __invoke(Request $request): View
     {
-        $q = trim((string) $request->string('q'));
+        $str = fn (string $key) => is_string($request->input($key)) ? trim($request->input($key)) : '';
+        $q = $str('q');
         $selectedTags = array_values(array_filter((array) $request->input('tags', []), 'is_string'));
-        $availability = (string) $request->string('availability');
-        $university = trim((string) $request->string('university'));
+        $availability = $str('availability');
+        $university = $str('university');
         $sort = in_array($request->input('sort'), ['updated', 'name', 'views'], true) ? $request->input('sort') : 'updated';
 
         // wildcards typed by a visitor are matched literally rather than as patterns

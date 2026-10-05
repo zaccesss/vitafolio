@@ -23,22 +23,5 @@
     </p>
 
     <h2 id="contact">Contact</h2>
-    @if (config('vitafolio.contact_email'))
-        <p>Questions, ideas or problems? Send a message and you will get a reply by email.</p>
-        <div class="not-prose">
-            <x-error-summary />
-            <form method="POST" action="{{ route('contact') }}" class="card grid gap-4 p-6">
-                @csrf
-                <x-field name="sender_name" label="Your name" required autocomplete="name" maxlength="100" />
-                <x-field name="sender_email" label="Your email" type="email" required autocomplete="email" maxlength="254" />
-                <x-field name="message" label="Message" type="textarea" rows="6" required maxlength="3000" counter />
-                {{-- hidden from people; only bots fill it in --}}
-                <div class="hidden" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-                <x-turnstile />
-                <div><button type="submit" class="btn btn-primary">Send message</button></div>
-            </form>
-        </div>
-    @else
-        <p>The contact form is not set up on this site yet.</p>
-    @endif
+    <p>Questions, ideas or problems? The <a href="{{ route('contact.show') }}">contact page</a> has a form and the quickest route for each kind of question.</p>
 </x-prose-page>

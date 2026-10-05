@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Support\Images;
 use App\Support\Links;
+use App\Support\ViewRecorder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +23,15 @@ class ProfileController extends Controller
             $moved = DB::table('handle_history')->where('handle', $handle)->where('released_at', '>', now())->value('user_id');
             abort_unless($moved, 404);
 
-            return redirect()->route('profile.show', User::findOrFail($moved)->handle, 301);
+            $target = User::findOrFail($moved);
+            abort_unless($target->profileVisibleTo($request->user()), 404);
+
+            return redirect()->route('profile.show', $target->handle, 301);
         }
         abort_unless($user->profileVisibleTo($request->user()), 404);
 
         $isOwner = $request->user()?->is($user) ?? false;
+        ViewRecorder::recordProfile($user, $request, $request->user());
         $cvs = $user->cvs()->with('tags')
             ->when(! $isOwner, fn ($q) => $q->where('visibility', 'public')->whereNull('hidden_at'))
             ->get();
@@ -41,7 +46,7 @@ class ProfileController extends Controller
 
     public function edit(Request $request): View
     {
-        return view('profile.edit', ['user' => $request->user()]);
+        return view('settings.profile', ['user' => $request->user()]);
     }
 
     public function update(Request $request): RedirectResponse
@@ -74,7 +79,7 @@ class ProfileController extends Controller
         $new = $data['handle'];
 
         if ($new === $user->handle) {
-            return redirect()->route('profile.edit');
+            return redirect()->route('settings.handle');
         }
         if (! $user->canChangeHandle()) {
             throw ValidationException::withMessages(['handle' => 'You can change your handle again on '.$user->nextHandleChange()->format('j F Y').'.'])->errorBag('handle');
@@ -94,13 +99,14 @@ class ProfileController extends Controller
             $user->forceFill(['handle' => $new, 'handle_changed_at' => now()])->save();
         });
 
-        return redirect()->route('profile.edit')->with('status', 'Your handle is now @'.$new.'. Links to your old handle redirect here for 30 days.');
+        return redirect()->route('settings.handle')->with('status', 'Your handle is now @'.$new.'. Links to your old handle redirect here for 30 days.');
     }
 
     public function updateAvatar(Request $request): RedirectResponse
     {
         $request->validateWithBag('avatar', [
-            'avatar' => ['required', 'file', 'max:'.config('vitafolio.limits.avatar_kb'), 'mimetypes:image/jpeg,image/png,image/gif,image/webp', 'dimensions:max_width=8000,max_height=8000'],
+            // 4000 pixels a side keeps the decoded image well inside the php memory limit
+            'avatar' => ['required', 'file', 'max:'.config('vitafolio.limits.avatar_kb'), 'mimetypes:image/jpeg,image/png,image/gif,image/webp', 'dimensions:max_width=4000,max_height=4000'],
             // the cropper sends all three or none; without them the centre square is used
             'crop_x' => ['nullable', 'required_with:crop_y,crop_size', 'numeric', 'between:0,1'],
             'crop_y' => ['nullable', 'required_with:crop_x,crop_size', 'numeric', 'between:0,1'],
@@ -119,13 +125,13 @@ class ProfileController extends Controller
             'avatar_version' => base_convert((string) now()->getTimestampMs(), 10, 36),
         ])->save();
 
-        return redirect()->route('profile.edit')->with('status', 'Profile photo updated.');
+        return redirect()->route('settings.photo')->with('status', 'Profile photo updated.');
     }
 
     public function deleteAvatar(Request $request): RedirectResponse
     {
         $request->user()->forceFill(['avatar' => null, 'avatar_type' => null, 'avatar_version' => null])->save();
 
-        return redirect()->route('profile.edit')->with('status', 'Profile photo removed.');
+        return redirect()->route('settings.photo')->with('status', 'Profile photo removed.');
     }
 }

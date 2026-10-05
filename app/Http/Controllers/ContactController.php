@@ -20,7 +20,7 @@ class ContactController extends Controller
             Mail::to(config('vitafolio.contact_email'))->send(new VisitorMessage($data, config('app.name').' enquiry'));
         }
 
-        return redirect()->to(route('about').'#contact')->with('status', 'Thanks, your message has been sent.');
+        return redirect()->route('contact.show')->with('status', 'Thanks, your message has been sent.');
     }
 
     /** relays a message to a cv owner without ever revealing their address */

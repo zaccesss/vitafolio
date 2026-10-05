@@ -145,7 +145,7 @@ class CvEditorController extends Controller
             $copy->save();
             $copy->tags()->sync($cv->tags()->pluck('tags.id'));
             foreach ($cv->projects as $project) {
-                $copy->projects()->create($project->only(['position', 'title', 'description', 'url', 'media_url', 'media_type', 'media_public_id', 'media_alt']));
+                $copy->projects()->create($project->only(['position', 'title', 'description', 'url', 'media_url', 'media_type', 'media_public_id', 'media_size', 'media_alt']));
             }
 
             return $copy;

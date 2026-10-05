@@ -17,6 +17,9 @@ return [
 
     'source_url' => env('SITE_SOURCE_URL'),
 
+    // a public status page for the site, linked from the footer when set
+    'status_url' => env('SITE_STATUS_URL'),
+
     'security_contact' => env('SITE_SECURITY_EMAIL', env('SITE_CONTACT_EMAIL')),
 
     'turnstile' => [
@@ -29,6 +32,10 @@ return [
 
     // shared secret for the nightly tidy-up call to /cron; the address returns 404 when it is empty
     'cron_token' => env('CRON_TOKEN'),
+
+    // where browsers report content security policy breaks, for example an error tracker's
+    // security endpoint; reporting stays off when it is empty
+    'csp_report_uri' => env('CSP_REPORT_URI'),
 
     // indexnow key (any 8 to 128 letters, digits or dashes); search engine pings stay off when it is empty
     'indexnow_key' => env('INDEXNOW_KEY'),

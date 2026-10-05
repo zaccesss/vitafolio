@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\ModerationController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CronController;
@@ -15,8 +16,10 @@ use App\Http\Controllers\OgImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\SocialAuthController;
+use App\Support\HelpTopics;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', DirectoryController::class)->name('home');
@@ -30,6 +33,8 @@ Route::view('/accessibility', 'pages.accessibility')->name('accessibility');
 Route::get('/manifest.webmanifest', [SiteController::class, 'manifest'])->name('manifest');
 Route::get('/robots.txt', [SiteController::class, 'robots'])->name('robots');
 Route::get('/.well-known/security.txt', [SiteController::class, 'securityTxt'])->name('security.txt');
+// browsers and password managers send people here after a breach alert
+Route::redirect('/.well-known/change-password', '/settings/security', 302);
 Route::get('/indexnow.txt', [SiteController::class, 'indexNowKey'])->name('indexnow.key');
 Route::get('/offline', [SiteController::class, 'offline'])->name('offline');
 
@@ -39,10 +44,19 @@ Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'
 
 Route::post('/cron', CronController::class)->middleware('throttle:6,1')->name('cron');
 
+Route::view('/contact', 'pages.contact')->name('contact.show');
+Route::view('/support', 'pages.support')->name('support');
+Route::view('/features', 'pages.features')->name('features');
+Route::view('/changelog', 'pages.changelog')->name('changelog');
+Route::view('/docs', 'pages.docs')->name('docs');
+Route::view('/help', 'help.index')->name('help');
+Route::get('/help/{topic}', fn (string $topic) => view('help.'.$topic))
+    ->whereIn('topic', array_keys(HelpTopics::ALL))->name('help.topic');
 Route::post('/contact', [ContactController::class, 'site'])->middleware('throttle:messages')->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/analytics', AnalyticsController::class)->name('analytics');
 
     Route::post('/cvs', [CvEditorController::class, 'store'])->name('cvs.store');
     Route::prefix('/cvs/{cv}')->name('cvs.')->group(function () {
@@ -64,18 +78,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/', [CvEditorController::class, 'destroy'])->name('destroy');
     });
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // settings: public profile, photo and handle, then sign-in and data; old addresses redirect here
+    Route::redirect('/settings', '/settings/profile');
+    Route::redirect('/profile', '/settings/profile');
+    Route::redirect('/account', '/settings/account');
+    Route::get('/settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/settings/account', [AccountController::class, 'edit'])->name('account');
+    foreach (SettingsController::PAGES as $page) {
+        Route::get('/settings/'.$page, [SettingsController::class, 'show'])->defaults('page', $page)->name('settings.'.$page);
+    }
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/handle', [ProfileController::class, 'updateHandle'])->middleware('throttle:6,1')->name('profile.handle');
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->middleware('throttle:uploads')->name('profile.avatar');
     Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
 
-    Route::get('/account', [AccountController::class, 'edit'])->name('account');
     Route::put('/account/password', [AccountController::class, 'setPassword'])->middleware('throttle:6,1')->name('account.password');
     Route::delete('/account/connected/{provider}', [SocialAuthController::class, 'disconnect'])->name('social.disconnect');
     Route::post('/account/connected/{provider}/photo', [SocialAuthController::class, 'usePhoto'])->middleware('throttle:uploads')->name('social.photo');
     Route::get('/account/passkeys', [AccountController::class, 'passkeys'])->middleware('password.confirm')->name('account.passkeys');
+    Route::get('/settings/sessions', [AccountController::class, 'sessions'])->name('settings.sessions');
     Route::post('/account/sessions', [AccountController::class, 'endOtherSessions'])->middleware('throttle:6,1')->name('account.sessions');
+    Route::delete('/account/sessions/{id}', [AccountController::class, 'endSession'])->middleware('password.confirm')->name('account.sessions.end');
     Route::get('/account/export.json', [AccountController::class, 'export'])->name('account.export');
     Route::delete('/account', [AccountController::class, 'destroy'])->middleware('password.confirm')->name('account.destroy');
 });

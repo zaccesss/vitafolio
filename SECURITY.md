@@ -40,6 +40,11 @@ Only the latest release on `main` and the live site receive fixes.
 
 Test only with accounts you own. Never access or keep data that belongs to someone else.
 
+## If a breach happens
+
+The steps for containing, recording and reporting a personal data breach are in the
+[incident response section](docs/DOCUMENTATION.md#incident-response) of the documentation.
+
 ## The shared policy
 
 > [!NOTE]

@@ -7,6 +7,7 @@
         <li>Animation is decoration only and switches off when your device asks for reduced motion. Videos never play on their own.</li>
         <li>Text can be zoomed to 400% without losing content. Layouts adapt to small screens.</li>
         <li>CV layouts include a plain option that is easy for screen readers and applicant tracking systems to read.</li>
+        <li>Signing in never needs a puzzle or a retyped code. Codes can be pasted, and passkeys or recovery codes work as alternatives to an authenticator app.</li>
     </ul>
 
     <h2>Known limitations</h2>
@@ -17,5 +18,5 @@
     </ul>
 
     <h2>Tell us about a problem</h2>
-    <p>If something does not work for you, @if (config('vitafolio.contact_email'))email <a href="mailto:{{ config('vitafolio.contact_email') }}">{{ config('vitafolio.contact_email') }}</a> or @endif use the <a href="{{ route('about') }}#contact">contact form</a>. Accessibility problems are treated as bugs and fixed as a priority.</p>
+    <p>If something does not work for you, @if (config('vitafolio.contact_email'))email <a href="mailto:{{ config('vitafolio.contact_email') }}">{{ config('vitafolio.contact_email') }}</a> or @endif use the <a href="{{ route('contact.show') }}">contact form</a>. Accessibility problems are treated as bugs and fixed as a priority.</p>
 </x-prose-page>

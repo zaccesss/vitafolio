@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Cv;
 use App\Models\Report;
 use App\Models\User;
+use App\Support\Audit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ModerationController extends Controller
@@ -31,6 +33,7 @@ class ModerationController extends Controller
     public function hide(Cv $cv): RedirectResponse
     {
         $cv->forceFill(['hidden_at' => now()])->save();
+        Audit::log('moderation.hide', ['admin' => auth()->id(), 'cv' => $cv->id]);
         $cv->reports()->whereNull('resolved_at')->update(['resolved_at' => now()]);
 
         return back()->with('status', '"'.$cv->title.'" is now hidden from everyone except its owner.');
@@ -39,6 +42,7 @@ class ModerationController extends Controller
     public function restore(Cv $cv): RedirectResponse
     {
         $cv->forceFill(['hidden_at' => null])->save();
+        Audit::log('moderation.restore', ['admin' => auth()->id(), 'cv' => $cv->id]);
 
         return back()->with('status', '"'.$cv->title.'" is visible again.');
     }
@@ -46,6 +50,7 @@ class ModerationController extends Controller
     public function dismiss(Report $report): RedirectResponse
     {
         $report->forceFill(['resolved_at' => now()])->save();
+        Audit::log('moderation.dismiss', ['admin' => auth()->id(), 'report' => $report->id]);
 
         return back()->with('status', 'Report dismissed.');
     }
@@ -54,6 +59,7 @@ class ModerationController extends Controller
     public function removeAvatar(User $user): RedirectResponse
     {
         $user->forceFill(['avatar' => null, 'avatar_type' => null, 'avatar_version' => null])->save();
+        Audit::log('moderation.remove_photo', ['admin' => auth()->id(), 'user' => $user->id]);
 
         return back()->with('status', $user->name.'\'s photo has been removed.');
     }
@@ -61,9 +67,12 @@ class ModerationController extends Controller
     public function suspend(Request $request, User $user): RedirectResponse
     {
         abort_if($user->is($request->user()) || $user->isAdmin(), 403, 'Admins cannot be suspended here.');
-        $user->forceFill(['suspended_at' => $user->isSuspended() ? null : now()])->save();
+        $suspending = ! $user->isSuspended();
+        // a new remember token means a "keep me signed in" cookie cannot carry a suspended account on
+        $user->forceFill(['suspended_at' => $suspending ? now() : null, 'remember_token' => Str::random(60)])->save();
         // sessions live in the database, so a suspension also signs the account out everywhere
         DB::table('sessions')->where('user_id', $user->id)->delete();
+        Audit::log($suspending ? 'moderation.suspend' : 'moderation.reinstate', ['admin' => auth()->id(), 'user' => $user->id]);
 
         return back()->with('status', $user->isSuspended() ? $user->name.' has been suspended.' : $user->name.' has been reinstated.');
     }

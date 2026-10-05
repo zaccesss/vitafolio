@@ -13,6 +13,7 @@ A CV site is only useful if everyone can build one and everyone can read one. Vi
 | Colour vision differences | Colour is never the only signal: badges, states and links all carry text too. Every CV accent colour is checked for contrast |
 | Motion sensitivity | Animation is decoration only and stops when the device asks for reduced motion. Videos never play on their own |
 | Reading CVs | The Plain CV theme is built for screen readers and applicant tracking systems. Every project image or video has a description |
+| Signing in | No puzzles and no retyping: codes can be pasted, every field allows paste and passkeys or recovery codes stand in for an authenticator app |
 
 ## Known gaps
 
