@@ -1,0 +1,18 @@
+# tls ends at the host's proxy, so this serves plain http on the port the host gives it
+{
+	frankenphp
+	auto_https off
+	admin off
+}
+
+:{$PORT} {
+	root * /app/public
+	encode zstd br gzip
+
+	# built assets carry a content hash in their names, so they can be cached for a year
+	@build path /build/*
+	header @build Cache-Control "public, max-age=31536000, immutable"
+	header -Server
+
+	php_server
+}

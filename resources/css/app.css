@@ -1,0 +1,268 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/source-serif-4';
+@import '@fontsource-variable/jetbrains-mono';
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@source '../views';
+
+/* the theme script sets data-theme before first paint, so dark: styles never flash */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * semantic colours point at variables that change with the theme, so a class such as
+ * bg-surface or text-muted is right in light and dark without extra dark: variants.
+ * every text pair meets wcag aa: 4.5:1 for text, 3:1 for borders and large text.
+ */
+@theme {
+    --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-serif: 'Source Serif 4 Variable', Georgia, 'Times New Roman', serif;
+    --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+    --color-page: var(--c-page);
+    --color-surface: var(--c-surface);
+    --color-raised: var(--c-raised);
+    --color-ink: var(--c-ink);
+    --color-muted: var(--c-muted);
+    --color-line: var(--c-line);
+    --color-line-strong: var(--c-line-strong);
+    --color-brand: var(--c-brand);
+    --color-brand-strong: var(--c-brand-strong);
+    --color-on-brand: var(--c-on-brand);
+    --color-link: var(--c-link);
+    --color-ok: var(--c-ok);
+    --color-ok-bg: var(--c-ok-bg);
+    --color-bad: var(--c-bad);
+    --color-bad-bg: var(--c-bad-bg);
+    --color-info: var(--c-info);
+    --color-info-bg: var(--c-info-bg);
+    --color-header: var(--c-header);
+    --color-brass: var(--c-brass);
+    --color-brass-text: var(--c-brass-text);
+    --color-accent: var(--accent);
+    --color-accent-soft: var(--accent-soft);
+    /* stays deep in both themes, so white text on it always passes contrast */
+    --color-accent-solid: var(--accent-solid);
+
+    --radius-card: 1.125rem;
+    --shadow-card: 0 1px 2px rgb(20 10 35 / 0.05), 0 8px 24px rgb(20 10 35 / 0.06);
+    --shadow-lift: 0 2px 6px rgb(20 10 35 / 0.08), 0 18px 44px rgb(20 10 35 / 0.13);
+}
+
+@layer base {
+    :root {
+        --c-page: #f7f6f3;
+        --c-surface: #ffffff;
+        --c-raised: #efede8;
+        --c-ink: #141414;
+        --c-muted: #55524c;
+        --c-line: #e4e1da;
+        --c-line-strong: #8a8375;
+        --c-brand: #14213d;
+        --c-brand-strong: #0b1428;
+        --c-on-brand: #ffffff;
+        --c-link: #2b4c8c;
+        --c-focus: #14213d;
+        --c-brass: #b08d57;
+        --c-brass-text: #7a5b2e;
+        --c-ok: #0f6b3a; --c-ok-bg: #e6f4ec;
+        --c-bad: #a3201a; --c-bad-bg: #fdecea;
+        --c-info: #1f4fb0; --c-info-bg: #eaf0fc;
+        --c-header: #14213d;
+        --accent: #14213d;
+        --accent-solid: #14213d;
+        --accent-soft: #efede8;
+        color-scheme: light;
+    }
+
+    [data-theme='dark'] {
+        --c-page: #0b1220;
+        --c-surface: #131c2e;
+        --c-raised: #1b2639;
+        --c-ink: #eceae4;
+        --c-muted: #b9b4aa;
+        --c-line: #26324a;
+        --c-line-strong: #6e7a92;
+        --c-brand: #a9bce0;
+        --c-brand-strong: #c7d4ee;
+        --c-on-brand: #0b1220;
+        --c-link: #a9bce0;
+        --c-focus: #e8c98f;
+        --c-brass: #d9b77e;
+        --c-brass-text: #d9b77e;
+        --c-ok: #8fe0b2; --c-ok-bg: #12301f;
+        --c-bad: #ffb4ab; --c-bad-bg: #3a1513;
+        --c-info: #b7c6ff; --c-info-bg: #19213f;
+        --c-header: #0e1729;
+        --accent: #a9bce0;
+        --accent-soft: #1b2639;
+        color-scheme: dark;
+    }
+
+    html { -webkit-text-size-adjust: 100%; scroll-padding-top: 5.5rem; }
+
+    body {
+        @apply bg-page font-sans text-ink antialiased;
+        font-size: 1.0625rem;
+        line-height: 1.65;
+        font-feature-settings: 'cv11', 'ss01';
+    }
+
+    h1, h2, h3, h4 { @apply font-semibold tracking-tight text-ink; text-wrap: balance; }
+    p { text-wrap: pretty; }
+
+    a { @apply text-link underline-offset-4; }
+    a:hover { text-decoration-thickness: 2px; }
+
+    /* one visible focus style everywhere: a solid ring with a gap, never colour alone */
+    :focus-visible {
+        outline: 3px solid var(--c-focus);
+        outline-offset: 3px;
+        border-radius: 6px;
+    }
+
+    [x-cloak] { display: none !important; }
+    ::selection { background: var(--c-brand); color: var(--c-on-brand); }
+}
+
+@layer components {
+    /* per-cv accent colours: a deep shade on light pages and a light tint on dark ones */
+    .accent-midnight { --accent-solid: #14213d; --accent: #14213d; --accent-soft: #e8ebf2; }
+    .accent-brass { --accent-solid: #7a5b2e; --accent: #7a5b2e; --accent-soft: #f4ede2; }
+    .accent-purple { --accent-solid: #5c2d82; --accent: #5c2d82; --accent-soft: #f0eaf8; }
+    .accent-blue { --accent-solid: #1d4ed8; --accent: #1d4ed8; --accent-soft: #e8eefc; }
+    .accent-teal { --accent-solid: #0f766e; --accent: #0f766e; --accent-soft: #e2f4f2; }
+    .accent-green { --accent-solid: #15803d; --accent: #15803d; --accent-soft: #e6f5ea; }
+    .accent-red { --accent-solid: #b91c1c; --accent: #b91c1c; --accent-soft: #fbe9e9; }
+    .accent-amber { --accent-solid: #92400e; --accent: #92400e; --accent-soft: #fbefe3; }
+    .accent-slate { --accent-solid: #334155; --accent: #334155; --accent-soft: #eceff3; }
+    [data-theme='dark'] .accent-midnight { --accent: #a9bce0; }
+    [data-theme='dark'] .accent-brass { --accent: #d9b77e; }
+    [data-theme='dark'] .accent-purple { --accent: #c9a8ef; }
+    [data-theme='dark'] .accent-blue { --accent: #9db8ff; }
+    [data-theme='dark'] .accent-teal { --accent: #6fe0d2; }
+    [data-theme='dark'] .accent-green { --accent: #8ee6a8; }
+    [data-theme='dark'] .accent-red { --accent: #ffaaa5; }
+    [data-theme='dark'] .accent-amber { --accent: #ffcf8a; }
+    [data-theme='dark'] .accent-slate { --accent: #cbd5e1; }
+    [data-theme='dark'] [class*='accent-'] { --accent-soft: var(--c-raised); }
+
+    .font-cv-sans { font-family: var(--font-sans); }
+    .font-cv-serif { font-family: var(--font-serif); }
+    .font-cv-mono { font-family: var(--font-mono); font-size: 0.94em; }
+
+    .container-page { @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8; }
+
+    .card { @apply rounded-card border border-line bg-surface p-6; box-shadow: var(--shadow-card); }
+
+    .btn {
+        @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-transparent px-5 py-2 text-base leading-tight font-semibold no-underline select-none;
+    }
+    .btn-primary { @apply bg-brand text-on-brand; }
+    .btn-primary:hover { @apply bg-brand-strong; }
+    .btn-secondary { @apply border-line-strong bg-surface text-ink; }
+    .btn-secondary:hover { @apply bg-raised; }
+    .btn-ghost { @apply text-ink; }
+    .btn-ghost:hover { @apply bg-raised; }
+    .btn-danger { @apply bg-bad text-surface; }
+    .btn-on-dark { @apply bg-white text-[#14213d]; }
+    .btn-on-dark:hover { @apply bg-[#efede8]; }
+    .btn-sm { @apply min-h-9 rounded-lg px-3.5 py-1 text-sm; }
+    .btn:disabled { @apply cursor-not-allowed opacity-60; }
+
+    .field-label { @apply mb-1 block font-semibold text-ink; }
+    .field-hint { @apply mb-2 text-sm text-muted; }
+    .field-error { @apply mt-1.5 text-sm font-semibold text-bad; }
+
+    .input {
+        @apply block w-full rounded-xl border-2 border-line-strong bg-surface px-3.5 py-2.5 text-base text-ink placeholder:text-muted;
+        min-height: 2.9rem;
+    }
+    .input:focus { @apply border-brand ring-0; }
+    .input[aria-invalid='true'] { @apply border-bad; border-width: 3px; }
+    textarea.input { min-height: 8rem; resize: vertical; }
+    select.input { @apply pr-10; }
+
+    /* "or" between two ways of doing the same thing, with a rule either side */
+    .divider { @apply flex items-center gap-3; }
+    .divider::before, .divider::after { content: ''; @apply h-px flex-1 bg-line; }
+
+    /* a plain progress bar; the label above it always carries the actual numbers */
+    .storage-meter { @apply h-2.5 w-full overflow-hidden rounded-full; appearance: none; background: var(--c-raised); border: 1px solid var(--c-line-strong); }
+    .storage-meter::-webkit-progress-bar { background: var(--c-raised); }
+    .storage-meter::-webkit-progress-value { background: var(--c-brand); }
+    .storage-meter::-moz-progress-bar { background: var(--c-brand); }
+    .check { @apply size-5 rounded border-2 border-line-strong text-brand; }
+    .check:focus { @apply ring-0; }
+    .radio { @apply size-5 border-2 border-line-strong text-brand; }
+    .radio:focus { @apply ring-0; }
+
+    .tag { @apply inline-flex items-center rounded-full border border-line-strong bg-surface px-3 py-0.5 text-sm text-ink no-underline; }
+    a.tag:hover { @apply bg-raised; }
+    .tag-active { @apply border-brand bg-brand text-on-brand; }
+
+    .badge { @apply inline-flex items-center gap-1 rounded-full border border-line bg-raised px-2.5 py-0.5 text-xs font-semibold text-ink; }
+
+    .alert { @apply rounded-xl border-l-4 px-4 py-3; border-left-color: currentColor; }
+    .alert-success { @apply bg-ok-bg text-ok; }
+    .alert-error { @apply bg-bad-bg text-bad; }
+    .alert-info { @apply bg-info-bg text-info; }
+
+    .skip-link { @apply fixed left-4 z-[100] rounded-xl bg-brand-strong px-4 py-3 font-semibold text-white no-underline; top: -5rem; }
+    .skip-link:focus { top: 1rem; }
+
+    .nav-link { @apply rounded-lg px-3 py-2 text-[0.97rem] text-white no-underline; }
+    .nav-link:hover { background: rgb(255 255 255 / 0.12); }
+    .nav-link[aria-current='page'] { @apply font-semibold underline underline-offset-8; background: rgb(255 255 255 / 0.16); }
+    .site-header :focus-visible { outline-color: #fff; }
+
+    .tab-link { @apply -mb-0.5 border-b-[3px] border-transparent px-4 py-3 font-semibold whitespace-nowrap text-muted no-underline; }
+    .tab-link:hover { @apply text-ink; }
+    .tab-link[aria-current='page'] { @apply border-brand text-ink; }
+
+    .prose-cv { @apply max-w-none whitespace-pre-line text-ink; }
+
+    /* the hero illustration: stacked cv cards drawn with plain markup */
+    .hero-stack { @apply relative mx-auto h-80 w-full max-w-sm; }
+    .hero-sheet { @apply absolute inset-x-6 rounded-2xl border border-line bg-surface p-5; box-shadow: var(--shadow-lift); }
+    .hero-line { @apply block h-2 rounded-full bg-raised; }
+}
+
+/* motion is decoration only; everything works with animation switched off */
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition { navigation: auto; }
+    ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 180ms; }
+
+    .btn { transition: background-color 150ms, border-color 150ms, color 150ms, transform 150ms; }
+    .btn:active { transform: translateY(1px); }
+
+    .card-hover { transition: box-shadow 180ms ease, transform 180ms ease; }
+    .card-hover:hover { box-shadow: var(--shadow-lift); transform: translateY(-2px); }
+
+    .hero-sheet { animation: float 7s ease-in-out infinite; }
+    .hero-sheet:nth-child(2) { animation-delay: -2.3s; }
+    .hero-sheet:nth-child(3) { animation-delay: -4.6s; }
+
+    .toast { animation: toast-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+    @supports (animation-timeline: view()) {
+        .reveal { animation: reveal-in linear both; animation-timeline: view(); animation-range: entry 0% cover 22%; }
+    }
+}
+
+@keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+@keyframes reveal-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+/* print shows the cv only, black on white */
+@media print {
+    .site-header, .site-footer, .no-print, .skip-link { display: none !important; }
+    body { background: #fff !important; color: #000 !important; font-size: 11pt; }
+    .cv-doc { box-shadow: none !important; border: 0 !important; }
+    .cv-band { background: none !important; }
+    .cv-band, .cv-band * { color: #000 !important; }
+    a { color: #000 !important; }
+    section { break-inside: avoid; }
+}

@@ -1,0 +1,32 @@
+% Vitafolio classic template. Compile with pdfLaTeX or XeLaTeX.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\setlist{leftmargin=1.2em,itemsep=1pt,topsep=2pt}
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+{\LARGE\bfseries {{NAME}}}\\[2pt]
+{\large {{HEADLINE}}}\\[4pt]
+{\small {{CONTACT}}}
+
+\section{Profile}
+{{SUMMARY}}
+
+\section{Experience}
+{{EXPERIENCE}}
+
+\section{Projects}
+{{PROJECTS}}
+
+\section{Education}
+{{EDUCATION}}
+
+\section{Skills}
+{{SKILLS}}
+\end{document}

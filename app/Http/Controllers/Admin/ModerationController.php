@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Cv;
+use App\Models\Report;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
+
+class ModerationController extends Controller
+{
+    public function index(Request $request): View
+    {
+        return view('admin.index', [
+            'reports' => Report::with(['cv.user'])->whereNull('resolved_at')->latest()->paginate(20),
+            'stats' => [
+                'Accounts' => User::count(),
+                'CVs' => Cv::count(),
+                'Public CVs' => Cv::listed()->count(),
+                'Open reports' => Report::whereNull('resolved_at')->count(),
+                'Suspended accounts' => User::whereNotNull('suspended_at')->count(),
+            ],
+            'hidden' => Cv::with('user')->whereNotNull('hidden_at')->latest('hidden_at')->limit(20)->get(),
+        ]);
+    }
+
+    public function hide(Cv $cv): RedirectResponse
+    {
+        $cv->forceFill(['hidden_at' => now()])->save();
+        $cv->reports()->whereNull('resolved_at')->update(['resolved_at' => now()]);
+
+        return back()->with('status', '"'.$cv->title.'" is now hidden from everyone except its owner.');
+    }
+
+    public function restore(Cv $cv): RedirectResponse
+    {
+        $cv->forceFill(['hidden_at' => null])->save();
+
+        return back()->with('status', '"'.$cv->title.'" is visible again.');
+    }
+
+    public function dismiss(Report $report): RedirectResponse
+    {
+        $report->forceFill(['resolved_at' => now()])->save();
+
+        return back()->with('status', 'Report dismissed.');
+    }
+
+    /** removes a photo that breaks the terms without touching anything else on the account */
+    public function removeAvatar(User $user): RedirectResponse
+    {
+        $user->forceFill(['avatar' => null, 'avatar_type' => null, 'avatar_version' => null])->save();
+
+        return back()->with('status', $user->name.'\'s photo has been removed.');
+    }
+
+    public function suspend(Request $request, User $user): RedirectResponse
+    {
+        abort_if($user->is($request->user()) || $user->isAdmin(), 403, 'Admins cannot be suspended here.');
+        $user->forceFill(['suspended_at' => $user->isSuspended() ? null : now()])->save();
+        // sessions live in the database, so a suspension also signs the account out everywhere
+        DB::table('sessions')->where('user_id', $user->id)->delete();
+
+        return back()->with('status', $user->isSuspended() ? $user->name.' has been suspended.' : $user->name.' has been reinstated.');
+    }
+}

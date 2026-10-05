@@ -1,0 +1,30 @@
+name: Nightly tidy-up
+
+# the free hosting plan runs no scheduled jobs, so this calls the site's /cron address once a night.
+# it needs the CRON_TOKEN secret and the SITE_URL variable; without them it skips quietly.
+
+permissions: {}
+
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  tidy:
+    name: Call the tidy-up
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call /cron
+        env:
+          CRON_TOKEN: ${{ secrets.CRON_TOKEN }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          if [ -z "$CRON_TOKEN" ] || [ -z "$SITE_URL" ]; then
+            echo "CRON_TOKEN or SITE_URL is not set, so there is nothing to call."
+            exit 0
+          fi
+          # a sleeping free instance can take a minute to wake, so the call retries
+          curl --fail --silent --show-error --retry 4 --retry-delay 20 --retry-all-errors --max-time 90 \
+            -X POST -H "Authorization: Bearer $CRON_TOKEN" "${SITE_URL%/}/cron"
