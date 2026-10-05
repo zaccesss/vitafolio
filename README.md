@@ -25,34 +25,29 @@ browser.
 
 ## Stack
 
-### Built with
+### Application
 
-<table>
-  <tr>
-    <td align="center" width="96"><img src="docs/assets/stack/laravel.svg" width="56" height="56" alt=""><br><sub><b>Laravel</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/php.svg" width="56" height="56" alt=""><br><sub><b>PHP 8.4</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/vuedotjs.svg" width="56" height="56" alt=""><br><sub><b>Vue</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/alpinedotjs.svg" width="56" height="56" alt=""><br><sub><b>Alpine.js</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/tailwindcss.svg" width="56" height="56" alt=""><br><sub><b>Tailwind CSS</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/vite.svg" width="56" height="56" alt=""><br><sub><b>Vite</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/mysql.svg" width="56" height="56" alt=""><br><sub><b>MySQL</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/latex.svg" width="56" height="56" alt=""><br><sub><b>LaTeX</b></sub></td>
-  </tr>
-</table>
+| <img src="docs/assets/stack/laravel.svg" alt="Laravel" width="60"> | <img src="docs/assets/stack/php.svg" alt="PHP 8.4" width="60"> | <img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="MySQL" width="60"> | <img src="docs/assets/stack/latex.svg" alt="LaTeX" width="60"> |
+| :---: | :---: | :---: | :---: |
+| **Laravel** | **PHP 8.4** | **MySQL** | **LaTeX** |
 
-### Runs on
+### Front end
 
-<table>
-  <tr>
-    <td align="center" width="96"><img src="docs/assets/stack/docker.svg" width="56" height="56" alt=""><br><sub><b>Docker</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/render.svg" width="56" height="56" alt=""><br><sub><b>Render</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/cloudflare.svg" width="56" height="56" alt=""><br><sub><b>Cloudflare</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/cloudinary.svg" width="56" height="56" alt=""><br><sub><b>Cloudinary</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/resend.svg" width="56" height="56" alt=""><br><sub><b>Resend</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/sentry.svg" width="56" height="56" alt=""><br><sub><b>Sentry</b></sub></td>
-    <td align="center" width="96"><img src="docs/assets/stack/githubactions.svg" width="56" height="56" alt=""><br><sub><b>GitHub Actions</b></sub></td>
-  </tr>
-</table>
+| <img src="docs/assets/stack/vuedotjs.svg" alt="Vue" width="60"> | <img src="docs/assets/stack/alpinedotjs.svg" alt="Alpine.js" width="60"> | <img src="docs/assets/stack/tailwindcss.svg" alt="Tailwind CSS" width="60"> | <img src="docs/assets/stack/vite.svg" alt="Vite" width="60"> |
+| :---: | :---: | :---: | :---: |
+| **Vue** | **Alpine.js** | **Tailwind CSS** | **Vite** |
+
+### Hosting and storage
+
+| <img src="https://techstack-generator.vercel.app/docker-icon.svg" alt="Docker" width="60"> | <img src="docs/assets/stack/render.svg" alt="Render" width="60"> | <img src="docs/assets/stack/cloudflare.svg" alt="Cloudflare" width="60"> | <img src="docs/assets/stack/cloudinary.svg" alt="Cloudinary" width="60"> |
+| :---: | :---: | :---: | :---: |
+| **Docker** | **Render** | **Cloudflare** | **Cloudinary** |
+
+### Email, monitoring and delivery
+
+| <img src="docs/assets/stack/resend.svg" alt="Resend" width="60"> | <img src="docs/assets/stack/sentry.svg" alt="Sentry" width="60"> | <img src="docs/assets/stack/githubactions.svg" alt="GitHub Actions" width="60"> |
+| :---: | :---: | :---: |
+| **Resend** | **Sentry** | **GitHub Actions** |
 
 Laravel Fortify handles accounts, two-factor authentication and passkeys. Laravel Socialite handles
 the sign-in providers. PDFs come from mPDF, images from GD and the server is FrankenPHP on Alpine

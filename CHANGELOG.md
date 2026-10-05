@@ -9,6 +9,11 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 - A full-width header with an account menu showing your photo, name and handle, a four-column footer and a settings area with a page for each setting instead of two long forms.
 - Pages for features, contact, a help centre with nine guides and a search box, what is new and the documentation, all linked from the footer and the sitemap.
 - Complete terms of use and privacy policy, written for UK GDPR, with a contents list on each.
+- A confirmation dialog for destructive actions in place of the browser's own prompt. Escape cancels and focus returns to the button.
+- Breadcrumbs with structured data on help, legal and documentation pages. The home page describes the site and its search to search engines. The FAQ expands one question at a time and is marked up as an FAQ.
+- A reading progress line on long pages, a back-to-top button and copy buttons on code blocks.
+- A message button that stays in view on phones when reading someone's CV. A thank-you page after the contact form.
+- Links tagged with `?utm_source=` show by their tag in Analytics.
 - A thin progress bar at the top while the next page loads. Submit buttons disable themselves and say what they are doing, so a form cannot be sent twice.
 - Analytics: profile views, QR code scans, PDF downloads and file opens are counted alongside CV views. An Analytics page shows them for the last 7, 30 or 90 days with a line chart, views per CV, referring sites, a busiest day and a table for every chart.
 

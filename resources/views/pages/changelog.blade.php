@@ -5,7 +5,7 @@
 @endphp
 <x-layouts.app title="What is new" description="Every notable change to Vitafolio, newest first.">
     <div class="container-page py-12">
-        <article class="prose prose-lg max-w-3xl prose-headings:font-semibold prose-headings:text-ink prose-p:text-ink prose-li:text-ink prose-a:text-link prose-strong:text-ink dark:prose-invert">
+        <article data-reading class="prose prose-lg max-w-3xl prose-headings:font-semibold prose-headings:text-ink prose-p:text-ink prose-li:text-ink prose-a:text-link prose-strong:text-ink dark:prose-invert">
             {!! $html ?: '<h1>What is new</h1><p>Nothing to show yet.</p>' !!}
         </article>
     </div>

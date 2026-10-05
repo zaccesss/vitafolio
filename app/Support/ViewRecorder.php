@@ -88,6 +88,12 @@ class ViewRecorder
 
     private static function referrer(Request $request): ?string
     {
+        // a link the owner tagged themselves, such as ?utm_source=newsletter, is named by its tag
+        $tag = $request->query('utm_source');
+        if (is_string($tag) && preg_match('/^[A-Za-z0-9._-]{1,40}$/', $tag)) {
+            return 'tagged: '.strtolower($tag);
+        }
+
         $host = parse_url((string) $request->headers->get('referer'), PHP_URL_HOST) ?: null;
 
         return $host && $host !== $request->getHost() ? substr($host, 0, 100) : null;

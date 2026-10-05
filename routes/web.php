@@ -46,6 +46,7 @@ Route::post('/cron', CronController::class)->middleware('throttle:6,1')->name('c
 
 Route::view('/contact', 'pages.contact')->name('contact.show');
 Route::view('/support', 'pages.support')->name('support');
+Route::view('/contact/sent', 'pages.contact-sent')->name('contact.sent');
 Route::view('/features', 'pages.features')->name('features');
 Route::view('/changelog', 'pages.changelog')->name('changelog');
 Route::view('/docs', 'pages.docs')->name('docs');
