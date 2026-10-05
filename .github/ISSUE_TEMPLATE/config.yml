@@ -4,6 +4,9 @@ contact_links:
   - name: Security issue
     url: https://github.com/zaccesss/vitafolio/security/advisories/new
     about: Report privately, never in a public issue.
+  - name: Question or idea
+    url: https://github.com/zaccesss/vitafolio/discussions
+    about: Ask a question or share an idea in Discussions.
   - name: Help with an account on the live site
     url: mailto:support@isaacadjei.me
     about: Account questions by email, so personal details never go in a public issue.

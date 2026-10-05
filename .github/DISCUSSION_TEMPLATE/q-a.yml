@@ -1,0 +1,37 @@
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: Leave out personal details such as your email address or the contents of a private CV.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Signing in and account security
+        - Profile and handle
+        - Building a CV
+        - Uploaded files and the LaTeX editor
+        - Sharing, PDFs and the directory
+        - Running your own copy
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+  - type: input
+    id: setup
+    attributes:
+      label: Browser or setup
+      description: Your browser and device. For your own copy, the commit and how you run it.
+      placeholder: Firefox on Windows 11 / main at 1a2b3c4 in Docker
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you tried
+      description: Steps you already took, with any messages you saw.
