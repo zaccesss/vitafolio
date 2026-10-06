@@ -124,7 +124,9 @@ class LaunchPolishTest extends TestCase
     public function test_the_profile_saves_with_routes_cached(): void
     {
         $this->artisan('route:cache')->assertSuccessful();
+        // a fresh app starts with an empty in-memory database, so it is migrated again
         $this->refreshApplication();
+        $this->artisan('migrate');
         try {
             $user = User::factory()->create();
             $this->actingAs($user)->put(route('profile.update'), [
