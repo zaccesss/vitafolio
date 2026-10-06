@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Cv;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class PrivateDefaultsTest extends TestCase
@@ -13,10 +14,12 @@ class PrivateDefaultsTest extends TestCase
 
     public function test_a_new_account_starts_with_a_private_cv_and_an_unlisted_profile(): void
     {
+        // the breached-password check calls out over the network, so it answers "not found" here
+        Http::fake();
         $this->post(route('register'), [
             'name' => 'New Person', 'email' => 'new@example.test',
-            'password' => 'a-long-pass-123', 'password_confirmation' => 'a-long-pass-123',
-        ]);
+            'password' => 'a-long-pass-123', 'password_confirmation' => 'a-long-pass-123', 'terms' => '1',
+        ])->assertSessionHasNoErrors();
 
         $user = User::where('email', 'new@example.test')->firstOrFail();
         $this->assertSame('unlisted', $user->profile_visibility);
