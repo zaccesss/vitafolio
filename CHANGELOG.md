@@ -6,6 +6,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Added
 
+- A cover letter alongside each CV. Write it on the editor's new Cover letter tab, with an optional line saying who it is for. It opens from the CV's own address at `/letter` in the CV's theme. It also downloads as a PDF or a Word document. It follows exactly the same visibility as its CV. A CV without a letter shows no trace of one.
 - Download a CV as a Word document, beside the PDF on the CV page and in the editor's Export section. It uses Word's own title, heading and list styles, so it stays editable and reads well in screen readers and applicant tracking systems. It follows the same visibility rules as the PDF.
 - Browse CVs finds people as well as CVs. A search by name or @handle shows matching public profiles in a People row above the CV results, including people who have not published a CV yet. Unlisted and private profiles never appear.
 - Three more LaTeX starter templates: Sidebar, a two-column layout with contact and skills beside the main story. Elegant, a centred serif page with small capitals. Minimal, a clean sans-serif page with plenty of white space. All seven templates compile with pdfLaTeX, XeLaTeX and LuaLaTeX on the core download.

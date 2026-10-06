@@ -66,8 +66,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/cvs', [CvEditorController::class, 'store'])->name('cvs.store');
     Route::prefix('/cvs/{cv}')->name('cvs.')->group(function () {
         Route::get('/edit/{tab?}', [CvEditorController::class, 'edit'])
-            ->whereIn('tab', ['details', 'projects', 'file', 'settings', 'import'])->name('edit');
+            ->whereIn('tab', ['details', 'letter', 'projects', 'file', 'settings', 'import'])->name('edit');
         Route::put('/details', [CvEditorController::class, 'updateDetails'])->name('details');
+        Route::put('/letter', [CvEditorController::class, 'updateLetter'])->name('letter');
         Route::put('/settings', [CvEditorController::class, 'updateSettings'])->name('settings');
         Route::put('/publish', [CvEditorController::class, 'publish'])->name('publish');
         Route::put('/order', [CvEditorController::class, 'updateOrder'])->name('order');
@@ -128,6 +129,10 @@ Route::get('/cv/{cv}/qr.svg', [CvController::class, 'qr'])->name('cv.qr');
 Route::post('/cv/{cv}/report', [ReportController::class, 'store'])->middleware('throttle:reports')->name('cv.report');
 Route::get('/cv/{cv}/pdf', [CvController::class, 'pdf'])->middleware('throttle:pdf')->name('cv.pdf');
 Route::get('/cv/{cv}/word', [CvController::class, 'word'])->middleware('throttle:pdf')->name('cv.word');
+// the cover letter shares its cv's address and visibility; a cv without one answers 404 here
+Route::get('/cv/{cv}/letter', [CvController::class, 'letter'])->name('cv.letter');
+Route::get('/cv/{cv}/letter/pdf', [CvController::class, 'letterPdf'])->middleware('throttle:pdf')->name('cv.letter.pdf');
+Route::get('/cv/{cv}/letter/word', [CvController::class, 'letterWord'])->middleware('throttle:pdf')->name('cv.letter.word');
 Route::get('/cv/{cv}/file', [CvDocumentController::class, 'show'])->middleware('throttle:pdf')->name('cv.file');
 Route::post('/cv/{cv}/message', [ContactController::class, 'cv'])->middleware('throttle:messages')->name('cv.message');
 Route::get('/avatar/{user}', AvatarController::class)->name('avatar');

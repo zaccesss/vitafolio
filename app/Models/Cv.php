@@ -22,6 +22,7 @@ class Cv extends Model
     protected $fillable = [
         'title', 'slug', 'headline', 'key_language', 'profile', 'education', 'experience',
         'visibility', 'show_email', 'theme', 'accent', 'font', 'latex_source', 'section_order',
+        'letter_to', 'cover_letter',
     ];
 
     protected function casts(): array
@@ -132,6 +133,12 @@ class Cv extends Model
         }
 
         return $this->visibility !== 'private' && $this->hidden_at === null && ! $this->user->isSuspended();
+    }
+
+    /** an empty letter means the cv has none, so its page and downloads answer 404 */
+    public function hasCoverLetter(): bool
+    {
+        return filled($this->cover_letter);
     }
 
     /** a cv can override the profile headline, for example to target a particular role */

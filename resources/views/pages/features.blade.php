@@ -1,6 +1,6 @@
 @php
     $features = [
-        ['Every version of your CV', 'Keep up to ten named CVs, one for each kind of role. Duplicate one to start the next version in seconds.'],
+        ['Every version of your CV', 'Keep up to ten named CVs, one for each kind of role, each with an optional cover letter. Duplicate one to start the next version in seconds.'],
         ['You choose who sees each one', 'Make each CV public, unlisted or private. Public CVs appear in the directory; unlisted ones open only for people with the link.'],
         ['Bring the CV you already have', 'Upload a PDF or Word file, import JSON Resume or write it in LaTeX and compile it in your browser.'],
         ['Show your work', 'Add projects with links, images and short videos, each described for people who cannot see them.'],
