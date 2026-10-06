@@ -16,7 +16,7 @@
         <li><strong>Fonts:</strong> Inter, Source Serif 4 and JetBrains Mono, each under the SIL Open Font License 1.1.</li>
         <li><strong>LaTeX in the browser:</strong> BusyTeX and the TeX Live packages it bundles, each under its own free licence. Documents you compile are yours.</li>
         <li><strong>Libraries:</strong> Laravel, Vue, Alpine.js, Tailwind CSS and CodeMirror under the MIT Licence. PDFs are generated with Typst under the Apache License 2.0, with mPDF under the GNU GPL version 2 as a fallback. The DejaVu fonts in generated PDFs are under the Bitstream Vera and DejaVu licences.</li>
-        <li><strong>Sign-in logos:</strong> the Google, GitHub, Microsoft and LinkedIn names and logos belong to their owners and appear only on their sign-in buttons. Their use does not mean any of them endorse {{ $site }}.</li>
+        <li><strong>Sign-in logos:</strong> the Google, GitHub and Microsoft names and logos belong to their owners and appear only on their sign-in buttons. Their use does not mean any of them endorse {{ $site }}.</li>
     </ul>
 
     <h2 id="report">Reporting a copyright problem</h2>

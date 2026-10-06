@@ -19,7 +19,7 @@ use Laravel\Socialite\AbstractUser as ProviderUser;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\AbstractProvider;
 
-/** sign in, sign up and account linking through google, github, microsoft and linkedin */
+/** sign in, sign up and account linking through google, github and microsoft */
 class SocialAuthController extends Controller
 {
     /** providers whose keys are set, for the buttons on the sign-in pages */
@@ -165,7 +165,7 @@ class SocialAuthController extends Controller
     }
 
     /**
-     * google and linkedin say outright whether the address is verified. github only hands over an
+     * google says outright whether the address is verified. github only hands over an
      * address it has verified. microsoft gives no such promise, so it is never trusted
      */
     private function emailVerified(string $provider, ProviderUser $remote): bool
@@ -176,7 +176,7 @@ class SocialAuthController extends Controller
         $raw = $remote->getRaw();
 
         return match ($provider) {
-            'google', 'linkedin' => filter_var($raw['email_verified'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            'google' => filter_var($raw['email_verified'] ?? false, FILTER_VALIDATE_BOOLEAN),
             'github' => true,
             default => false,
         };
