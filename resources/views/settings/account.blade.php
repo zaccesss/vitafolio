@@ -8,7 +8,7 @@
             <x-field name="email" label="Email address" type="email" :value="$user->email" required autocomplete="email" maxlength="254" error-bag="updateProfileInformation"
                      hint="If you change it, you will need to confirm the new address before your CVs show in the directory again." />
             @if ($user->has_password)
-                <x-password-field name="current_password" label="Your password" error-bag="updateProfileInformation" hint="Only needed when changing your email address." />
+                <x-password-field name="current_password" label="Your password" :required="false" error-bag="updateProfileInformation" hint="Only needed when changing your email address." />
             @endif
             <div><button type="submit" class="btn btn-primary">Save details</button></div>
         </form>
