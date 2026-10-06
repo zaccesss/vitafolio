@@ -3,7 +3,7 @@
     $email = config('vitafolio.contact_email');
     $sections = ['who' => 'Who is responsible', 'what' => 'What we collect', 'why' => 'Why we use it and our legal bases', 'visitors' => 'People who visit a CV', 'sharing' => 'Who we share it with', 'transfers' => 'Transfers outside the UK', 'keep' => 'How long we keep it', 'rights' => 'Your rights', 'security' => 'How we protect it', 'children' => 'Children', 'changes' => 'Changes to this policy', 'contact' => 'Contact and complaints'];
 @endphp
-<x-prose-page title="Privacy policy" intro="What {{ config('app.name') }} collects, why, who sees it and the rights you have over it." updated="5 October 2026">
+<x-prose-page title="Privacy policy" intro="What {{ config('app.name') }} collects, why, who sees it and the rights you have over it." updated="6 October 2026">
     <nav aria-labelledby="privacy-contents" class="not-prose card p-5">
         <h2 id="privacy-contents" class="text-lg">Contents</h2>
         <ol class="mt-2 grid gap-1 text-sm sm:grid-cols-2">
@@ -68,7 +68,7 @@
             </thead>
             <tbody>
                 <tr class="border-b border-line"><td class="py-2 pr-4">Render</td><td class="py-2">Runs the website, in Frankfurt, Germany</td></tr>
-                <tr class="border-b border-line"><td class="py-2 pr-4">Aiven</td><td class="py-2">Hosts the database, in Frankfurt, Germany</td></tr>
+                <tr class="border-b border-line"><td class="py-2 pr-4">TiDB Cloud (PingCAP)</td><td class="py-2">Hosts the database on AWS in Frankfurt, Germany</td></tr>
                 <tr class="border-b border-line"><td class="py-2 pr-4">Cloudinary</td><td class="py-2">Stores CV files, project images and videos</td></tr>
                 <tr class="border-b border-line"><td class="py-2 pr-4">Resend</td><td class="py-2">Delivers account emails and messages from visitors</td></tr>
                 <tr class="border-b border-line"><td class="py-2 pr-4">Cloudflare</td><td class="py-2">Routes traffic to the site, protects forms from spam and counts visits without cookies</td></tr>

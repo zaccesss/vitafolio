@@ -64,6 +64,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- The site went down on 6 October when the free database plan powered the database off for inactivity. The database now runs on TiDB Cloud Starter in Frankfurt, which stays on, with every table and row copied across and checked. The privacy policy names the new host.
 - Saving your public profile and deleting your account work on the live site. The redirects from the old /profile and /account addresses answered every kind of request. Once routes were cached in production they caught those forms first, so nothing was saved. The redirects now answer page visits only.
 - An uploaded or LaTeX-compiled PDF opens in Chrome instead of showing a blocked page. The file carried the site-wide security policy as well as its own. That policy forbids the browser's PDF viewer. A PDF still cannot load or run anything; Word files keep their sandbox and download.
 - The footer's Legal column listed Copyright twice.
