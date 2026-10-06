@@ -143,6 +143,8 @@ class CoverLetterTest extends TestCase
         $this->artisan('route:cache')->assertSuccessful();
         // a fresh app starts with an empty in-memory database, so it is migrated again
         $this->refreshApplication();
+        // the fresh app also forgets the base test's switches, so pages render without a build again
+        $this->withoutVite();
         $this->artisan('migrate');
         try {
             $cv = Cv::factory()->create();
