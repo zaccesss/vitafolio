@@ -7,7 +7,7 @@
     <p>The LaTeX editor compiles your CV in the browser with pdfLaTeX, XeLaTeX or LuaLaTeX. Start from one of four templates (Classic, Compact, Modern or Academic), which fill in your details for you.</p>
     <ul>
         <li><code>Ctrl+Enter</code> compiles and <code>Ctrl+S</code> saves. On a Mac, use <code>Cmd</code> instead of <code>Ctrl</code>.</li>
-        <li>The first compile downloads the LaTeX engine with the core packages, about 120 MB. After that your browser keeps it, so later compiles start straight away. Every starter template uses only the core packages. If your own document uses a package outside them, the collection holding it downloads once, the first time it is needed.</li>
+        <li>The first compile downloads the LaTeX engine with the core packages, about 120 MB. After that your browser keeps it, so later compiles start straight away. Every starter template uses only the core packages. If you write your own, add <code>\usepackage[T1]{fontenc}</code> and <code>\usepackage{lmodern}</code> near the top: they keep bullet points and accented letters within the core download. If your own document uses a package outside them, the collection holding it downloads once, the first time it is needed.</li>
         <li>Nothing leaves your device until you save. Saving stores your source and attaches the latest compiled PDF to the CV.</li>
         <li>If the code editor is awkward with a screen reader, tick <strong>Plain text box</strong> to switch to a standard text area.</li>
     </ul>

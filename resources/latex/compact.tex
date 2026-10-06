@@ -1,6 +1,10 @@
 % Vitafolio compact template: small margins and tight spacing to fit one page.
 \documentclass[10pt,a4paper]{article}
 \usepackage[margin=1.3cm]{geometry}
+% latin modern ships with the core packages and covers list bullets and other symbols;
+% the default fonts would need a much larger download for those
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage[hidelinks]{hyperref}
 \setlength{\parindent}{0pt}
 \pagestyle{empty}

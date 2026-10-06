@@ -55,6 +55,9 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- The footer's Legal column listed Copyright twice.
+- LaTeX CVs compile in the editor. A bullet list made pdfLaTeX stop with no output, because its default bullet needs a font outside the core packages. The starter templates now load Latin Modern, which is in the core set and covers bullets and accented letters. All four templates compile with pdfLaTeX, XeLaTeX and LuaLaTeX.
+- Flowcharts on the documentation and What is new pages are drawn as diagrams, with the source available as text underneath, instead of showing as code.
 - The README explains the name and its flowchart shows every service now in use: Turnstile, Aiven, the LaTeX engine host and the uptime monitor.
 - The LaTeX editor starts its engine. Browsers refuse to run a background worker from another site, so the engine's worker now starts from a local copy that loads the rest of the engine from its host. The first download drops from about 680 MB to about 120 MB: the starter templates use only core packages. Larger package collections download only when a document needs them. Shortcut labels show Cmd on Macs running Chrome.
 - Compiling LaTeX works on the live site. The engine is published from its own repository, [vitafolio-latex](https://github.com/zaccesss/vitafolio-latex). The editor now loads the TeX Live packages the starter templates need. It shows download progress and says how large the first download is.

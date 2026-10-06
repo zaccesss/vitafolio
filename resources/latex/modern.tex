@@ -1,6 +1,10 @@
 % Vitafolio modern template: an accent rule under each heading.
 \documentclass[11pt,a4paper]{article}
 \usepackage[margin=1.8cm]{geometry}
+% latin modern ships with the core packages and covers list bullets and other symbols;
+% the default fonts would need a much larger download for those
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage[hidelinks]{hyperref}
 \usepackage{color}
 % the core color package takes rgb values: #14213D and #7A5B2E
