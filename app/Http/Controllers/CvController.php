@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cv;
 use App\Models\User;
-use App\Support\Images;
 use App\Support\Links;
+use App\Support\PdfCv;
 use App\Support\ViewRecorder;
 use App\Support\WordCv;
 use chillerlan\QRCode\Common\EccLevel;
@@ -14,9 +14,7 @@ use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Mpdf\Mpdf;
 
 class CvController extends Controller
 {
@@ -83,24 +81,7 @@ class CvController extends Controller
     /** the cv and its letter share one pdf layout, so both carry the same theme, accent and font */
     private function pdfResponse(Cv $cv, bool $letter): Response
     {
-        // the photo is embedded as data so mpdf never fetches anything over the network
-        $picture = null;
-        if ($cv->user->hasAvatar()) {
-            $round = Images::circlePng((string) DB::table('users')->where('id', $cv->user_id)->value('avatar'), 300);
-            $picture = $round ? 'data:image/png;base64,'.base64_encode($round) : null;
-        }
-
-        $html = view('cv.pdf', ['cv' => $cv, 'links' => Links::parse($cv->user->links), 'picture' => $picture, 'letter' => $letter])->render();
-
-        $mpdf = new Mpdf([
-            'tempDir' => storage_path('framework/cache/mpdf'),
-            'margin_top' => 14, 'margin_bottom' => 14, 'margin_left' => 16, 'margin_right' => 16,
-            'default_font' => 'dejavusans',
-        ]);
-        $mpdf->SetTitle($cv->user->name.($letter ? ' cover letter' : ' CV'));
-        $mpdf->WriteHTML($html);
-
-        return response($mpdf->OutputBinaryData(), 200, [
+        return response(PdfCv::build($cv, $letter), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="'.self::filename($cv, $letter ? 'Cover_letter' : 'CV', 'pdf').'"',
         ]);

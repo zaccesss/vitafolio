@@ -36,6 +36,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Changed
 
+- Generated CV and cover letter PDFs are tagged PDF/UA-1 files, so screen readers read them as well as the web page. Each one declares British English as its language and carries its own title. Headings become bookmarks. Paragraphs, bulleted lists, the links table and every link carry structure tags in reading order. The photo has alt text. The PDFs are now made by Typst, which refuses to write a file that breaks the standard. mPDF stays only as a fallback for a machine without Typst.
 - The privacy policy, help guides, features page and documentation list Google, GitHub and Microsoft as the sign-in options. LinkedIn sign-in is not offered, although the code still supports it.
 - New CVs start private and new profiles start unlisted, so nothing appears in Browse CVs until its owner publishes it. A Publish button on the dashboard makes a CV public in one step. Existing CVs and profiles keep their settings.
 - The project's contact address is now vitafolio@isaacadjei.me.

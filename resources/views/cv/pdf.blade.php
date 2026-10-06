@@ -1,6 +1,8 @@
 @php
-    // mpdf reads a small subset of css (no pre-line either, so line breaks become <br>) (tables, no flexbox or grid), so this layout is separate
-    // from the web page but follows the same theme, accent, font and section order
+    // the fallback layout, used only when the typst binary is missing. resources/pdf/cv.typ is the
+    // real one and the only one that writes tagged pdfs. mpdf reads a small subset of css (no
+    // pre-line either, so line breaks become <br>) (tables, no flexbox or grid), so this layout is
+    // separate from the web page but follows the same theme, accent, font and section order
     $user = $cv->user;
     // the cover letter reuses this layout, so the letter and the cv print as a matching pair
     $letter ??= false;
