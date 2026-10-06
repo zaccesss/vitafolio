@@ -3,8 +3,29 @@ import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue';
 
 // apple devices use Cmd where windows and linux use Ctrl; the editor's Mod- bindings already
 // follow that, so the labels do too
-const isApple = /Mac|iPhone|iPad|iPod/.test(navigator.userAgentData?.platform ?? navigator.platform ?? '');
+// chrome reports "macOS", safari "MacIntel", so the check ignores case
+const isApple = /mac|iphone|ipad|ipod/i.test(navigator.userAgentData?.platform || navigator.platform || '');
 const modKey = isApple ? 'Cmd' : 'Ctrl';
+// browsers only start a worker from the page's own site, and the engine lives on another one. So the
+// worker script is fetched, its relative imports are pointed at the engine site and it starts from a
+// local blob instead. Only the engine's own worker is swapped; the original constructor comes back after
+async function withSameOriginWorker(workerUrl, start) {
+    const base = workerUrl.slice(0, workerUrl.lastIndexOf('/') + 1);
+    const source = (await (await fetch(workerUrl)).text()).replace(/importScripts\('([\w.-]+\.js)'\)/g, (_, file) => `importScripts('${base}${file}')`);
+    const blobUrl = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
+    const NativeWorker = window.Worker;
+    window.Worker = class extends NativeWorker {
+        constructor(url, options) {
+            super(String(url) === workerUrl ? blobUrl : url, options);
+        }
+    };
+    try {
+        return await start();
+    } finally {
+        window.Worker = NativeWorker;
+    }
+}
+
 function onPageKey(event) {
     if (event.defaultPrevented || event.altKey || !(isApple ? event.metaKey : event.ctrlKey)) return;
     if (event.key === 'Enter') { event.preventDefault(); compile(); }
@@ -120,16 +141,18 @@ async function compile() {
     try {
         const mod = await import('texlyre-busytex');
         if (!runner) {
-            status.value = 'Downloading the LaTeX engine and its packages, about 680 MB. The first time takes a few minutes on a fast connection; after that your browser keeps them.';
+            status.value = 'Downloading the LaTeX engine, about 120 MB the first time. After that your browser keeps it.';
             const base = `${props.assetsUrl.replace(/\/$/, '')}/busytex`;
-            // the starter templates use packages from all three TeX Live collections, so all three load:
-            // geometry and hyperref are in basic, xcolor in recommended, enumitem and titlesec in extra
+            const collection = (c) => `${base}/texlive-${c}.js`;
+            // the core collection loads up front and covers every starter template. The larger
+            // collections are a catalogue: a document that uses one of their packages downloads it then
             runner = new mod.BusyTexRunner({
                 busytexBasePath: base,
-                preloadDataPackages: ['basic', 'recommended', 'extra'].map((c) => `${base}/texlive-${c}.js`),
-                onDownloadProgress: (p) => { status.value = `Downloading the LaTeX engine and its packages: ${Math.min(100, Math.round(p.percent))}%`; },
+                preloadDataPackages: [collection('basic')],
+                catalogDataPackages: ['basic', 'recommended', 'extra'].map(collection),
+                onDownloadProgress: (p) => { status.value = `Downloading the LaTeX engine: ${Math.min(100, Math.round(p.percent))}%`; },
             });
-            await runner.initialize(true);
+            await withSameOriginWorker(`${base}/busytex_worker.js`, () => runner.initialize(true));
         }
         status.value = 'Compiling…';
         const Engine = { pdflatex: mod.PdfLatex, xelatex: mod.XeLatex, lualatex: mod.LuaLatex }[engine.value];
