@@ -57,6 +57,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- Saving your public profile and deleting your account work on the live site. The redirects from the old /profile and /account addresses answered every kind of request. Once routes were cached in production they caught those forms first, so nothing was saved. The redirects now answer page visits only.
 - An uploaded or LaTeX-compiled PDF opens in Chrome instead of showing a blocked page. The file carried the site-wide security policy as well as its own. That policy forbids the browser's PDF viewer. A PDF still cannot load or run anything; Word files keep their sandbox and download.
 - The footer's Legal column listed Copyright twice.
 - LaTeX CVs compile in the editor. A bullet list made pdfLaTeX stop with no output, because its default bullet needs a font outside the core packages. The starter templates now load Latin Modern, which is in the core set and covers bullets and accented letters. All four templates compile with pdfLaTeX, XeLaTeX and LuaLaTeX.
