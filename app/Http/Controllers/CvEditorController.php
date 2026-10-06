@@ -59,6 +59,20 @@ class CvEditorController extends Controller
         return redirect()->route('cvs.edit', [$cv, 'details'])->with('status', 'Your CV has been saved.');
     }
 
+    /** the letter is stored on the cv itself, so it follows the cv's theme and visibility */
+    public function updateLetter(Request $request, Cv $cv): RedirectResponse
+    {
+        Gate::authorize('manage', $cv);
+        $data = $request->validate([
+            'letter_to' => ['nullable', 'string', 'max:160'],
+            'cover_letter' => ['nullable', 'string', 'max:6000'],
+        ]);
+        $cv->update($data);
+
+        return redirect()->route('cvs.edit', [$cv, 'letter'])
+            ->with('status', filled($data['cover_letter'] ?? null) ? 'Your cover letter has been saved.' : 'This CV has no cover letter now.');
+    }
+
     /** the order chosen by dragging sections in the editor; unknown names are ignored */
     public function updateOrder(Request $request, Cv $cv): JsonResponse|RedirectResponse
     {

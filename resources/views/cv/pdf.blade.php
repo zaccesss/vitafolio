@@ -2,6 +2,8 @@
     // mpdf reads a small subset of css (no pre-line either, so line breaks become <br>) (tables, no flexbox or grid), so this layout is separate
     // from the web page but follows the same theme, accent, font and section order
     $user = $cv->user;
+    // the cover letter reuses this layout, so the letter and the cv print as a matching pair
+    $letter ??= false;
     $accent = config('vitafolio.accents')[$cv->accent]['hex'] ?? '#14213d';
     $font = ['sans' => 'dejavusans', 'serif' => 'dejavuserif', 'mono' => 'dejavusansmono'][$cv->font] ?? 'dejavusans';
     $theme = $cv->theme;
@@ -47,7 +49,7 @@
 </style>
 </head>
 <body>
-<htmlpagefooter name="footer"><div class="footer">{{ $user->name }} &middot; {{ route('cv.show', $cv) }} &middot; page {PAGENO} of {nbpg}</div></htmlpagefooter>
+<htmlpagefooter name="footer"><div class="footer">{{ $user->name }} &middot; {{ $letter ? route('cv.letter', $cv) : route('cv.show', $cv) }} &middot; page {PAGENO} of {nbpg}</div></htmlpagefooter>
 <sethtmlpagefooter name="footer" value="on" />
 
 <table class="header" cellspacing="0" cellpadding="0">
@@ -64,6 +66,11 @@
 </table>
 @unless ($band)<div class="rule"></div>@endunless
 
+@if ($letter)
+    <h2>Cover letter</h2>
+    @if (filled($cv->letter_to))<p class="muted">{{ $cv->letter_to }}</p>@endif
+    <div>{!! nl2br(e($cv->cover_letter)) !!}</div>
+@else
 @foreach ($cv->orderedSections() as $section)
     @if ($section === 'profile' && filled($cv->profile))
         <h2>Profile</h2>
@@ -99,5 +106,6 @@
         </table>
     @endif
 @endforeach
+@endif
 </body>
 </html>

@@ -8,13 +8,6 @@
     $headingClass = $cv->theme === 'minimal'
         ? 'font-serif text-2xl text-ink'
         : 'border-b-2 border-line pb-2 text-sm font-bold uppercase tracking-widest '.($cv->theme === 'plain' ? 'text-ink' : 'text-accent');
-    $band = $cv->theme === 'modern';
-    $headerClass = [
-        'classic' => 'border-b border-line',
-        'modern' => 'cv-band bg-accent-solid text-white',
-        'minimal' => '',
-        'plain' => 'border-b-2 border-ink',
-    ][$cv->theme];
 @endphp
 <x-layouts.app :title="$name.' CV'" :description="$description" :canonical="route('cv.show', $cv)"
     :noindex="$cv->visibility !== 'public' || $cv->hidden_at || $user->profile_visibility === 'private' || ! $user->hasVerifiedEmail()" :image="route('cv.og', $cv)" type="profile" turnstile>
@@ -37,41 +30,13 @@
     </x-slot:head>
 
     <div class="container-page py-8">
-        @if ($isOwner || auth()->user()?->isAdmin())
-            <div class="alert alert-info mb-6 flex flex-wrap items-center justify-between gap-3 no-print">
-                <p>
-                    @if ($cv->hidden_at)
-                        <strong>Hidden by a moderator.</strong> Only you and admins can see this CV.
-                    @elseif ($cv->visibility === 'private')
-                        <strong>Private.</strong> Only you can see this CV.
-                    @elseif ($cv->visibility === 'unlisted')
-                        <strong>Unlisted.</strong> Anyone with the link can see it, but it is not in the directory.
-                    @else
-                        <strong>Public.</strong> Listed in the directory.
-                    @endif
-                </p>
-                @if ($isOwner)<a class="btn btn-sm btn-secondary" href="{{ route('cvs.edit', $cv) }}">Edit this CV</a>@endif
-            </div>
-        @endif
+        <x-cv-status :cv="$cv" :is-owner="$isOwner" />
+        <x-cv-pages :cv="$cv" current="cv" />
 
         <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
             <article aria-labelledby="cv-name"
                 class="cv-doc overflow-hidden rounded-card accent-{{ $cv->accent }} font-cv-{{ $cv->font }} {{ $cv->theme === 'minimal' ? '' : 'border border-line bg-surface shadow-card' }}">
-                <header class="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:p-8 {{ $headerClass }}">
-                    @unless ($cv->theme === 'plain')<x-avatar :user="$user" size="lg" :accent="$cv->accent" />@endunless
-                    <div class="min-w-0">
-                        <h1 id="cv-name" class="text-3xl sm:text-4xl {{ $band ? 'text-white' : '' }}">{{ $name }}</h1>
-                        @if ($headline)<p class="mt-1 text-lg {{ $band ? 'text-white/90' : 'text-muted' }}">{{ $headline }}</p>@endif
-                        <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm {{ $band ? 'text-white/90' : 'text-muted' }}">
-                            @if ($user->pronouns)<li>{{ $user->pronouns }}</li>@endif
-                            @if ($user->location)<li><span class="sr-only">Location: </span>{{ $user->location }}</li>@endif
-                            @if ($user->university)<li><span class="sr-only">University: </span>{{ $user->university }}</li>@endif
-                            @if ($cv->key_language)<li>Main language: {{ $cv->key_language }}</li>@endif
-                            @if ($user->availability !== 'none')<li>Looking for: {{ config('vitafolio.availability')[$user->availability] }}</li>@endif
-                            @if ($cv->show_email)<li><a class="{{ $band ? 'text-white' : '' }}" href="mailto:{{ $user->email }}">{{ $user->email }}</a></li>@endif
-                        </ul>
-                    </div>
-                </header>
+                <x-cv-header :cv="$cv" />
 
                 <div class="grid gap-8 p-6 sm:p-8">
                     @if (! $hasBuiltContent && $document)
@@ -155,6 +120,9 @@
                     <div class="mt-4 grid gap-2">
                         <a class="btn btn-primary" href="{{ route('cv.pdf', $cv) }}">Download PDF</a>
                         <a class="btn btn-secondary" href="{{ route('cv.word', $cv) }}">Download as Word</a>
+                        @if ($cv->hasCoverLetter())
+                            <a class="btn btn-secondary" href="{{ route('cv.letter', $cv) }}">Read the cover letter</a>
+                        @endif
                         @if ($document && $hasBuiltContent)
                             <a class="btn btn-secondary" href="{{ route('cv.file', $cv) }}">
                                 {{ $document->source === 'latex' ? 'Open LaTeX version' : ($document->isPdf() ? 'Open uploaded PDF' : 'Download Word file') }}
