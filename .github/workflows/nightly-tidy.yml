@@ -1,6 +1,8 @@
 name: Nightly tidy-up
 
 # the free hosting plan runs no scheduled jobs, so this calls the site's /cron address once a night.
+# an external scheduler starts it at 03:30 London; the schedule below is a backup in case that run
+# never arrives. The tidy-up is idempotent, so a second run the same night finds nothing to clear.
 # it needs the CRON_TOKEN secret and the SITE_URL variable; without them it skips quietly.
 
 permissions: {}
