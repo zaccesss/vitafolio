@@ -3,7 +3,7 @@
     $email = config('vitafolio.contact_email');
     $sections = ['who' => 'Who is responsible', 'what' => 'What we collect', 'why' => 'Why we use it and our legal bases', 'visitors' => 'People who visit a CV', 'sharing' => 'Who we share it with', 'transfers' => 'Transfers outside the UK', 'keep' => 'How long we keep it', 'rights' => 'Your rights', 'security' => 'How we protect it', 'children' => 'Children', 'changes' => 'Changes to this policy', 'contact' => 'Contact and complaints'];
 @endphp
-<x-prose-page title="Privacy policy" intro="What {{ config('app.name') }} collects, why, who sees it and the rights you have over it." updated="6 October 2026">
+<x-prose-page title="Privacy policy" intro="What {{ config('app.name') }} collects, why, who sees it and the rights you have over it." updated="7 October 2026">
     <nav aria-labelledby="privacy-contents" class="not-prose card p-5">
         <h2 id="privacy-contents" class="text-lg">Contents</h2>
         <ol class="mt-2 grid gap-1 text-sm sm:grid-cols-2">
@@ -22,8 +22,11 @@
         <li><strong>Account details:</strong> your name, email address and a password stored only as a secure one-way hash. If you turn on two-factor authentication, its secret and recovery codes are stored encrypted. Passkeys store only a public key; your fingerprint, face or PIN never leaves your device.</li>
         <li><strong>Profile:</strong> your handle, photo, headline, bio, pronouns, location, university, availability and links.</li>
         <li><strong>CVs:</strong> everything you add to a CV, such as its sections, skills, projects, images, videos, uploaded files and LaTeX source.</li>
-        <li><strong>Messages and reports:</strong> what you write when you contact us, message a CV owner or report a CV.</li>
+        <li><strong>Messages and reports:</strong> what you write when you contact us, message a CV owner or report a CV or an endorsement.</li>
+        <li><strong>Endorsements you write:</strong> the text, how you know the CV's owner and any role or context you add, linked to your account and the CV. Your name is shown beside it once the owner approves it.</li>
     </ul>
+    <h3>Information other people give about you</h3>
+    <p><strong>Endorsements:</strong> someone who knows your work can write an endorsement of one of your CVs. We store what they wrote, how they know you, any role or context they add and whether you approved or hid it. Nothing shows to anyone else until you approve it. An approved endorsement is only visible to people who can already see that CV.</p>
     <h3>Information from sign-in providers</h3>
     <p>If you sign in with Google, GitHub or Microsoft, we receive your name, email address, profile photo address and an identifier for your account with that provider. We never receive your password for that provider. We never post anything on your behalf.</p>
     <h3>Information collected automatically</h3>
@@ -89,6 +92,7 @@
         <li><strong>Visit counts:</strong> 13 months, then deleted automatically.</li>
         <li><strong>Sessions and sign-in records:</strong> until they expire, usually within hours.</li>
         <li><strong>Old handles:</strong> 30 days after you change your handle, so nobody else can take it and pose as you.</li>
+        <li><strong>Endorsements:</strong> until the writer withdraws it, the CV's owner deletes it or either of them deletes their account. Deleting the CV deletes its endorsements too.</li>
         <li><strong>Reports:</strong> until they have been dealt with and for as long as needed to handle repeat abuse.</li>
         <li><strong>Error reports:</strong> as set by our error tracking provider, usually 30 to 90 days.</li>
     </ul>

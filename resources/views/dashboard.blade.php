@@ -20,6 +20,13 @@
             @endif
         </div>
 
+        @php($waiting = $cvs->sum('pending_endorsements'))
+        @if ($waiting > 0)
+            <p class="alert alert-info mt-6">
+                {{ $waiting }} {{ $waiting === 1 ? 'endorsement is' : 'endorsements are' }} waiting for your approval. They show on your CVs only once you approve them.
+            </p>
+        @endif
+
         <ul class="mt-8 grid gap-5 md:grid-cols-2">
             @foreach ($cvs as $cv)
                 <li class="card flex flex-col gap-4 p-5 accent-{{ $cv->accent }}">
@@ -38,6 +45,9 @@
                         <div><dt class="text-muted">File</dt><dd class="text-lg font-semibold">{{ $cv->document ? 'Yes' : 'No' }}</dd></div>
                     </dl>
                     <p class="text-sm text-muted">Updated {{ $cv->updated_at->diffForHumans() }}</p>
+                    @if ($cv->pending_endorsements > 0)
+                        <p class="text-sm"><a href="{{ route('cvs.edit', [$cv, 'endorsements']) }}">{{ $cv->pending_endorsements }} {{ $cv->pending_endorsements === 1 ? 'endorsement' : 'endorsements' }} to review<span class="sr-only"> on {{ $cv->title }}</span></a></p>
+                    @endif
                     <div class="mt-auto flex flex-wrap gap-2">
                         <a class="btn btn-sm btn-primary" href="{{ route('cvs.edit', $cv) }}">Edit<span class="sr-only"> {{ $cv->title }}</span></a>
                         <a class="btn btn-sm btn-secondary" href="{{ route('cv.show', $cv) }}">View<span class="sr-only"> {{ $cv->title }}</span></a>

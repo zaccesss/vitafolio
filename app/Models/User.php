@@ -115,6 +115,22 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
+     * endorsements this account has written about other people's cvs
+     *
+     * @return HasMany<Endorsement, $this>
+     */
+    public function endorsementsWritten(): HasMany
+    {
+        return $this->hasMany(Endorsement::class, 'endorser_id')->latest();
+    }
+
+    /** endorsements on this account's cvs that wait for its approval */
+    public function pendingEndorsementCount(): int
+    {
+        return Endorsement::whereIn('cv_id', Cv::where('user_id', $this->id)->select('id'))->where('status', 'pending')->whereNull('hidden_at')->count();
+    }
+
+    /**
      * get the attributes that should be cast.
      *
      * @return array<string, string>

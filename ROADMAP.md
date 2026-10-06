@@ -11,7 +11,6 @@ What comes after the first release. Ideas and requests are welcome as
 
 - Custom domains for a profile. This needs a paid host plan with setup for each domain
 - Interface translations
-- Endorsements from people who worked with the CV's owner, approved by the owner before they show
 
 ## Shipped
 
@@ -19,6 +18,7 @@ What comes after the first release. Ideas and requests are welcome as
 - Export to Word as well as PDF (October 2026)
 - More LaTeX starter templates, including a two-column layout (October 2026)
 - Tagged PDFs from the generated CV, so screen readers read them as well as the web page (October 2026)
+- Endorsements from people who worked with the CV's owner, approved by the owner before they show (October 2026)
 
 ## Considered and not planned
 

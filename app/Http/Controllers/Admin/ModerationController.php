@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cv;
+use App\Models\Endorsement;
 use App\Models\Report;
 use App\Models\User;
 use App\Support\Audit;
@@ -18,7 +19,7 @@ class ModerationController extends Controller
     public function index(Request $request): View
     {
         return view('admin.index', [
-            'reports' => Report::with(['cv.user'])->whereNull('resolved_at')->latest()->paginate(20),
+            'reports' => Report::with(['cv.user', 'endorsement.endorser'])->whereNull('resolved_at')->latest()->paginate(20),
             'stats' => [
                 'Accounts' => User::count(),
                 'CVs' => Cv::count(),
@@ -27,6 +28,7 @@ class ModerationController extends Controller
                 'Suspended accounts' => User::whereNotNull('suspended_at')->count(),
             ],
             'hidden' => Cv::with('user')->whereNotNull('hidden_at')->latest('hidden_at')->limit(20)->get(),
+            'hiddenEndorsements' => Endorsement::with(['cv', 'endorser'])->whereNotNull('hidden_at')->latest('hidden_at')->limit(20)->get(),
         ]);
     }
 
@@ -45,6 +47,24 @@ class ModerationController extends Controller
         Audit::log('moderation.restore', ['admin' => auth()->id(), 'cv' => $cv->id]);
 
         return back()->with('status', '"'.$cv->title.'" is visible again.');
+    }
+
+    /** hides one endorsement from everyone whatever its owner chose, then closes its reports */
+    public function hideEndorsement(Endorsement $endorsement): RedirectResponse
+    {
+        $endorsement->forceFill(['hidden_at' => now()])->save();
+        Audit::log('moderation.hide_endorsement', ['admin' => auth()->id(), 'endorsement' => $endorsement->id]);
+        $endorsement->reports()->whereNull('resolved_at')->update(['resolved_at' => now()]);
+
+        return back()->with('status', 'The endorsement by '.$endorsement->endorser->name.' is now hidden.');
+    }
+
+    public function restoreEndorsement(Endorsement $endorsement): RedirectResponse
+    {
+        $endorsement->forceFill(['hidden_at' => null])->save();
+        Audit::log('moderation.restore_endorsement', ['admin' => auth()->id(), 'endorsement' => $endorsement->id]);
+
+        return back()->with('status', 'The endorsement by '.$endorsement->endorser->name.' is no longer hidden. It shows if its CV owner has approved it.');
     }
 
     public function dismiss(Report $report): RedirectResponse

@@ -36,6 +36,10 @@ class CvEditorController extends Controller
     {
         Gate::authorize('manage', $cv);
         $cv->load(['tags', 'document']);
+        $cv->loadCount(['endorsements as pending_endorsements' => fn ($q) => $q->where('status', 'pending')->whereNull('hidden_at')]);
+        if ($tab === 'endorsements') {
+            $cv->load('endorsements.endorser');
+        }
 
         return view('cv.edit', ['cv' => $cv, 'tab' => $tab, 'user' => $request->user()]);
     }

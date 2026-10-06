@@ -13,4 +13,8 @@
 
     <h2>Messages from visitors</h2>
     <p>Visitors can send you a message from your CV without ever seeing your email address. You receive it by email and only share your address if you choose to reply.</p>
+
+    <h2>Endorsements</h2>
+    <p>People who worked or studied with you can endorse a CV that they can see, from the CV's own page. They need a verified account. Each person can write one endorsement per CV, with how they know you and an optional role or context. You are emailed when one arrives. Your CVs list and the editor's <strong>Endorsements</strong> tab show how many are waiting.</p>
+    <p>Nothing shows until you approve it. On the <strong>Endorsements</strong> tab you can approve, hide or delete each one. If the writer edits an endorsement you approved, it waits for you again. Writers can edit or withdraw their own from the CV page. Endorsements follow the CV's privacy setting, so a private CV shows none to anyone else. Anyone can report an endorsement that breaks the terms. Moderators can then hide it.</p>
 </x-help-page>
