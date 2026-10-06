@@ -1,5 +1,9 @@
 # Vitafolio
 
+[![CI](https://github.com/zaccesss/vitafolio/actions/workflows/ci.yml/badge.svg)](https://github.com/zaccesss/vitafolio/actions/workflows/ci.yml)
+[![Uptime](https://incidents.betterstack.com/status-badges/v2/monitor/2zqfn.svg)](https://vitafolio.isaacadjei.me)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Build, store and share every version of a CV, each with its own theme, privacy setting and link.
 
 ![Vitafolio: every version of your CV, in one place](resources/brand/social-preview.png)
