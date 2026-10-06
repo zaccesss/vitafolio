@@ -120,8 +120,15 @@ async function compile() {
     try {
         const mod = await import('texlyre-busytex');
         if (!runner) {
-            status.value = 'Downloading the LaTeX engine. The first time takes a minute or two; after that it is cached.';
-            runner = new mod.BusyTexRunner({ busytexBasePath: `${props.assetsUrl.replace(/\/$/, '')}/busytex` });
+            status.value = 'Downloading the LaTeX engine and its packages, about 680 MB. The first time takes a few minutes on a fast connection; after that your browser keeps them.';
+            const base = `${props.assetsUrl.replace(/\/$/, '')}/busytex`;
+            // the starter templates use packages from all three TeX Live collections, so all three load:
+            // geometry and hyperref are in basic, xcolor in recommended, enumitem and titlesec in extra
+            runner = new mod.BusyTexRunner({
+                busytexBasePath: base,
+                preloadDataPackages: ['basic', 'recommended', 'extra'].map((c) => `${base}/texlive-${c}.js`),
+                onDownloadProgress: (p) => { status.value = `Downloading the LaTeX engine and its packages: ${Math.min(100, Math.round(p.percent))}%`; },
+            });
             await runner.initialize(true);
         }
         status.value = 'Compiling…';
