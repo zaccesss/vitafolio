@@ -55,6 +55,8 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- Deleting your account or signing out one device now works when the password has not been confirmed recently. Confirming used to send you back to the settings page without finishing the action.
+- The password box on Name and email is marked optional, since it is only needed when changing the address.
 - The production image starts on hosts that drop every Linux capability, such as Render. The server binary no longer asks for the port-binding capability it never uses.
 
 ### Added

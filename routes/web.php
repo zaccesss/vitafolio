@@ -19,6 +19,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\SocialAuthController;
+use App\Http\Middleware\ConfirmPasswordFirst;
 use App\Support\HelpTopics;
 use Illuminate\Support\Facades\Route;
 
@@ -101,9 +102,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/account/passkeys', [AccountController::class, 'passkeys'])->middleware('password.confirm')->name('account.passkeys');
     Route::get('/settings/sessions', [AccountController::class, 'sessions'])->name('settings.sessions');
     Route::post('/account/sessions', [AccountController::class, 'endOtherSessions'])->middleware('throttle:6,1')->name('account.sessions');
-    Route::delete('/account/sessions/{id}', [AccountController::class, 'endSession'])->middleware('password.confirm')->name('account.sessions.end');
+    Route::delete('/account/sessions/{id}', [AccountController::class, 'endSession'])->middleware(ConfirmPasswordFirst::class.':settings.sessions')->name('account.sessions.end');
     Route::get('/account/export.json', [AccountController::class, 'export'])->name('account.export');
-    Route::delete('/account', [AccountController::class, 'destroy'])->middleware('password.confirm')->name('account.destroy');
+    Route::delete('/account', [AccountController::class, 'destroy'])->middleware(ConfirmPasswordFirst::class.':settings.data')->name('account.destroy');
 });
 
 Route::middleware(['auth', 'verified', 'can:admin'])->prefix('/admin')->name('admin.')->group(function () {
