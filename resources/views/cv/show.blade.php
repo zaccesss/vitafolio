@@ -154,6 +154,7 @@
                     <h2 id="share-title" class="text-base">Share and download</h2>
                     <div class="mt-4 grid gap-2">
                         <a class="btn btn-primary" href="{{ route('cv.pdf', $cv) }}">Download PDF</a>
+                        <a class="btn btn-secondary" href="{{ route('cv.word', $cv) }}">Download as Word</a>
                         @if ($document && $hasBuiltContent)
                             <a class="btn btn-secondary" href="{{ route('cv.file', $cv) }}">
                                 {{ $document->source === 'latex' ? 'Open LaTeX version' : ($document->isPdf() ? 'Open uploaded PDF' : 'Download Word file') }}

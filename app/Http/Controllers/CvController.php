@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Support\Images;
 use App\Support\Links;
 use App\Support\ViewRecorder;
+use App\Support\WordCv;
 use chillerlan\QRCode\Common\EccLevel;
 use chillerlan\QRCode\Output\QRMarkupSVG;
 use chillerlan\QRCode\QRCode;
@@ -30,6 +31,21 @@ class CvController extends Controller
             'cv' => $cv,
             'links' => Links::parse($cv->user->links),
             'isOwner' => $request->user()?->id === $cv->user_id,
+        ]);
+    }
+
+    /** the cv as an editable word document, built from the same content as the pdf */
+    public function word(Request $request, Cv $cv): Response
+    {
+        abort_unless($cv->isVisibleTo($request->user()), 404);
+        $cv->load(['user', 'tags', 'projects']);
+        $filename = (preg_replace('/[^A-Za-z0-9_-]/', '', str_replace(' ', '_', $cv->user->name)) ?: 'Vitafolio').'_CV.docx';
+
+        return response(WordCv::build($cv), 200, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+            'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control' => 'private, no-store',
         ]);
     }
 
