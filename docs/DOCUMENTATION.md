@@ -419,7 +419,7 @@ image and a Gitleaks scan for committed secrets.
 | LaTeX compiled in the browser | No server needs a 4 GB TeX installation. The source also stays private until saved |
 | FrankenPHP on Alpine | A single small process, with far fewer known vulnerabilities than a Debian Apache image |
 | Microsoft never joins accounts by email | Some tenants let users set unverified addresses, which would allow account takeover |
-| A scheduler outside the app | Free hosting has no scheduled jobs, so a nightly call with a shared secret does the tidy-up |
+| A scheduler outside the app | Free hosting has no scheduled jobs, so a nightly call with a shared secret does the tidy-up. An external scheduler makes the call on time; the workflow's own schedule is the backup |
 
 ## Troubleshooting
 
