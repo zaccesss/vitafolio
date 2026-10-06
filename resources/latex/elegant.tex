@@ -1,0 +1,40 @@
+% Vitafolio elegant template: a centred name in small capitals and a traditional serif page.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+% latin modern ships with the core packages and covers list bullets and other symbols;
+% the default fonts would need a much larger download for those
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+% plain LaTeX for list spacing and headings, so the template only needs the core packages
+\makeatletter
+\setlength{\leftmargini}{1.3em}
+\renewcommand{\@listI}{\leftmargin\leftmargini \topsep 2pt \itemsep 2pt \parsep 0pt}
+\let\@listi\@listI
+\makeatother
+\renewcommand{\section}[1]{\par\vspace{14pt}\begin{center}{\scshape\large #1}\\[-4pt]\rule{0.18\textwidth}{0.4pt}\end{center}\vspace{2pt}}
+
+\begin{document}
+\begin{center}
+{\Huge\scshape {{NAME}}}\\[6pt]
+{\itshape {{HEADLINE}}}\\[6pt]
+{\small {{CONTACT}}}
+\end{center}
+
+\section{Profile}
+{{SUMMARY}}
+
+\section{Experience}
+{{EXPERIENCE}}
+
+\section{Education}
+{{EDUCATION}}
+
+\section{Projects}
+{{PROJECTS}}
+
+\section{Skills}
+{{SKILLS}}
+\end{document}

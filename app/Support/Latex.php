@@ -12,6 +12,9 @@ class Latex
         'compact' => 'Compact: fits a lot on one page',
         'modern' => 'Modern: accent rule and sidebar details',
         'academic' => 'Academic: education first, room for publications',
+        'sidebar' => 'Sidebar: two columns, with contact and skills beside the main story',
+        'elegant' => 'Elegant: a centred serif page with small capitals',
+        'minimal' => 'Minimal: clean sans-serif with plenty of white space',
     ];
 
     /** the characters tex treats as commands are replaced, so a cv can never inject latex code */

@@ -1,0 +1,40 @@
+% Vitafolio minimal template: a clean sans-serif page with generous white space.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.4cm]{geometry}
+% latin modern ships with the core packages and covers list bullets and other symbols;
+% the default fonts would need a much larger download for those
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\pagestyle{empty}
+% plain LaTeX for list spacing and headings, so the template only needs the core packages
+\makeatletter
+\setlength{\leftmargini}{1.1em}
+\renewcommand{\@listI}{\leftmargin\leftmargini \topsep 2pt \itemsep 2pt \parsep 0pt}
+\let\@listi\@listI
+\makeatother
+\renewcommand{\section}[1]{\par\vspace{16pt}{\normalsize\bfseries\MakeUppercase{#1}}\par\vspace{6pt}}
+
+\begin{document}
+{\huge\bfseries {{NAME}}}\par
+{\large {{HEADLINE}}}\par
+{\small {{CONTACT}}}
+
+\section{Profile}
+{{SUMMARY}}
+
+\section{Experience}
+{{EXPERIENCE}}
+
+\section{Projects}
+{{PROJECTS}}
+
+\section{Education}
+{{EDUCATION}}
+
+\section{Skills}
+{{SKILLS}}
+\end{document}
