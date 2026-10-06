@@ -16,6 +16,8 @@ return [
     'contact_email' => env('SITE_CONTACT_EMAIL'),
 
     'source_url' => env('SITE_SOURCE_URL'),
+    // the project's linkedin page, linked from the footer and the site's structured data
+    'linkedin_url' => env('SITE_LINKEDIN_URL'),
 
     // a public status page for the site, linked from the footer when set
     'status_url' => env('SITE_STATUS_URL'),
