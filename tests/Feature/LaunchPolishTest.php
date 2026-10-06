@@ -108,4 +108,30 @@ class LaunchPolishTest extends TestCase
         $this->get('/.well-known/microsoft-identity-association.json')->assertOk()
             ->assertExactJson(['associatedApplications' => [['applicationId' => 'a573bf4c-0000-0000-0000-000000000000']]]);
     }
+
+    public function test_no_redirect_route_swallows_a_form_submission(): void
+    {
+        // a redirect that answers every method shadows a form route at the same address once routes
+        // are cached in production, so every redirect must answer page visits only
+        foreach (app('router')->getRoutes() as $route) {
+            if (str_contains((string) $route->getActionName(), 'RedirectController')) {
+                $this->assertSame(['GET', 'HEAD'], $route->methods(), $route->uri().' should only redirect page visits');
+            }
+        }
+    }
+
+    public function test_the_profile_saves_with_routes_cached(): void
+    {
+        $this->artisan('route:cache')->assertSuccessful();
+        $this->refreshApplication();
+        try {
+            $user = \App\Models\User::factory()->create();
+            $this->actingAs($user)->put(route('profile.update'), [
+                'name' => $user->name, 'pronouns' => 'he/him', 'availability' => 'none', 'profile_visibility' => 'private',
+            ])->assertRedirect(route('profile.edit'))->assertSessionHasNoErrors();
+            $this->assertSame('he/him', $user->fresh()->pronouns);
+        } finally {
+            $this->artisan('route:clear');
+        }
+    }
 }
