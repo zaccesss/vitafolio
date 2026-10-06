@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Cv;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -125,7 +126,7 @@ class LaunchPolishTest extends TestCase
         $this->artisan('route:cache')->assertSuccessful();
         $this->refreshApplication();
         try {
-            $user = \App\Models\User::factory()->create();
+            $user = User::factory()->create();
             $this->actingAs($user)->put(route('profile.update'), [
                 'name' => $user->name, 'pronouns' => 'he/him', 'availability' => 'none', 'profile_visibility' => 'private',
             ])->assertRedirect(route('profile.edit'))->assertSessionHasNoErrors();

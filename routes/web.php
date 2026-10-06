@@ -21,8 +21,8 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Middleware\ConfirmPasswordFirst;
 use App\Support\HelpTopics;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\RedirectController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', DirectoryController::class)->name('home');
 
