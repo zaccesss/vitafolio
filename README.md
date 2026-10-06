@@ -27,6 +27,17 @@ browser.
 | Safety | Ownership checks on every change, reports with a moderation queue, suspensions and a strict content security policy |
 | Accessibility | WCAG 2.2 AA colours in light and dark themes, full keyboard use, reduced motion and a plain CV layout |
 
+## The name
+
+Vitafolio is pronounced VEE-ta-FOH-lee-oh and joins two Latin words.
+
+| Part | Root | Meaning |
+| --- | --- | --- |
+| VITA- | *vita*, as in *curriculum vitae* | life, the course of a life |
+| -FOLIO | *folium* | a leaf or sheet of paper, the root behind *portfolio* |
+
+Together they mean "the pages of a life": one place that holds every version of the record a CV tells.
+
 ## Stack
 
 ### Application
@@ -66,18 +77,19 @@ flowchart LR
         VISITOR["Visitors and recruiters<br/>read, download, message"]
     end
     subgraph EDGE["Cloudflare"]
-        CF["DNS, spam protection<br/>and cookieless analytics"]
+        CF["DNS, Turnstile spam checks<br/>and cookieless analytics"]
     end
     subgraph HOST["Render"]
         APP["FrankenPHP<br/>Laravel 13 on PHP 8.4"]
     end
     PEOPLE --> CF --> APP
-    APP --> DB[("MySQL<br/>accounts, CVs, photos")]
+    APP --> DB[("MySQL on Aiven<br/>accounts, CVs, photos")]
     APP -- "signed requests" --> MEDIA[("Cloudinary<br/>CV files and project media")]
     APP -- "verification and alerts" --> MAIL["Resend"]
     APP -. "errors" .-> SENTRY["Sentry"]
-    OWNER -- "first compile only" --> TEX["LaTeX engine files<br/>compiled in the browser"]
+    OWNER -- "first compile only" --> TEX["LaTeX engine on GitHub Pages<br/>runs in the browser"]
     CRON["Nightly scheduler"] -- "POST /cron" --> APP
+    MONITOR["Uptime monitor<br/>and status page"] -- "GET /up every 3 minutes" --> APP
     APP -- "public page changed" --> SEARCH["Search engines<br/>sitemap and IndexNow"]
 ```
 

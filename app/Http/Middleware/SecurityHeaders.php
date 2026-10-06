@@ -39,7 +39,8 @@ class SecurityHeaders
 
             $headers['Content-Security-Policy'] = implode('; ', [
                 "default-src 'self'",
-                "script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com".($latex ? " 'wasm-unsafe-eval'" : ''),
+                // the latex worker starts from a local blob and imports the engine scripts from their host
+                "script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com".($latex ? " 'wasm-unsafe-eval'".rtrim($latexAssets) : ''),
                 'worker-src '.($latex ? "'self' blob:" : "'self'"),
                 "style-src 'self'".($nonce ? " 'nonce-{$nonce}'" : ''),
                 // the photo cropper previews the chosen file before it is uploaded

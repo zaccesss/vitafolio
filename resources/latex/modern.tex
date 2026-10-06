@@ -2,16 +2,19 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[margin=1.8cm]{geometry}
 \usepackage[hidelinks]{hyperref}
-\usepackage{xcolor}
-\usepackage{enumitem}
-\usepackage{titlesec}
-\definecolor{accent}{HTML}{14213D}
-\definecolor{brass}{HTML}{7A5B2E}
-\setlist{leftmargin=1.2em,itemsep=1pt,topsep=2pt}
-\titleformat{\section}{\color{accent}\large\bfseries}{}{0em}{}[{\color{brass}\titlerule[1pt]}]
-\titlespacing{\section}{0pt}{14pt}{6pt}
-\pagestyle{empty}
+\usepackage{color}
+% the core color package takes rgb values: #14213D and #7A5B2E
+\definecolor{accent}{rgb}{0.078,0.129,0.239}
+\definecolor{brass}{rgb}{0.478,0.357,0.180}
 \setlength{\parindent}{0pt}
+\pagestyle{empty}
+% plain LaTeX for list spacing and headings, so the template only needs the core packages
+\makeatletter
+\setlength{\leftmargini}{1.2em}
+\renewcommand{\@listI}{\leftmargin\leftmargini \topsep 2pt \itemsep 1pt \parsep 0pt}
+\let\@listi\@listI
+\makeatother
+\renewcommand{\section}[1]{\par\vspace{14pt}{\color{accent}\large\bfseries #1}\par\vspace{2pt}{\color{brass}\hrule height 1pt}\vspace{6pt}}
 
 \begin{document}
 {\color{accent}\Huge\bfseries {{NAME}}}\\[4pt]
