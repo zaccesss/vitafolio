@@ -47,6 +47,18 @@ class SiteController extends Controller
         return response(implode("\n", $lines)."\n", 200, ['Content-Type' => 'text/plain; charset=utf-8', 'Cache-Control' => 'public, max-age=86400']);
     }
 
+    /**
+     * proves to microsoft that the sign-in app belongs to this site, so its consent screen names the site as
+     * the publisher. The app id is public: it appears in every microsoft sign-in link
+     */
+    public function microsoftIdentity(): JsonResponse
+    {
+        $appId = (string) config('services.microsoft.client_id');
+        abort_if($appId === '', 404);
+
+        return response()->json(['associatedApplications' => [['applicationId' => $appId]]]);
+    }
+
     /** rfc 9116; the expiry rolls forward on its own so the file never goes stale */
     public function securityTxt(): Response
     {

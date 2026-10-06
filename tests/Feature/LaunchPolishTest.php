@@ -98,4 +98,14 @@ class LaunchPolishTest extends TestCase
         $this->get(route('home'))->assertOk()->assertSee('href="'.route('copyright').'"', false);
         $this->get(route('copyright'))->assertOk()->assertSee('MIT Licence');
     }
+
+    public function test_the_microsoft_publisher_file_names_the_sign_in_app(): void
+    {
+        config(['services.microsoft.client_id' => '']);
+        $this->get('/.well-known/microsoft-identity-association.json')->assertNotFound();
+
+        config(['services.microsoft.client_id' => 'a573bf4c-0000-0000-0000-000000000000']);
+        $this->get('/.well-known/microsoft-identity-association.json')->assertOk()
+            ->assertExactJson(['associatedApplications' => [['applicationId' => 'a573bf4c-0000-0000-0000-000000000000']]]);
+    }
 }

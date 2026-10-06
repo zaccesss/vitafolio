@@ -34,6 +34,7 @@ Route::view('/accessibility', 'pages.accessibility')->name('accessibility');
 Route::get('/manifest.webmanifest', [SiteController::class, 'manifest'])->name('manifest');
 Route::get('/robots.txt', [SiteController::class, 'robots'])->name('robots');
 Route::get('/.well-known/security.txt', [SiteController::class, 'securityTxt'])->name('security.txt');
+Route::get('/.well-known/microsoft-identity-association.json', [SiteController::class, 'microsoftIdentity'])->name('microsoft.identity');
 // browsers and password managers send people here after a breach alert
 Route::redirect('/.well-known/change-password', '/settings/security', 302);
 Route::get('/indexnow.txt', [SiteController::class, 'indexNowKey'])->name('indexnow.key');
