@@ -88,7 +88,6 @@ return [
         'google' => ['label' => 'Google', 'driver' => 'google', 'trusts_email' => true, 'photo_hosts' => ['googleusercontent.com']],
         'github' => ['label' => 'GitHub', 'driver' => 'github', 'trusts_email' => true, 'photo_hosts' => ['avatars.githubusercontent.com']],
         'microsoft' => ['label' => 'Microsoft', 'driver' => 'microsoft', 'trusts_email' => false, 'photo_hosts' => []],
-        'linkedin' => ['label' => 'LinkedIn', 'driver' => 'linkedin-openid', 'trusts_email' => true, 'photo_hosts' => ['media.licdn.com']],
     ],
 
     'max_cvs_per_user' => 10,

@@ -169,6 +169,7 @@ flowchart LR
 | `resources/js` | Alpine components in `app.js` and the Vue islands in `components/` |
 | `resources/latex` | The four LaTeX starter templates |
 | `resources/brand` | SVG sources for every icon and share image, rendered by `scripts/brand-assets.sh` |
+| `resources/brand/linkedin` | Logo, cover image and profile text for the [LinkedIn page](../resources/brand/linkedin/README.md) |
 | `docker` | The FrankenPHP config, PHP settings and the start script used by the production image |
 
 ## Data model
@@ -215,12 +216,12 @@ Every table has a primary key, so the schema runs on database hosts that require
 - **Two-factor authentication** uses an authenticator app with recovery codes.
 - **Passkeys** sign in with a fingerprint, face or device PIN. Adding or removing one needs a password
   confirmed within the last three hours.
-- **Sign-in providers** are Google, GitHub and Microsoft, with LinkedIn supported in the code. Each one only appears once its keys
-  are set.
+- **Sign-in providers** are Google, GitHub and Microsoft. Each one only appears once its keys are set.
+  LinkedIn sign-in is not offered.
 
 > [!IMPORTANT]
 > A provider sign-in joins an existing account with the same email only when the provider confirms the
-> address is verified. Google and LinkedIn say so explicitly and GitHub only shares verified addresses.
+> address is verified. Google says so explicitly and GitHub only shares verified addresses.
 > Microsoft gives no such promise for every organisation, so it never joins an account by email; it can
 > still be connected from the account page while signed in.
 
@@ -359,7 +360,7 @@ Copy `.env.example` to `.env`. Laravel's own settings are documented there; thes
 | `CF_BEACON_TOKEN` | Cloudflare Web Analytics |
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | File and media storage |
 | `LATEX_ASSETS_URL` | Where the LaTeX engine files are hosted |
-| `GOOGLE_*`, `GITHUB_*`, `MICROSOFT_*`, `LINKEDIN_*` | Sign-in providers, each a client id and secret |
+| `GOOGLE_*`, `GITHUB_*`, `MICROSOFT_*` | Sign-in providers, each a client id and secret |
 | `CRON_TOKEN` | Shared secret for the nightly tidy-up |
 | `SENTRY_LARAVEL_DSN` | Error tracking |
 | `INDEXNOW_KEY` | Search engine change notifications |
