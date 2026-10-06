@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class DirectoryController extends Controller
@@ -22,11 +23,13 @@ class DirectoryController extends Controller
 
         // wildcards typed by a visitor are matched literally rather than as patterns
         $like = '%'.addcslashes($q, '%_\\').'%';
+        // "@name" searches handles the way people write them
+        $handle = '%'.addcslashes(ltrim(Str::lower($q), '@'), '%_\\').'%';
 
         $cvs = Cv::listed()
             ->with(['user:id,name,handle,headline,university,availability,avatar_version', 'tags'])
             ->when($q !== '', fn (Builder $query) => $query->where(fn (Builder $w) => $w
-                ->whereHas('user', fn (Builder $u) => $u->where('name', 'like', $like))
+                ->whereHas('user', fn (Builder $u) => $u->where('name', 'like', $like)->orWhere('handle', 'like', $handle))
                 ->orWhere('cvs.headline', 'like', $like)
                 ->orWhereHas('user', fn (Builder $u) => $u->where('headline', 'like', $like))
                 ->orWhere('key_language', 'like', $like)
@@ -46,6 +49,14 @@ class DirectoryController extends Controller
             ->paginate(config('vitafolio.per_page'))
             ->withQueryString();
 
+        // people whose profile is public, so someone can be found by name or @handle even before
+        // they publish a cv. unlisted and private profiles are never searchable
+        $people = $q === '' ? collect() : User::query()
+            ->where('profile_visibility', 'public')->whereNotNull('email_verified_at')->whereNull('suspended_at')
+            ->where(fn (Builder $u) => $u->where('name', 'like', $like)->orWhere('handle', 'like', $handle))
+            ->orderBy('name')->limit(6)
+            ->get(['id', 'name', 'handle', 'headline', 'university', 'avatar_version']);
+
         $popularTags = Tag::query()
             ->whereHas('cvs', fn ($c) => $c->listed())
             ->withCount(['cvs' => fn ($c) => $c->listed()])
@@ -55,6 +66,6 @@ class DirectoryController extends Controller
         $universities = User::whereNotNull('university')->whereNull('suspended_at')
             ->whereHas('cvs', fn (Builder $c) => $c->listed())->distinct()->orderBy('university')->pluck('university');
 
-        return view('directory.index', compact('cvs', 'q', 'selectedTags', 'availability', 'university', 'sort', 'popularTags', 'universities'));
+        return view('directory.index', compact('cvs', 'people', 'q', 'selectedTags', 'availability', 'university', 'sort', 'popularTags', 'universities'));
     }
 }
