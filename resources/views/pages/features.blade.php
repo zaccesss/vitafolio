@@ -11,7 +11,7 @@
         ['Built for everyone', 'Readable in light and dark mode, usable with a keyboard or screen reader, with a plain theme for applicant tracking systems.'],
     ];
     $steps = [
-        ['Create your account', 'Sign up with your email or with Google, GitHub, Microsoft or LinkedIn. Your first CV is ready straight away.'],
+        ['Create your account', 'Sign up with your email or with Google, GitHub or Microsoft. Your first CV is ready straight away.'],
         ['Build or upload', 'Fill in your sections, add projects and pick a theme. Or upload the file you already have.'],
         ['Share', 'Choose who can see it, then share the link, the QR code or the PDF.'],
     ];

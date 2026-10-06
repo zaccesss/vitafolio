@@ -23,7 +23,7 @@ browser.
 | Files | Uploaded PDF and Word files. LaTeX compiled in the browser with pdfLaTeX, XeLaTeX or LuaLaTeX |
 | Sharing | A clean link, a QR code, a generated PDF and a share image for each CV, plus private view counts |
 | Directory | Public CVs listed with search, skill tags, availability and university filters |
-| Sign-in | Email and password, passkeys, two-factor authentication, plus Google, GitHub, Microsoft and LinkedIn |
+| Sign-in | Email and password, passkeys, two-factor authentication, plus Google, GitHub and Microsoft |
 | Safety | Ownership checks on every change, reports with a moderation queue, suspensions and a strict content security policy |
 | Accessibility | WCAG 2.2 AA colours in light and dark themes, full keyboard use, reduced motion and a plain CV layout |
 

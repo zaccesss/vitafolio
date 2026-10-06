@@ -179,6 +179,7 @@
                 ['Report a security issue', url('/.well-known/security.txt')],
                 config('vitafolio.status_url') ? ['Service status', config('vitafolio.status_url')] : null,
                 config('vitafolio.source_url') ? ['Source code', config('vitafolio.source_url')] : null,
+                config('vitafolio.linkedin_url') ? ['LinkedIn', config('vitafolio.linkedin_url')] : null,
                 ['Sitemap', route('sitemap')],
             ]),
         ];

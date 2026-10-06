@@ -6,6 +6,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Added
 
+- A link to Vitafolio's LinkedIn page in the footer, also listed in the site's structured data for search engines.
 - Each sign-in button and connected account shows its provider's official logo beside the text: Google's four-colour G, the GitHub mark, Microsoft's four squares and LinkedIn's in.
 - Sign in with GitHub and Microsoft. The Microsoft sign-in app names vitafolio.isaacadjei.me as its publisher through a verification file at `/.well-known/microsoft-identity-association.json`.
 - A full-width header with an account menu showing your photo, name and handle, a four-column footer and a settings area with a page for each setting instead of two long forms.
@@ -31,6 +32,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Changed
 
+- The privacy policy, help guides, features page and documentation list Google, GitHub and Microsoft as the sign-in options. LinkedIn sign-in is not offered, although the code still supports it.
 - New CVs start private and new profiles start unlisted, so nothing appears in Browse CVs until its owner publishes it. A Publish button on the dashboard makes a CV public in one step. Existing CVs and profiles keep their settings.
 - The project's contact address is now vitafolio@isaacadjei.me.
 

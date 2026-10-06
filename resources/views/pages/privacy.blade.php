@@ -25,7 +25,7 @@
         <li><strong>Messages and reports:</strong> what you write when you contact us, message a CV owner or report a CV.</li>
     </ul>
     <h3>Information from sign-in providers</h3>
-    <p>If you sign in with Google, GitHub, Microsoft or LinkedIn, we receive your name, email address, profile photo address and an identifier for your account with that provider. We never receive your password for that provider. We never post anything on your behalf.</p>
+    <p>If you sign in with Google, GitHub or Microsoft, we receive your name, email address, profile photo address and an identifier for your account with that provider. We never receive your password for that provider. We never post anything on your behalf.</p>
     <h3>Information collected automatically</h3>
     <ul>
         <li><strong>Sign-in records:</strong> a session cookie keeps you signed in. Failed sign-in attempts are counted for a short time against your email and network address to stop password guessing.</li>
@@ -73,7 +73,7 @@
                 <tr class="border-b border-line"><td class="py-2 pr-4">Resend</td><td class="py-2">Delivers account emails and messages from visitors</td></tr>
                 <tr class="border-b border-line"><td class="py-2 pr-4">Cloudflare</td><td class="py-2">Routes traffic to the site, protects forms from spam and counts visits without cookies</td></tr>
                 <tr class="border-b border-line"><td class="py-2 pr-4">Sentry</td><td class="py-2">Records technical error reports</td></tr>
-                <tr><td class="py-2 pr-4">Google, GitHub, Microsoft and LinkedIn</td><td class="py-2">Confirm who you are, only if you choose to sign in with them</td></tr>
+                <tr><td class="py-2 pr-4">Google, GitHub and Microsoft</td><td class="py-2">Confirm who you are, only if you choose to sign in with them</td></tr>
             </tbody>
         </table>
     </div>

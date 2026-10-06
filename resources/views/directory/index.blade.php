@@ -13,7 +13,8 @@
             '@graph' => [
                 ['@type' => 'WebSite', 'name' => config('app.name'), 'url' => route('home'),
                     'potentialAction' => ['@type' => 'SearchAction', 'target' => route('home').'?q={search_term_string}', 'query-input' => 'required name=search_term_string']],
-                ['@type' => 'Organization', 'name' => config('app.name'), 'url' => route('home'), 'logo' => asset('icon-512.png')],
+                array_filter(['@type' => 'Organization', 'name' => config('app.name'), 'url' => route('home'), 'logo' => asset('icon-512.png'),
+                    'sameAs' => array_values(array_filter([config('vitafolio.linkedin_url'), config('vitafolio.source_url')])) ?: null]),
             ],
         ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     </x-slot:head>
