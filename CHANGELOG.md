@@ -6,6 +6,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Added
 
+- Each sign-in button and connected account shows its provider's official logo beside the text: Google's four-colour G, the GitHub mark, Microsoft's four squares and LinkedIn's in.
 - Sign in with GitHub and Microsoft. The Microsoft sign-in app names vitafolio.isaacadjei.me as its publisher through a verification file at `/.well-known/microsoft-identity-association.json`.
 - A full-width header with an account menu showing your photo, name and handle, a four-column footer and a settings area with a page for each setting instead of two long forms.
 - Pages for features, contact, a help centre with nine guides and a search box, what is new and the documentation, all linked from the footer and the sitemap.
