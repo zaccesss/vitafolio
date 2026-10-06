@@ -243,10 +243,11 @@
                     </section>
                     <section class="card mt-8 p-6" aria-labelledby="export-title">
                         <h2 id="export-title" class="text-xl">Export</h2>
-                        <p class="mt-2 text-muted">Download this CV as JSON Resume to use it in other tools. A PDF download is on the CV page.</p>
+                        <p class="mt-2 text-muted">Download this CV as JSON Resume to use it in other tools. PDF and Word downloads are on the CV page too.</p>
                         <div class="mt-4 flex flex-wrap gap-3">
                             <a class="btn btn-secondary" href="{{ route('cvs.export', $cv) }}">Download JSON Resume</a>
                             <a class="btn btn-secondary" href="{{ route('cv.pdf', $cv) }}">Download PDF</a>
+                            <a class="btn btn-secondary" href="{{ route('cv.word', $cv) }}">Download as Word</a>
                         </div>
                     </section>
                 @endif

@@ -127,6 +127,7 @@ Route::get('/cv/{cv}/og.png', OgImageController::class)->name('cv.og');
 Route::get('/cv/{cv}/qr.svg', [CvController::class, 'qr'])->name('cv.qr');
 Route::post('/cv/{cv}/report', [ReportController::class, 'store'])->middleware('throttle:reports')->name('cv.report');
 Route::get('/cv/{cv}/pdf', [CvController::class, 'pdf'])->middleware('throttle:pdf')->name('cv.pdf');
+Route::get('/cv/{cv}/word', [CvController::class, 'word'])->middleware('throttle:pdf')->name('cv.word');
 Route::get('/cv/{cv}/file', [CvDocumentController::class, 'show'])->middleware('throttle:pdf')->name('cv.file');
 Route::post('/cv/{cv}/message', [ContactController::class, 'cv'])->middleware('throttle:messages')->name('cv.message');
 Route::get('/avatar/{user}', AvatarController::class)->name('avatar');
