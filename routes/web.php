@@ -66,6 +66,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->whereIn('tab', ['details', 'projects', 'file', 'settings', 'import'])->name('edit');
         Route::put('/details', [CvEditorController::class, 'updateDetails'])->name('details');
         Route::put('/settings', [CvEditorController::class, 'updateSettings'])->name('settings');
+        Route::put('/publish', [CvEditorController::class, 'publish'])->name('publish');
         Route::put('/order', [CvEditorController::class, 'updateOrder'])->name('order');
         Route::post('/projects', [ProjectController::class, 'store'])->middleware('throttle:uploads')->name('projects.store');
         Route::put('/projects/{project}', [ProjectController::class, 'update'])->middleware('throttle:uploads')->name('projects.update');

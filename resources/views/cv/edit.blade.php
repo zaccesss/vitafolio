@@ -236,6 +236,7 @@
                         <form method="POST" action="{{ route('cvs.import', $cv) }}" enctype="multipart/form-data" class="mt-6 grid gap-4" data-confirm="Importing replaces the matching sections of this CV. Continue?">
                             @csrf
                             <x-field name="resume" label="Upload a resume.json file" type="file" accept=".json,application/json" />
+                            <p class="text-sm text-muted">Have a PDF or Word CV instead? Upload it on the <a href="{{ route('cvs.edit', [$cv, 'file']) }}">File and LaTeX tab</a>.</p>
                             <x-field name="resume_text" label="Or paste the JSON" type="textarea" rows="6" />
                             <div><button type="submit" class="btn btn-primary">Import</button></div>
                         </form>

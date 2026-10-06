@@ -173,7 +173,7 @@
     .btn:disabled { @apply cursor-not-allowed opacity-60; }
 
     .field-label { @apply mb-1 block font-semibold text-ink; }
-    .field-hint { @apply mb-2 text-sm text-muted; }
+    .field-hint { @apply mt-1.5 text-sm text-muted; }
     .field-error { @apply mt-1.5 text-sm font-semibold text-bad; }
 
     .input {
