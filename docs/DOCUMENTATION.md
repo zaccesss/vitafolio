@@ -30,7 +30,7 @@ safe and how to run your own copy.
 ### Getting started
 
 1. Create an account with an email address and password. Where the site offers them, you can also
-   continue with Google, GitHub, Microsoft or LinkedIn.
+   continue with Google, GitHub or Microsoft.
 2. Confirm your email address from the link sent to you. Nothing can be created until it is confirmed.
 3. Your first CV, called "My CV", is ready on the **My CVs** page.
 
@@ -157,7 +157,7 @@ Every table has a primary key, so the schema runs on database hosts that require
 - **Two-factor authentication** uses an authenticator app with recovery codes.
 - **Passkeys** sign in with a fingerprint, face or device PIN. Adding or removing one needs a password
   confirmed within the last three hours.
-- **Sign-in providers** are Google, GitHub, Microsoft and LinkedIn. Each one only appears once its keys
+- **Sign-in providers** are Google, GitHub and Microsoft, with LinkedIn supported in the code. Each one only appears once its keys
   are set.
 
 > [!IMPORTANT]

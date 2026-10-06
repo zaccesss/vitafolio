@@ -2,7 +2,7 @@
     <h2>Create your account</h2>
     <ol>
         <li>Select <strong>Create your CV</strong> at the top of any page.</li>
-        <li>Enter your name, email address and a password of at least 10 characters with a letter and a number. You can also continue with Google, GitHub, Microsoft or LinkedIn where they are offered.</li>
+        <li>Enter your name, email address and a password of at least 10 characters with a letter and a number. You can also continue with Google, GitHub or Microsoft where they are offered.</li>
         <li>Open the confirmation email and select the link. Nothing can be created until your email address is confirmed.</li>
     </ol>
     <p>Your first CV, called <strong>My CV</strong>, is ready straight away on the <strong>My CVs</strong> page.</p>
