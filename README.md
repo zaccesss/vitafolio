@@ -83,7 +83,7 @@ flowchart LR
         APP["FrankenPHP<br/>Laravel 13 on PHP 8.4"]
     end
     PEOPLE --> CF --> APP
-    APP --> DB[("MySQL on Aiven<br/>accounts, CVs, photos")]
+    APP --> DB[("TiDB Cloud (MySQL compatible)<br/>accounts, CVs, photos")]
     APP -- "signed requests" --> MEDIA[("Cloudinary<br/>CV files and project media")]
     APP -- "verification and alerts" --> MAIL["Resend"]
     APP -. "errors" .-> SENTRY["Sentry"]
