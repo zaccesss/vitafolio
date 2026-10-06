@@ -1,0 +1,53 @@
+% Vitafolio sidebar template: a narrow column for contact and skills beside the main story.
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=1.5cm]{geometry}
+% latin modern ships with the core packages and covers list bullets and other symbols;
+% the default fonts would need a much larger download for those
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+\usepackage{color}
+\definecolor{accent}{rgb}{0.078,0.129,0.239}
+\definecolor{panel}{rgb}{0.937,0.945,0.961}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+% plain LaTeX for list spacing and headings, so the template only needs the core packages
+\makeatletter
+\setlength{\leftmargini}{1em}
+\renewcommand{\@listI}{\leftmargin\leftmargini \topsep 1pt \itemsep 1pt \parsep 0pt}
+\let\@listi\@listI
+\makeatother
+\renewcommand{\section}[1]{\par\vspace{10pt}{\color{accent}\large\bfseries #1}\par\vspace{2pt}{\color{accent}\hrule}\vspace{5pt}}
+\newcommand{\sidesection}[1]{\par\vspace{8pt}{\color{accent}\bfseries\scshape #1}\par\vspace{3pt}}
+
+\begin{document}
+{\color{accent}\Huge\bfseries {{NAME}}}\\[3pt]
+{\large {{HEADLINE}}}
+
+\vspace{10pt}
+\noindent
+\colorbox{panel}{\begin{minipage}[t]{0.29\textwidth}
+\vspace{4pt}
+\small
+\sidesection{Contact}
+\raggedright {{CONTACT}}
+
+\sidesection{Skills}
+\raggedright {{SKILLS}}
+
+\sidesection{Education}
+\raggedright {{EDUCATION}}
+\vspace{4pt}
+\end{minipage}}
+\hfill
+\begin{minipage}[t]{0.66\textwidth}
+\section{Profile}
+{{SUMMARY}}
+
+\section{Experience}
+{{EXPERIENCE}}
+
+\section{Projects}
+{{PROJECTS}}
+\end{minipage}
+\end{document}
