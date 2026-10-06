@@ -21,7 +21,7 @@ browser.
 | CVs | Up to ten per account, each with its own address, theme, accent colour, font, section order and visibility |
 | Content | Rich sections, skills as tags, projects with images or short videos, an optional cover letter, JSON Resume import and export |
 | Files | Uploaded PDF and Word files. LaTeX compiled in the browser with pdfLaTeX, XeLaTeX or LuaLaTeX |
-| Sharing | A clean link, a QR code, generated PDF and Word files and a share image for each CV, plus private view counts. A cover letter shares its CV's link and privacy |
+| Sharing | A clean link, a QR code, generated PDF and Word files and a share image for each CV, plus private view counts. Generated PDFs are tagged PDF/UA-1 files that screen readers can follow. A cover letter shares its CV's link and privacy |
 | Directory | Public CVs listed with search, skill tags, availability and university filters |
 | Sign-in | Email and password, passkeys, two-factor authentication, plus Google, GitHub and Microsoft |
 | Safety | Ownership checks on every change, reports with a moderation queue, suspensions and a strict content security policy |
@@ -65,7 +65,7 @@ Together they mean "the pages of a life": one place that holds every version of 
 | **Resend** | **Sentry** | **GitHub Actions** |
 
 Laravel Fortify handles accounts, two-factor authentication and passkeys. Laravel Socialite handles
-the sign-in providers. PDFs come from mPDF, images from GD and the server is FrankenPHP on Alpine
+the sign-in providers. Tagged PDFs come from Typst, images from GD and the server is FrankenPHP on Alpine
 Linux. Each choice is explained in the [design decisions](docs/DOCUMENTATION.md#design-decisions).
 
 ## Architecture

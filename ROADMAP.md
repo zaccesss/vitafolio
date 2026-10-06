@@ -6,16 +6,19 @@ What comes after the first release. Ideas and requests are welcome as
 ## Next
 
 - Short demo videos and screenshots in the README
-- More LaTeX starter templates, including a two-column layout
-- Tagged PDFs from the generated CV, so screen readers read them as well as the web page
-- A cover letter that sits alongside each CV
 
 ## Later
 
-- Custom domains for a profile
+- Custom domains for a profile. This needs a paid host plan with setup for each domain
 - Interface translations
 - Endorsements from people who worked with the CV's owner, approved by the owner before they show
-- Export to Word as well as PDF
+
+## Shipped
+
+- A cover letter that sits alongside each CV (October 2026)
+- Export to Word as well as PDF (October 2026)
+- More LaTeX starter templates, including a two-column layout (October 2026)
+- Tagged PDFs from the generated CV, so screen readers read them as well as the web page (October 2026)
 
 ## Considered and not planned
 

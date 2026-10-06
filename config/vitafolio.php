@@ -39,6 +39,10 @@ return [
     // shared secret for the nightly tidy-up call to /cron; the address returns 404 when it is empty
     'cron_token' => env('CRON_TOKEN'),
 
+    // the typst binary that renders tagged cv and letter pdfs. the docker image carries it; without
+    // it the downloads fall back to an untagged mpdf render, so a fresh checkout still works
+    'typst_binary' => env('TYPST_BINARY', 'typst'),
+
     // where browsers report content security policy breaks, for example an error tracker's
     // security endpoint; reporting stays off when it is empty
     'csp_report_uri' => env('CSP_REPORT_URI'),
