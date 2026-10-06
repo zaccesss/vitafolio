@@ -15,7 +15,7 @@
                     @php($account = $connected->get($key))
                     <li class="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                         <div>
-                            <p class="font-semibold">{{ $provider['label'] }}</p>
+                            <p class="flex items-center gap-2 font-semibold"><x-provider-icon :provider="$key" />{{ $provider['label'] }}</p>
                             <p class="text-sm text-muted">{{ $account ? 'Connected'.($account->email ? ' as '.$account->email : '') : 'Not connected' }}</p>
                         </div>
                         <div class="flex flex-wrap gap-2">
