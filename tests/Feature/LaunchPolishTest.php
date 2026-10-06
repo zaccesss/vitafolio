@@ -137,4 +137,14 @@ class LaunchPolishTest extends TestCase
             $this->artisan('route:clear');
         }
     }
+
+    public function test_people_are_found_by_name_or_handle_when_their_profile_is_public(): void
+    {
+        $public = User::factory()->create(['name' => 'Amara Okafor', 'handle' => 'amara-builds', 'profile_visibility' => 'public']);
+        $unlisted = User::factory()->create(['name' => 'Amara Unlisted', 'handle' => 'amara-hidden', 'profile_visibility' => 'unlisted']);
+
+        $this->get(route('home', ['q' => '@amara-builds']))->assertOk()->assertSee('Amara Okafor')->assertDontSee('Amara Unlisted');
+        $this->get(route('home', ['q' => 'Amara']))->assertOk()->assertSee('Amara Okafor')->assertDontSee('Amara Unlisted');
+        $this->get(route('home'))->assertOk()->assertDontSee('id="people-title"', false);
+    }
 }
