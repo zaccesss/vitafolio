@@ -1,6 +1,6 @@
 @props(['provider'])
-{{-- each provider's official mark, as its sign-in brand guidance asks: google's four-colour g, the github
-     mark in the text colour so it suits both themes, microsoft's four squares and linkedin's blue in.
+{{-- each provider's official mark, as its sign-in brand guidance asks: google's four-colour g, microsoft's
+     four squares and the github mark in the text colour so it suits both themes.
      decorative only, since the button text already names the provider --}}
 @switch($provider)
     @case('google')
@@ -22,12 +22,6 @@
             <path fill="#7FBA00" d="M12 1h10v10H12z"/>
             <path fill="#00A4EF" d="M1 12h10v10H1z"/>
             <path fill="#FFB900" d="M12 12h10v10H12z"/>
-        </svg>
-        @break
-    @case('linkedin')
-        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="shrink-0">
-            <rect width="24" height="24" rx="3" fill="#0A66C2"/>
-            <path fill="#FFFFFF" d="M7.1 9.4H4.6V19h2.5V9.4zM5.85 5.2a1.45 1.45 0 1 0 0 2.9 1.45 1.45 0 0 0 0-2.9zM19.4 13.7c0-2.6-1.4-4.5-3.9-4.5-1.3 0-2.2.7-2.6 1.4V9.4h-2.4V19h2.5v-5c0-1.3.3-2.5 1.9-2.5 1.6 0 1.6 1.5 1.6 2.6V19h2.5v-5.3z"/>
         </svg>
         @break
 @endswitch

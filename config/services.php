@@ -39,12 +39,6 @@ return [
         'tenant' => env('MICROSOFT_TENANT', 'common'),
     ],
 
-    'linkedin-openid' => [
-        'client_id' => env('LINKEDIN_CLIENT_ID'),
-        'client_secret' => env('LINKEDIN_CLIENT_SECRET'),
-        'redirect' => '/auth/linkedin/callback',
-    ],
-
     'resend' => [
         'key' => env('RESEND_API_KEY'),
     ],

@@ -12,6 +12,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 - Browse CVs finds people as well as CVs. A search by name or @handle shows matching public profiles in a People row above the CV results, including people who have not published a CV yet. Unlisted and private profiles never appear.
 - Three more LaTeX starter templates: Sidebar, a two-column layout with contact and skills beside the main story. Elegant, a centred serif page with small capitals. Minimal, a clean sans-serif page with plenty of white space. All seven templates compile with pdfLaTeX, XeLaTeX and LuaLaTeX on the core download.
 - A link to Vitafolio's LinkedIn page in the footer, also listed in the site's structured data for search engines.
+- The LinkedIn page's logo, cover image and profile text in `resources/brand/linkedin`, linked from the documentation.
 - Each sign-in button and connected account shows its provider's official logo beside the text: Google's four-colour G, the GitHub mark, Microsoft's four squares and LinkedIn's in.
 - Sign in with GitHub and Microsoft. The Microsoft sign-in app names vitafolio.isaacadjei.me as its publisher through a verification file at `/.well-known/microsoft-identity-association.json`.
 - A full-width header with an account menu showing your photo, name and handle, a four-column footer and a settings area with a page for each setting instead of two long forms.
@@ -38,7 +39,8 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 ### Changed
 
 - Generated CV and cover letter PDFs are tagged PDF/UA-1 files, so screen readers read them as well as the web page. Each one declares British English as its language and carries its own title. Headings become bookmarks. Paragraphs, bulleted lists, the links table and every link carry structure tags in reading order. The photo has alt text. The PDFs are now made by Typst, which refuses to write a file that breaks the standard. mPDF stays only as a fallback for a machine without Typst.
-- The privacy policy, help guides, features page and documentation list Google, GitHub and Microsoft as the sign-in options. LinkedIn sign-in is not offered, although the code still supports it.
+- The privacy policy, help guides, features page and documentation list Google, GitHub and Microsoft as the sign-in options. LinkedIn sign-in is not offered.
+- The unused LinkedIn sign-in setup is gone: its provider entry, its keys in `.env.example`, its logo and its mentions in the code and documentation. The LinkedIn page link in the footer and structured data stays.
 - New CVs start private and new profiles start unlisted, so nothing appears in Browse CVs until its owner publishes it. A Publish button on the dashboard makes a CV public in one step. Existing CVs and profiles keep their settings.
 - The project's contact address is now vitafolio@isaacadjei.me.
 

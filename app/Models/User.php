@@ -95,7 +95,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
-     * google, github, microsoft and linkedin accounts connected for signing in
+     * google, github and microsoft accounts connected for signing in
      *
      * @return HasMany<SocialAccount, $this>
      */
