@@ -1,11 +1,11 @@
 @php
-    $tabs = ['details' => 'Content', 'letter' => 'Cover letter', 'projects' => 'Projects', 'file' => 'File and LaTeX', 'settings' => 'Look and privacy', 'import' => 'Import and export'];
+    $tabs = ['details' => 'Content', 'letter' => 'Cover letter', 'endorsements' => 'Endorsements', 'projects' => 'Projects', 'file' => 'File and LaTeX', 'settings' => 'Look and privacy', 'import' => 'Import and export'];
     $sectionLabels = ['profile' => 'Profile', 'experience' => 'Experience', 'projects' => 'Projects', 'education' => 'Education', 'skills' => 'Skills', 'links' => 'Links'];
     $cloudinary = \App\Support\Cloudinary::enabled();
     $limits = config('vitafolio.limits');
     $mediaHint = 'Images up to '.intdiv($limits['image_kb'], 1024).' MB. Videos up to '.intdiv($limits['video_kb'], 1024).' MB and '.$limits['video_seconds'].' seconds.';
 @endphp
-<x-layouts.app :title="'Edit '.$cv->title" noindex>
+<x-layouts.app :title="'Edit '.$cv->title" noindex :turnstile="$tab === 'endorsements'">
     <div class="container-page py-8">
         <nav aria-label="Breadcrumb" class="text-sm text-muted">
             <ol class="flex flex-wrap gap-2">
@@ -30,7 +30,7 @@
 
         <nav class="mt-8 flex gap-1 overflow-x-auto border-b-2 border-line" aria-label="Edit sections">
             @foreach ($tabs as $key => $label)
-                <a class="tab-link" href="{{ route('cvs.edit', [$cv, $key]) }}" @if($tab === $key) aria-current="page" @endif>{{ $label }}</a>
+                <a class="tab-link" href="{{ route('cvs.edit', [$cv, $key]) }}" @if($tab === $key) aria-current="page" @endif>{{ $label }}@if ($key === 'endorsements' && $cv->pending_endorsements > 0) <span class="badge ml-1">{{ $cv->pending_endorsements }}<span class="sr-only"> waiting for approval</span></span>@endif</a>
             @endforeach
         </nav>
 
@@ -90,6 +90,9 @@
                             </div>
                         </form>
                     </section>
+
+                @elseif ($tab === 'endorsements')
+                    @include('cv.partials.endorsements')
 
                 @elseif ($tab === 'projects')
                     <section class="card p-6" aria-labelledby="add-project-title">

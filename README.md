@@ -22,6 +22,7 @@ browser.
 | Content | Rich sections, skills as tags, projects with images or short videos, an optional cover letter, JSON Resume import and export |
 | Files | Uploaded PDF and Word files. LaTeX compiled in the browser with pdfLaTeX, XeLaTeX or LuaLaTeX |
 | Sharing | A clean link, a QR code, generated PDF and Word files and a share image for each CV, plus private view counts. Generated PDFs are tagged PDF/UA-1 files that screen readers can follow. A cover letter shares its CV's link and privacy |
+| Endorsements | People who know the owner's work can endorse a CV. Each one shows only after the owner approves it and only where the CV is visible |
 | Directory | Public CVs listed with search, skill tags, availability and university filters |
 | Sign-in | Email and password, passkeys, two-factor authentication, plus Google, GitHub and Microsoft |
 | Safety | Ownership checks on every change, reports with a moderation queue, suspensions and a strict content security policy |

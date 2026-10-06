@@ -34,85 +34,89 @@
         <x-cv-pages :cv="$cv" current="cv" />
 
         <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
-            <article aria-labelledby="cv-name"
-                class="cv-doc overflow-hidden rounded-card accent-{{ $cv->accent }} font-cv-{{ $cv->font }} {{ $cv->theme === 'minimal' ? '' : 'border border-line bg-surface shadow-card' }}">
-                <x-cv-header :cv="$cv" />
+            <div class="grid min-w-0 gap-6">
+                <article aria-labelledby="cv-name"
+                    class="cv-doc overflow-hidden rounded-card accent-{{ $cv->accent }} font-cv-{{ $cv->font }} {{ $cv->theme === 'minimal' ? '' : 'border border-line bg-surface shadow-card' }}">
+                    <x-cv-header :cv="$cv" />
 
-                <div class="grid gap-8 p-6 sm:p-8">
-                    @if (! $hasBuiltContent && $document)
-                        <section class="text-center">
-                            <h2 class="text-xl">This CV is a {{ $document->isPdf() ? 'PDF' : 'Word document' }}</h2>
-                            <p class="mt-2 text-muted">{{ $document->filename }}, {{ $document->humanSize() }}</p>
-                            <a class="btn btn-primary mt-5" href="{{ route('cv.file', $cv) }}">{{ $document->isPdf() ? 'Open the CV' : 'Download the CV' }}</a>
-                        </section>
-                    @elseif (! $hasBuiltContent)
-                        <p class="text-muted">This CV has no content yet.</p>
-                    @endif
-
-                    @foreach ($cv->orderedSections() as $section)
-                        @if ($section === 'profile' && filled($cv->profile))
-                            <section aria-labelledby="sec-profile">
-                                <h2 id="sec-profile" class="mb-3 {{ $headingClass }}">Profile</h2>
-                                <div class="prose-cv">{{ $cv->profile }}</div>
+                    <div class="grid gap-8 p-6 sm:p-8">
+                        @if (! $hasBuiltContent && $document)
+                            <section class="text-center">
+                                <h2 class="text-xl">This CV is a {{ $document->isPdf() ? 'PDF' : 'Word document' }}</h2>
+                                <p class="mt-2 text-muted">{{ $document->filename }}, {{ $document->humanSize() }}</p>
+                                <a class="btn btn-primary mt-5" href="{{ route('cv.file', $cv) }}">{{ $document->isPdf() ? 'Open the CV' : 'Download the CV' }}</a>
                             </section>
-                        @elseif ($section === 'experience' && filled($cv->experience))
-                            <section aria-labelledby="sec-experience">
-                                <h2 id="sec-experience" class="mb-3 {{ $headingClass }}">Experience</h2>
-                                <div class="prose-cv">{{ $cv->experience }}</div>
-                            </section>
-                        @elseif ($section === 'education' && filled($cv->education))
-                            <section aria-labelledby="sec-education">
-                                <h2 id="sec-education" class="mb-3 {{ $headingClass }}">Education</h2>
-                                <div class="prose-cv">{{ $cv->education }}</div>
-                            </section>
-                        @elseif ($section === 'projects' && $cv->projects->isNotEmpty())
-                            <section aria-labelledby="sec-projects">
-                                <h2 id="sec-projects" class="mb-4 {{ $headingClass }}">Projects</h2>
-                                <ul class="grid gap-5 sm:grid-cols-2">
-                                    @foreach ($cv->projects as $project)
-                                        <li class="overflow-hidden rounded-xl border border-line bg-surface">
-                                            @if ($project->media_type === 'image')
-                                                <img src="{{ \App\Support\Cloudinary::delivery($project->media_url, 'image') }}" alt="{{ $project->media_alt }}" loading="lazy" decoding="async" class="aspect-video w-full object-cover">
-                                            @elseif ($project->media_type === 'video')
-                                                {{-- never autoplays; controls let people pause; the description stands in for captions --}}
-                                                <video controls preload="metadata" playsinline class="aspect-video w-full bg-black" aria-label="{{ $project->media_alt }}">
-                                                    <source src="{{ \App\Support\Cloudinary::delivery($project->media_url, 'video') }}">
-                                                </video>
-                                            @endif
-                                            <div class="p-4">
-                                                <h3 class="font-semibold">
-                                                    @if ($project->url)<a href="{{ $project->url }}" rel="noopener noreferrer nofollow ugc">{{ $project->title }}</a>@else{{ $project->title }}@endif
-                                                </h3>
-                                                @if ($project->description)<p class="mt-1 text-sm text-muted whitespace-pre-line">{{ $project->description }}</p>@endif
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </section>
-                        @elseif ($section === 'skills' && $cv->tags->isNotEmpty())
-                            <section aria-labelledby="sec-skills">
-                                <h2 id="sec-skills" class="mb-3 {{ $headingClass }}">Skills</h2>
-                                <ul class="flex flex-wrap gap-2">
-                                    @foreach ($cv->tags as $tag)
-                                        <li><a class="tag" href="{{ route('home', ['tags' => [$tag->slug]]) }}">{{ $tag->name }}</a></li>
-                                    @endforeach
-                                </ul>
-                            </section>
-                        @elseif ($section === 'links' && $links !== [])
-                            <section aria-labelledby="sec-links">
-                                <h2 id="sec-links" class="mb-3 {{ $headingClass }}">Links</h2>
-                                <ul class="space-y-1.5">
-                                    @foreach ($links as $link)
-                                        <li class="flex flex-wrap items-center gap-x-2"><x-link-icon :kind="$link['icon']" class="size-4 shrink-0 text-muted" /><a href="{{ $link['url'] }}" rel="noopener noreferrer nofollow ugc">{{ $link['label'] }}</a> <span class="text-sm text-muted">{{ preg_replace('#^https?://(www\.)?#', '', rtrim($link['url'], '/')) }}</span></li>
-                                    @endforeach
-                                </ul>
-                            </section>
+                        @elseif (! $hasBuiltContent)
+                            <p class="text-muted">This CV has no content yet.</p>
                         @endif
-                    @endforeach
 
-                    <p class="text-sm text-muted">Last updated {{ $cv->updated_at->format('j F Y') }}</p>
-                </div>
-            </article>
+                        @foreach ($cv->orderedSections() as $section)
+                            @if ($section === 'profile' && filled($cv->profile))
+                                <section aria-labelledby="sec-profile">
+                                    <h2 id="sec-profile" class="mb-3 {{ $headingClass }}">Profile</h2>
+                                    <div class="prose-cv">{{ $cv->profile }}</div>
+                                </section>
+                            @elseif ($section === 'experience' && filled($cv->experience))
+                                <section aria-labelledby="sec-experience">
+                                    <h2 id="sec-experience" class="mb-3 {{ $headingClass }}">Experience</h2>
+                                    <div class="prose-cv">{{ $cv->experience }}</div>
+                                </section>
+                            @elseif ($section === 'education' && filled($cv->education))
+                                <section aria-labelledby="sec-education">
+                                    <h2 id="sec-education" class="mb-3 {{ $headingClass }}">Education</h2>
+                                    <div class="prose-cv">{{ $cv->education }}</div>
+                                </section>
+                            @elseif ($section === 'projects' && $cv->projects->isNotEmpty())
+                                <section aria-labelledby="sec-projects">
+                                    <h2 id="sec-projects" class="mb-4 {{ $headingClass }}">Projects</h2>
+                                    <ul class="grid gap-5 sm:grid-cols-2">
+                                        @foreach ($cv->projects as $project)
+                                            <li class="overflow-hidden rounded-xl border border-line bg-surface">
+                                                @if ($project->media_type === 'image')
+                                                    <img src="{{ \App\Support\Cloudinary::delivery($project->media_url, 'image') }}" alt="{{ $project->media_alt }}" loading="lazy" decoding="async" class="aspect-video w-full object-cover">
+                                                @elseif ($project->media_type === 'video')
+                                                    {{-- never autoplays; controls let people pause; the description stands in for captions --}}
+                                                    <video controls preload="metadata" playsinline class="aspect-video w-full bg-black" aria-label="{{ $project->media_alt }}">
+                                                        <source src="{{ \App\Support\Cloudinary::delivery($project->media_url, 'video') }}">
+                                                    </video>
+                                                @endif
+                                                <div class="p-4">
+                                                    <h3 class="font-semibold">
+                                                        @if ($project->url)<a href="{{ $project->url }}" rel="noopener noreferrer nofollow ugc">{{ $project->title }}</a>@else{{ $project->title }}@endif
+                                                    </h3>
+                                                    @if ($project->description)<p class="mt-1 text-sm text-muted whitespace-pre-line">{{ $project->description }}</p>@endif
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </section>
+                            @elseif ($section === 'skills' && $cv->tags->isNotEmpty())
+                                <section aria-labelledby="sec-skills">
+                                    <h2 id="sec-skills" class="mb-3 {{ $headingClass }}">Skills</h2>
+                                    <ul class="flex flex-wrap gap-2">
+                                        @foreach ($cv->tags as $tag)
+                                            <li><a class="tag" href="{{ route('home', ['tags' => [$tag->slug]]) }}">{{ $tag->name }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                </section>
+                            @elseif ($section === 'links' && $links !== [])
+                                <section aria-labelledby="sec-links">
+                                    <h2 id="sec-links" class="mb-3 {{ $headingClass }}">Links</h2>
+                                    <ul class="space-y-1.5">
+                                        @foreach ($links as $link)
+                                            <li class="flex flex-wrap items-center gap-x-2"><x-link-icon :kind="$link['icon']" class="size-4 shrink-0 text-muted" /><a href="{{ $link['url'] }}" rel="noopener noreferrer nofollow ugc">{{ $link['label'] }}</a> <span class="text-sm text-muted">{{ preg_replace('#^https?://(www\.)?#', '', rtrim($link['url'], '/')) }}</span></li>
+                                        @endforeach
+                                    </ul>
+                                </section>
+                            @endif
+                        @endforeach
+
+                        <p class="text-sm text-muted">Last updated {{ $cv->updated_at->format('j F Y') }}</p>
+                    </div>
+                </article>
+
+                <x-endorsement-list :cv="$cv" :is-owner="$isOwner" :heading-class="$headingClass" />
+            </div>
 
             <aside class="space-y-5 no-print" aria-label="Actions">
                 <section class="card p-5" aria-labelledby="share-title">
@@ -146,6 +150,8 @@
                         <p class="text-sm">More from {{ $user->firstName() }}: <a href="{{ route('profile.show', $user->handle) }}">view profile</a></p>
                     </section>
                 @endif
+
+                <x-endorsement-form :cv="$cv" :is-owner="$isOwner" :mine="$myEndorsement" :pending="$pendingEndorsements" />
 
                 @if (! $isOwner && ! $cv->show_email)
                     <a href="#message" class="mobile-cta btn btn-primary no-print lg:hidden">Message {{ $user->firstName() }}</a>

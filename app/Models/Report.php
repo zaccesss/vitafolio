@@ -15,7 +15,7 @@ class Report extends Model
         'other' => 'Something else',
     ];
 
-    protected $fillable = ['reason', 'details', 'reporter_hash'];
+    protected $fillable = ['reason', 'details', 'reporter_hash', 'endorsement_id'];
 
     protected function casts(): array
     {
@@ -26,5 +26,15 @@ class Report extends Model
     public function cv(): BelongsTo
     {
         return $this->belongsTo(Cv::class);
+    }
+
+    /**
+     * set when the report is about one endorsement on the cv rather than the cv itself
+     *
+     * @return BelongsTo<Endorsement, $this>
+     */
+    public function endorsement(): BelongsTo
+    {
+        return $this->belongsTo(Endorsement::class);
     }
 }

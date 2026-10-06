@@ -21,14 +21,19 @@ class CvController extends Controller
     public function show(Request $request, Cv $cv): View
     {
         abort_unless($cv->isVisibleTo($request->user()), 404);
-        $cv->load(['user', 'tags', 'projects', 'document']);
+        $cv->load(['user', 'tags', 'projects', 'document', 'endorsements' => fn ($q) => $q->shown()->with('endorser')]);
+        $viewer = $request->user();
         // a printed qr code carries ?src=qr, so scans are counted apart from ordinary visits
         ViewRecorder::record($cv, $request, $request->user(), $request->query('src') === 'qr' ? 'qr' : 'view');
 
         return view('cv.show', [
             'cv' => $cv,
             'links' => Links::parse($cv->user->links),
-            'isOwner' => $request->user()?->id === $cv->user_id,
+            'isOwner' => $viewer?->id === $cv->user_id,
+            // the viewer's own endorsement, whatever its status, so they can edit or withdraw it
+            'myEndorsement' => $viewer ? $cv->endorsements()->where('endorser_id', $viewer->id)->first() : null,
+            'pendingEndorsements' => $viewer?->id === $cv->user_id
+                ? $cv->endorsements()->where('status', 'pending')->whereNull('hidden_at')->count() : 0,
         ]);
     }
 

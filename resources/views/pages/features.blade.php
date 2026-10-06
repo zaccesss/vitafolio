@@ -6,7 +6,7 @@
         ['Show your work', 'Add projects with links, images and short videos, each described for people who cannot see them.'],
         ['Share it anywhere', 'A clean link, a QR code for printed copies, a polished PDF and a preview card when the link is posted.'],
         ['Know what is working', 'See views, PDF downloads, QR scans and where visitors came from, counted without tracking anyone.'],
-        ['Hear from employers', 'Visitors can message you from your CV without seeing your email address.'],
+        ['Hear from employers', 'Visitors can message you from your CV without seeing your email address. People you worked with can endorse it, shown only once you approve.'],
         ['Safe by design', 'Passkeys, two-factor authentication, breach-checked passwords and a strict security policy on every page.'],
         ['Built for everyone', 'Readable in light and dark mode, usable with a keyboard or screen reader, with a plain theme for applicant tracking systems.'],
     ];

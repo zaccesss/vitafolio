@@ -114,6 +114,12 @@ class Cv extends Model
         return $this->hasMany(Report::class);
     }
 
+    /** @return HasMany<Endorsement, $this> */
+    public function endorsements(): HasMany
+    {
+        return $this->hasMany(Endorsement::class)->latest();
+    }
+
     /** listed in the directory: public and not hidden, with the owner verified, not suspended and not private */
     public function scopeListed(Builder $query): Builder
     {
