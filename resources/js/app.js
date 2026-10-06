@@ -170,6 +170,11 @@ Alpine.data('passkeyRegister', () => ({
 window.Alpine = Alpine;
 Alpine.start();
 
+// flowcharts in the documentation and changelog load the drawing library only when a page has one
+if (document.querySelector('pre > code.language-mermaid')) {
+    import('./diagrams.js').then(({ prepareDiagrams, renderDiagrams }) => renderDiagrams(prepareDiagrams()));
+}
+
 // vue islands: an element with data-vue="Name" gets that component, with props from data-props.
 // each component is loaded on demand, so pages without one never download vue at all
 const islands = import.meta.glob('./components/*.vue');

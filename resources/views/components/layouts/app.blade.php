@@ -173,7 +173,6 @@
                 ['Terms of use', route('terms')],
                 ['Cookies', route('cookies')],
                 ['Copyright', route('copyright')],
-                ['Copyright', route('copyright')],
                 ['Accessibility', route('accessibility')],
             ],
             'More' => array_filter([
