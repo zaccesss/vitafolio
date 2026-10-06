@@ -75,7 +75,7 @@
         <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
                 <h2 id="browse-title" class="text-2xl">Browse CVs</h2>
-                <p class="mt-1 text-muted">Search public CVs by name, role, skill or university.</p>
+                <p class="mt-1 text-muted">Search public CVs and people by name, @handle, role, skill or university.</p>
             </div>
         </div>
 
@@ -83,7 +83,7 @@
             @foreach ($selectedTags as $tag)<input type="hidden" name="tags[]" value="{{ $tag }}">@endforeach
             <div class="md:col-span-4">
                 <label for="q" class="field-label">Search</label>
-                <input id="q" name="q" type="search" value="{{ $q }}" class="input" placeholder="For example: Python or data analyst" autocomplete="off">
+                <input id="q" name="q" type="search" value="{{ $q }}" class="input" placeholder="For example: Python, data analyst or @handle" autocomplete="off">
             </div>
             <div class="md:col-span-3">
                 <label for="university" class="field-label">University</label>
@@ -131,6 +131,25 @@
                     @endforeach
                 </ul>
             </nav>
+        @endif
+
+        @if ($people->isNotEmpty())
+            <section class="mt-8" aria-labelledby="people-title">
+                <h3 id="people-title" class="text-lg">People</h3>
+                <ul class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($people as $person)
+                        <li>
+                            <a href="{{ route('profile.show', $person->handle) }}" class="card card-hover flex items-center gap-3 p-4 no-underline">
+                                <x-avatar :user="$person" size="sm" />
+                                <span class="min-w-0">
+                                    <span class="block font-semibold text-ink">{{ $person->name }}</span>
+                                    <span class="block truncate text-sm text-muted">{{ '@'.$person->handle }}@if ($person->headline) &middot; {{ $person->headline }}@endif</span>
+                                </span>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </section>
         @endif
 
         <div class="mt-8 flex flex-wrap items-center justify-between gap-3">
