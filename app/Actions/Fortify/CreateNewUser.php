@@ -39,7 +39,7 @@ class CreateNewUser implements CreatesNewUsers
                 'password' => Hash::make($input['password']),
                 'handle' => User::suggestHandle($input['name']),
             ]);
-            $user->cvs()->create(['title' => 'My CV', 'slug' => Cv::uniqueSlug($user->name)]);
+            $user->cvs()->create(['title' => 'My CV', 'slug' => Cv::uniqueSlug($user->name), 'visibility' => 'private']);
 
             return $user;
         });

@@ -74,6 +74,15 @@ class CvEditorController extends Controller
             : redirect()->route('cvs.edit', [$cv, 'details'])->with('status', 'Section order saved.');
     }
 
+    /** makes a private or unlisted cv public in one step, from the dashboard or the editor */
+    public function publish(Cv $cv): RedirectResponse
+    {
+        Gate::authorize('manage', $cv);
+        $cv->forceFill(['visibility' => 'public'])->save();
+
+        return back()->with('status', $cv->title.' is now public and listed in Browse CVs.');
+    }
+
     public function updateSettings(Request $request, Cv $cv): RedirectResponse
     {
         Gate::authorize('manage', $cv);

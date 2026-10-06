@@ -223,7 +223,7 @@ class SocialAuthController extends Controller
                 'handle' => User::suggestHandle($name),
             ]);
             $user->forceFill(['has_password' => false, 'email_verified_at' => $verified ? now() : null])->save();
-            $user->cvs()->create(['title' => 'My CV', 'slug' => Cv::uniqueSlug($user->name)]);
+            $user->cvs()->create(['title' => 'My CV', 'slug' => Cv::uniqueSlug($user->name), 'visibility' => 'private']);
             $this->link($user, $provider, $remote);
 
             return $user;

@@ -42,6 +42,12 @@
                         <a class="btn btn-sm btn-primary" href="{{ route('cvs.edit', $cv) }}">Edit<span class="sr-only"> {{ $cv->title }}</span></a>
                         <a class="btn btn-sm btn-secondary" href="{{ route('cv.show', $cv) }}">View<span class="sr-only"> {{ $cv->title }}</span></a>
                         <a class="btn btn-sm btn-secondary" href="{{ route('analytics') }}">Analytics<span class="sr-only"> for {{ $cv->title }}</span></a>
+                        @if ($cv->visibility !== 'public' && ! $cv->hidden_at)
+                            <form method="POST" action="{{ route('cvs.publish', $cv) }}" data-confirm="Publish {{ $cv->title }}? It will be public and listed in Browse CVs. You can make it private again at any time.">
+                                @csrf @method('PUT')
+                                <button type="submit" class="btn btn-sm btn-secondary">Publish<span class="sr-only"> {{ $cv->title }}</span></button>
+                            </form>
+                        @endif
                     </div>
                 </li>
             @endforeach
