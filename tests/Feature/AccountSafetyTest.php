@@ -166,4 +166,20 @@ class AccountSafetyTest extends TestCase
         $this->assertStringContainsString('no-store', $this->get(route('cv.qr', $cv))->headers->get('Cache-Control'));
         $this->assertStringContainsString('public', $this->get(route('cv.qr', Cv::factory()->create()))->headers->get('Cache-Control'));
     }
+
+    public function test_deleting_the_account_returns_to_the_form_after_confirming_the_password(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // not confirmed recently: off to confirm, with the data page as the place to come back to
+        $this->delete(route('account.destroy'), ['confirm' => 'DELETE'])->assertRedirect(route('password.confirm'));
+        $this->assertSame(route('settings.data'), session('url.intended'));
+        $this->assertNotNull($user->fresh());
+
+        // confirmed: the same form now deletes the account
+        $this->withSession(['auth.password_confirmed_at' => time()])
+            ->delete(route('account.destroy'), ['confirm' => 'DELETE'])->assertRedirect();
+        $this->assertNull($user->fresh());
+    }
 }
