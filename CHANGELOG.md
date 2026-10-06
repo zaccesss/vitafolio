@@ -8,6 +8,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 - Download a CV as a Word document, beside the PDF on the CV page and in the editor's Export section. It uses Word's own title, heading and list styles, so it stays editable and reads well in screen readers and applicant tracking systems. It follows the same visibility rules as the PDF.
 - Browse CVs finds people as well as CVs. A search by name or @handle shows matching public profiles in a People row above the CV results, including people who have not published a CV yet. Unlisted and private profiles never appear.
+- Three more LaTeX starter templates: Sidebar, a two-column layout with contact and skills beside the main story. Elegant, a centred serif page with small capitals. Minimal, a clean sans-serif page with plenty of white space. All seven templates compile with pdfLaTeX, XeLaTeX and LuaLaTeX on the core download.
 - A link to Vitafolio's LinkedIn page in the footer, also listed in the site's structured data for search engines.
 - Each sign-in button and connected account shows its provider's official logo beside the text: Google's four-colour G, the GitHub mark, Microsoft's four squares and LinkedIn's in.
 - Sign in with GitHub and Microsoft. The Microsoft sign-in app names vitafolio.isaacadjei.me as its publisher through a verification file at `/.well-known/microsoft-identity-association.json`.
