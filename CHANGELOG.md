@@ -9,6 +9,8 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 - A full-width header with an account menu showing your photo, name and handle, a four-column footer and a settings area with a page for each setting instead of two long forms.
 - Pages for features, contact, a help centre with nine guides and a search box, what is new and the documentation, all linked from the footer and the sitemap.
 - Complete terms of use and privacy policy, written for UK GDPR, with a contents list on each.
+- The Import tab points to the File and LaTeX tab for PDF and Word CVs.
+- Form hints now sit under their box on every form, so fields side by side always line up. Required fields carry a red asterisk, announced as "required" to screen readers. Optional fields still say so.
 - A copyright and licences page, linked from the copyright line and the Legal column of the footer. It covers who owns CVs, the MIT licence for the code and the name and logo. It also lists every third-party font and library.
 - The sitemap lists the nine help guides and the copyright page. Every entry carries a last-modified date.
 - The CV and LaTeX editors have a Help link. Links that would leave an editor, such as Preview, open in a new tab and say so, so unsaved work is never lost.
@@ -24,6 +26,11 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 - Links tagged with `?utm_source=` show by their tag in Analytics.
 - A thin progress bar at the top while the next page loads. Submit buttons disable themselves and say what they are doing, so a form cannot be sent twice.
 - Analytics: profile views, QR code scans, PDF downloads and file opens are counted alongside CV views. An Analytics page shows them for the last 7, 30 or 90 days with a line chart, views per CV, referring sites, a busiest day and a table for every chart.
+
+### Changed
+
+- New CVs start private and new profiles start unlisted, so nothing appears in Browse CVs until its owner publishes it. A Publish button on the dashboard makes a CV public in one step. Existing CVs and profiles keep their settings.
+- The project's contact address is now vitafolio@isaacadjei.me.
 
 ### Security
 
