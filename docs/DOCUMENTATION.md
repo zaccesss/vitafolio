@@ -326,12 +326,14 @@ release never serves traffic.
 
 To deploy on a container host such as Render:
 
-1. Create a MySQL 8 database and note its host, port, name, user and password.
+1. Create a MySQL 8 compatible database and note its host, port, name, user and password. Production uses a
+   TiDB Cloud Starter cluster in Frankfurt, which is free and never powers off when idle.
 2. Create a web service from this repository using the Dockerfile.
 3. Set `APP_KEY` (from `php artisan key:generate --show`), `APP_URL`, the `DB_*` values and any optional
    services from the [configuration table](#configuration). Set `SESSION_SECURE_COOKIE=true`.
-4. If the database requires TLS, upload its CA certificate as a secret file and point
-   `MYSQL_ATTR_SSL_CA` at it.
+4. If the database requires TLS, point `MYSQL_ATTR_SSL_CA` at its CA certificate. A host with a publicly
+   trusted certificate, such as TiDB Cloud, works with the container's own bundle at
+   `/etc/ssl/certs/ca-certificates.crt`. Otherwise upload the CA as a secret file and point at that.
 5. Set the health check path to `/up`.
 6. After the first deploy, open a shell and run `php artisan vitafolio:make-admin you@example.com`.
 
@@ -346,7 +348,7 @@ To deploy on a container host such as Render:
 | Secret | Where it lives | How to rotate |
 | --- | --- | --- |
 | `APP_KEY` | Host environment | As above, with `APP_PREVIOUS_KEYS` |
-| Database password | Aiven, then `DB_PASSWORD` on the host | Reset in Aiven, update the host, redeploy |
+| Database password | TiDB Cloud, then `DB_PASSWORD` on the host | Reset in TiDB Cloud, update the host, redeploy |
 | `CLOUDINARY_API_SECRET` | Cloudinary, then the host | Regenerate in Cloudinary settings, update the host |
 | `RESEND_API_KEY` | Resend, then the host | Create a new key, update the host, delete the old key |
 | OAuth client secrets | Each provider's console, then the host | Create a new secret, update the host, delete the old one |
@@ -434,6 +436,7 @@ image and a Gitleaks scan for committed secrets.
 | A provider sign-in says the account already exists | Sign in with the password first, then connect the provider from the account page |
 | `/cron` returns 404 | `CRON_TOKEN` is not set |
 | Database connection fails over TLS | `MYSQL_ATTR_SSL_CA` must point at the CA file inside the container |
+| The database host stops resolving and the site returns 502 | A free database plan has powered the service off. Power it on in the provider's console, then redeploy |
 
 ## Frequently asked questions
 
