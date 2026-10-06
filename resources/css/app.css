@@ -225,6 +225,9 @@
     .confirm-dialog { @apply m-auto w-[min(28rem,calc(100%-2rem))] rounded-2xl border border-line bg-surface p-6 text-ink shadow-xl; }
     .confirm-dialog::backdrop { background: rgb(0 0 0 / 0.55); }
     pre.has-copy { @apply relative; }
+    .diagram { @apply my-8; }
+    .diagram img { @apply mx-auto block h-auto max-w-full; }
+    .diagram summary { @apply mt-3 cursor-pointer text-sm text-muted; }
     .copy-code { @apply absolute top-2 right-2 min-h-8 px-3 py-1 text-sm; }
     details.faq summary { @apply list-none; }
     /* safari draws its own triangle on summary unless this marker is hidden too */
