@@ -71,6 +71,11 @@ class AppServiceProvider extends ServiceProvider
             Limit::perHour(5)->by('ip:'.$request->ip()),
             Limit::perDay(20)->by('ip-day:'.$request->ip()),
         ]);
+        // endorsements come from signed-in accounts, so the limit follows the account as well as the address
+        RateLimiter::for('endorsements', fn (Request $request) => [
+            Limit::perHour(10)->by('user:'.$request->user()?->id),
+            Limit::perHour(20)->by('ip:'.$request->ip()),
+        ]);
         RateLimiter::for('pdf', fn (Request $request) => Limit::perMinute(6)->by($request->ip()));
         RateLimiter::for('uploads', fn (Request $request) => Limit::perMinute(10)->by((string) $request->user()?->id));
     }

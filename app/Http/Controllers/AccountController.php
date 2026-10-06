@@ -89,7 +89,7 @@ class AccountController extends Controller
     /** everything stored about the account, as a download, for the right of access */
     public function export(Request $request): JsonResponse
     {
-        $user = $request->user()->load(['cvs.tags', 'cvs.document', 'cvs.projects', 'socialAccounts', 'passkeys']);
+        $user = $request->user()->load(['cvs.tags', 'cvs.document', 'cvs.projects', 'cvs.endorsements.endorser', 'socialAccounts', 'passkeys', 'endorsementsWritten.cv']);
 
         return response()->json([
             'exported_at' => now()->toIso8601String(),
@@ -102,17 +102,20 @@ class AccountController extends Controller
             'previous_handles' => DB::table('handle_history')->where('user_id', $user->id)->get(['handle', 'released_at']),
             'signed_in_devices' => self::sessionsFor($user)->map(fn ($s) => ['device' => $s->device, 'ip_address' => $s->ip_address, 'last_active' => $s->last_active]),
             'reports_made' => [],
+            // what this account wrote about other people's cvs; the other person's own details stay out
+            'endorsements_written' => $user->endorsementsWritten->map(fn ($e) => ['cv_address' => $e->cv ? route('cv.show', $e->cv) : null] + $e->exportFields()),
             'cvs' => $user->cvs->map(fn ($cv) => [
                 'resume' => JsonResume::export($cv->setRelation('user', $user)),
                 'settings' => $cv->only(['title', 'slug', 'visibility', 'show_email', 'theme', 'accent', 'font', 'section_order', 'view_count', 'created_at', 'updated_at']),
                 'latex_source' => $cv->latex_source,
                 'cover_letter' => $cv->hasCoverLetter() ? $cv->only(['letter_to', 'cover_letter']) : null,
                 'uploaded_file' => $cv->document?->only(['filename', 'mime', 'size']),
+                'endorsements_received' => $cv->endorsements->map(fn ($e) => ['from' => $e->endorser->name] + $e->exportFields()),
             ]),
         ], 200, ['Content-Disposition' => 'attachment; filename="vitafolio-my-data.json"'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
-    /** removes the account and every cv, file, picture and view record through the cascades */
+    /** removes the account, every cv, file, picture, view record and endorsement written or received through the cascades */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validate(['confirm' => ['required', 'in:DELETE']], ['confirm.in' => 'Type DELETE in capitals to confirm.']);

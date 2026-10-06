@@ -11,6 +11,7 @@ use App\Http\Controllers\CvDocumentController;
 use App\Http\Controllers\CvEditorController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DirectoryController;
+use App\Http\Controllers\EndorsementController;
 use App\Http\Controllers\LatexController;
 use App\Http\Controllers\OgImageController;
 use App\Http\Controllers\ProfileController;
@@ -66,7 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/cvs', [CvEditorController::class, 'store'])->name('cvs.store');
     Route::prefix('/cvs/{cv}')->name('cvs.')->group(function () {
         Route::get('/edit/{tab?}', [CvEditorController::class, 'edit'])
-            ->whereIn('tab', ['details', 'letter', 'projects', 'file', 'settings', 'import'])->name('edit');
+            ->whereIn('tab', ['details', 'letter', 'endorsements', 'projects', 'file', 'settings', 'import'])->name('edit');
         Route::put('/details', [CvEditorController::class, 'updateDetails'])->name('details');
         Route::put('/letter', [CvEditorController::class, 'updateLetter'])->name('letter');
         Route::put('/settings', [CvEditorController::class, 'updateSettings'])->name('settings');
@@ -83,6 +84,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/export.json', [CvEditorController::class, 'exportJson'])->name('export');
         Route::post('/duplicate', [CvEditorController::class, 'duplicate'])->name('duplicate');
         Route::delete('/', [CvEditorController::class, 'destroy'])->name('destroy');
+        Route::put('/endorsements/{endorsement}', [EndorsementController::class, 'decide'])->scopeBindings()->name('endorsements.decide');
+    });
+
+    // written about someone else's cv; scoped, so an endorsement only answers under its own cv
+    Route::prefix('/cv/{cv}/endorsements')->name('cv.endorsements.')->scopeBindings()->group(function () {
+        Route::post('/', [EndorsementController::class, 'store'])->middleware('throttle:endorsements')->name('store');
+        Route::put('/{endorsement}', [EndorsementController::class, 'update'])->middleware('throttle:endorsements')->name('update');
+        Route::delete('/{endorsement}', [EndorsementController::class, 'destroy'])->name('destroy');
     });
 
     // settings: public profile, photo and handle, then sign-in and data; old addresses redirect here
@@ -119,6 +128,8 @@ Route::middleware(['auth', 'verified', 'can:admin'])->prefix('/admin')->name('ad
     Route::post('/cvs/{cv}/restore', [ModerationController::class, 'restore'])->name('restore');
     Route::post('/reports/{report}/dismiss', [ModerationController::class, 'dismiss'])->name('dismiss');
     Route::post('/users/{user}/suspend', [ModerationController::class, 'suspend'])->name('suspend');
+    Route::post('/endorsements/{endorsement}/hide', [ModerationController::class, 'hideEndorsement'])->name('endorsements.hide');
+    Route::post('/endorsements/{endorsement}/restore', [ModerationController::class, 'restoreEndorsement'])->name('endorsements.restore');
     Route::delete('/users/{user}/avatar', [ModerationController::class, 'removeAvatar'])->name('avatar.remove');
 });
 
@@ -127,6 +138,7 @@ Route::get('/cv/{cv}', [CvController::class, 'show'])->name('cv.show');
 Route::get('/cv/{cv}/og.png', OgImageController::class)->name('cv.og');
 Route::get('/cv/{cv}/qr.svg', [CvController::class, 'qr'])->name('cv.qr');
 Route::post('/cv/{cv}/report', [ReportController::class, 'store'])->middleware('throttle:reports')->name('cv.report');
+Route::post('/cv/{cv}/endorsements/{endorsement}/report', [ReportController::class, 'endorsement'])->middleware('throttle:reports')->scopeBindings()->name('cv.endorsements.report');
 Route::get('/cv/{cv}/pdf', [CvController::class, 'pdf'])->middleware('throttle:pdf')->name('cv.pdf');
 Route::get('/cv/{cv}/word', [CvController::class, 'word'])->middleware('throttle:pdf')->name('cv.word');
 // the cover letter shares its cv's address and visibility; a cv without one answers 404 here

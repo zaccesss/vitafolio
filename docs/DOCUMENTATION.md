@@ -46,12 +46,13 @@ private.
 
 ### Building a CV
 
-Each CV has six tabs:
+Each CV has seven tabs:
 
 | Tab | What you do there |
 | --- | --- |
 | Content | Headline, main language, profile, experience, education and skills, plus the order the sections appear in |
 | Cover letter | An optional letter to send with this CV, with a line saying who it is for |
+| Endorsements | Endorsements other people wrote about this CV, to approve, hide or delete |
 | Projects | Up to twelve projects with a link, a description and an image or short video |
 | File and LaTeX | Upload a PDF or Word file. The LaTeX editor writes and compiles one instead |
 | Look and privacy | Title, address, theme, accent colour, font, whether to show your email and who can see the CV |
@@ -75,6 +76,34 @@ accent colour, font and visibility.
 
 Every one of these addresses obeys the CV's own visibility rules, including moderator hiding, and
 answers 404 while the letter is empty. A CV without a letter shows no switch and no letter links.
+
+### Endorsements
+
+People who worked or studied with a CV's owner can endorse that CV from its page. An endorsement
+belongs to one CV rather than the profile, because each CV has its own visibility and moderation
+already works per CV. The writer needs a signed-in, verified account in good standing. They choose how
+they know the owner (worked together, managed them, was managed by them, studied together, taught
+them, mentored them, worked with them as a client or another connection). They may add a role or
+context of up to 120 characters. The text itself runs from 20 to 600 characters.
+
+| Rule | Detail |
+| --- | --- |
+| Approval | Every endorsement starts as waiting. Only the CV's owner can approve, hide or delete it, from the editor's **Endorsements** tab |
+| Visibility | Only approved endorsements show, only on the CV's own page and only to people who can already open that CV |
+| One each | One endorsement per writer per CV, enforced by a unique index as well as the form |
+| Editing | The writer can edit or withdraw their own from the CV page. Editing an approved one sends it back for approval |
+| Notifications | The owner is emailed when one arrives. The dashboard and the editor tab show how many are waiting |
+| Abuse | Turnstile on the form, a rate limit and reports through the moderation queue. A suspended writer's endorsements stop showing. A writer cannot withdraw one a moderator has hidden, so the decision and its reports stay |
+
+| Address | What it does |
+| --- | --- |
+| `POST /cv/{address}/endorsements` | Sends a new endorsement |
+| `PUT` and `DELETE /cv/{address}/endorsements/{id}` | The writer edits or withdraws it. The owner may also delete it |
+| `PUT /cvs/{address}/endorsements/{id}` | The owner approves or hides it |
+| `POST /cv/{address}/endorsements/{id}/report` | Reports it to moderators |
+
+Each endorsement address only answers under its own CV, so one CV's owner can never reach another
+CV's endorsements.
 
 ### Sharing a CV
 
@@ -156,6 +185,9 @@ erDiagram
     cvs ||--o{ cv_views : counts
     users ||--o{ profile_views : counts
     cvs ||--o{ reports : receives
+    cvs ||--o{ endorsements : receives
+    users ||--o{ endorsements : writes
+    endorsements ||--o{ reports : receives
 ```
 
 | Table | Notes |
@@ -167,7 +199,8 @@ erDiagram
 | `tags` and `cv_tag` | Skills, with spelling variants such as "JS" and "JavaScript" folded into one tag |
 | `cv_views` | One row per visitor per CV per kind (view, QR scan, PDF download or file open) per day. The visitor is a salted daily hash, never an address |
 | `profile_views` | The same, for profile pages |
-| `reports` | Visitor reports with a reason, optional details and a hashed reporter |
+| `reports` | Visitor reports with a reason, optional details and a hashed reporter. `endorsement_id` is set when the report is about one endorsement on the CV |
+| `endorsements` | One per writer per CV: relationship, optional context, text and a `status` of pending, approved or hidden. `hidden_at` is set by moderators. Deleting the CV or either account deletes it |
 | `social_accounts` | One row per connected provider, keyed by the provider's own id for the person |
 | `passkeys` | One row per passkey, with its name and when it was last used |
 | `handle_history` | Old handles, held for 30 days so they redirect and cannot be taken by someone else |
@@ -214,7 +247,8 @@ private profile also takes its CVs out of the directory and out of search engine
 | Private | No | Owner and admins only | No | No |
 | Hidden by a moderator | No | Owner and admins only | No | No |
 
-A CV's cover letter, with its PDF and Word downloads, follows exactly the same rules as the CV.
+A CV's cover letter, with its PDF and Word downloads, follows exactly the same rules as the CV. So do
+its approved endorsements: a private or hidden CV shows none of them to anyone else.
 
 A public CV is also kept out of the directory and search when its owner's profile is private, their
 email is unverified or the account is suspended. Owners and admins always see a banner saying which of
@@ -270,7 +304,7 @@ editor for anyone who finds it easier with a screen reader.
 | Uploaded files | Served with a sandbox policy, so a script inside a PDF cannot reach the site |
 | Links | Only `http` and `https` links are kept. Each is labelled from its real address, so a lookalike cannot pose as a known site |
 | Sessions | Stored in the database, encrypted and ended everywhere on suspension |
-| Spam | Cloudflare Turnstile on sign-up and contact forms, a hidden honeypot field and rate limits |
+| Spam | Cloudflare Turnstile on sign-up, contact, report and endorsement forms, a hidden honeypot field and rate limits |
 | Container | Runs as an unprivileged user. CI scans the image, the PHP packages and the npm packages for known vulnerabilities on every pull request |
 | Sessions and devices | Remember-me cookies last 30 days. A password reset signs every device out; a password change signs every other device out. Settings lists every signed-in device and can end any one |
 
@@ -282,6 +316,7 @@ editor for anyone who finds it easier with a screen reader.
 | Uploads | 10 a minute per account |
 | Messages to CV owners | 5 an hour and 20 a day per address |
 | Reports | 5 an hour per address |
+| Endorsements sent or edited | 10 an hour per account, 20 an hour per address |
 | PDF and file downloads | 6 a minute per address |
 
 Report a vulnerability through the [security policy](../SECURITY.md). Never open a public issue for one.
@@ -294,6 +329,8 @@ Report a vulnerability through the [security policy](../SECURITY.md). Never open
 - Site analytics, where enabled, are Cloudflare Web Analytics: no cookies and no tracking across sites.
 - Photos from sign-in providers are copied once on request, never loaded from the provider's site.
 - Every account can download all its data as JSON and delete itself, which removes its files too.
+- Endorsements appear in the data download of both the writer and the CV's owner. Deleting the CV
+  or either account deletes the endorsement.
 
 ## Search and sharing
 
