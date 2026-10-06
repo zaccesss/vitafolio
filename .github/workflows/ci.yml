@@ -32,6 +32,16 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
+      # the tagged pdf tests run the same typst release as the production image, checked against its published digest
+      - name: Install typst
+        run: |
+          curl -sSfL --retry 5 --retry-delay 5 --retry-all-errors -o /tmp/typst.tar.xz \
+            "https://github.com/typst/typst/releases/download/v0.15.1/typst-x86_64-unknown-linux-musl.tar.xz"
+          echo "a6d077d0a95eed5a2eba715b2dae06be954f624ccbf85758a03f389ded33118c  /tmp/typst.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/typst.tar.xz -C /tmp
+          sudo install /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/typst
+          typst --version
+
       - name: Prepare the environment
         run: |
           cp .env.example .env
@@ -91,6 +101,9 @@ jobs:
           tags: vitafolio:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Check the pdf renderer runs in the image
+        run: docker run --rm --entrypoint typst vitafolio:ci --version
 
       # fails on a known critical or high vulnerability that has a fix; unfixed ones are reported only
       - name: Scan the image

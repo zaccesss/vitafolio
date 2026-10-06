@@ -82,6 +82,13 @@ Every CV has its own address. From the CV page you can copy the link, show a QR 
 copies, download a generated PDF and open any attached file. When the link is posted on a social site
 or in a chat, a preview card shows your photo, name, headline and top skills.
 
+Generated PDFs, for the CV and its cover letter, are tagged PDF/UA-1 files, so screen readers read
+them the same way as the web page. Each one declares its language (British English) and its title, which
+viewers show instead of the file name. The name, section headings and project titles are real headings,
+which also become the PDF's bookmarks. Paragraphs, bulleted lists, the links table and every link carry
+their own structure tags in reading order. The photo has alt text, while the page footer is marked as
+page furniture so it is not read out on every page.
+
 On **My CVs**, each CV shows how many people viewed it over the last 30 days and which sites sent them.
 Your own visits are never counted.
 
@@ -128,7 +135,8 @@ flowchart LR
 | `app/Support` | Plain helpers: link parsing, images, Cloudinary, file storage, LaTeX templates, JSON Resume, view counts and IndexNow |
 | `app/Policies` | `CvPolicy`, the single place that decides who may change a CV |
 | `app/Console/Commands` | `vitafolio:make-admin` and `vitafolio:tidy` |
-| `resources/views` | Blade pages and components, the PDF layout and plain-text emails |
+| `resources/views` | Blade pages and components, the fallback PDF layout and plain-text emails |
+| `resources/pdf` | `cv.typ`, the Typst layout for the tagged CV and cover letter PDFs |
 | `resources/js` | Alpine components in `app.js` and the Vue islands in `components/` |
 | `resources/latex` | The four LaTeX starter templates |
 | `resources/brand` | SVG sources for every icon and share image, rendered by `scripts/brand-assets.sh` |
@@ -319,6 +327,7 @@ Copy `.env.example` to `.env`. Laravel's own settings are documented there; thes
 | `SENTRY_LARAVEL_DSN` | Error tracking |
 | `INDEXNOW_KEY` | Search engine change notifications |
 | `STORAGE_ALLOWANCE_MB` | Storage per account, 100 by default |
+| `TYPST_BINARY` | The Typst binary for tagged PDFs, `typst` on the path by default |
 
 Each provider's callback address is the site address followed by `/auth/<provider>/callback`, for
 example `/auth/google/callback`. Microsoft sign-in uses the `common` tenant by default so personal, work
@@ -334,12 +343,17 @@ The [README](../README.md#running-it-locally) has the quick start. A few more de
   written to `storage/logs/laravel.log`.
 - The service worker only registers in a production build, so development never serves stale files.
 - `scripts/brand-assets.sh` needs `rsvg-convert` (from librsvg) and Python 3.
+- Generated PDFs need [Typst](https://typst.app) 0.15 or later on the path (`brew install typst` on
+  macOS). Without it, CV and letter PDFs still download, made by mPDF without structure tags. The
+  tagged PDF tests are then skipped. veraPDF (`brew install verapdf`) checks a file against PDF/UA-1 with
+  `verapdf --flavour ua1 file.pdf`.
 
 ## Deployment
 
 The `Dockerfile` builds a production image in three stages: front-end assets with Node, PHP
 dependencies with Composer, then a final FrankenPHP image on Alpine Linux that runs as an unprivileged
-user. On every start, `docker/start.sh` caches the configuration, routes, views and events, runs any
+user. The final image also carries the Typst binary from Typst's official image, pinned by digest, which
+renders the tagged PDFs. On every start, `docker/start.sh` caches the configuration, routes, views and events, runs any
 new migrations and then starts the server on `PORT`. A failed migration stops the start, so a broken
 release never serves traffic.
 
@@ -415,7 +429,9 @@ If personal data may have been exposed, lost or changed without permission:
 `php artisan test` runs the feature and unit tests on an in-memory SQLite database, with no front-end
 build or outside services needed. They cover ownership, visibility, handles, uploads and Cloudinary
 storage, security headers, every sign-in route including providers and passkeys, background jobs, link
-parsing and image handling.
+parsing and image handling. The PDF tests check that each generated CV and letter is tagged, with its
+language, its title, PDF/UA-1 identification, bookmarks and structure for headings, paragraphs, lists,
+tables and links. They also check that CV text is never read as Typst markup.
 
 | Check | Command |
 | --- | --- |
@@ -438,6 +454,7 @@ image and a Gitleaks scan for committed secrets.
 | MySQL | The data is relational: accounts own CVs, CVs own projects and files, tags link to CVs |
 | Cloudinary for files, the database for photos | Files can be large and must stay private; photos are tiny and shown on every card |
 | LaTeX compiled in the browser | No server needs a 4 GB TeX installation. The source also stays private until saved |
+| Typst for generated PDFs | It writes tagged PDF/UA-1 files and refuses to write one that breaks the standard. It is a single static binary of about 55 MB that renders a CV in a fraction of a second using about 25 MB of memory, so it suits a free host. mPDF cannot write structure tags. A headless browser would need several hundred megabytes of image and memory |
 | FrankenPHP on Alpine | A single small process, with far fewer known vulnerabilities than a Debian Apache image |
 | Microsoft never joins accounts by email | Some tenants let users set unverified addresses, which would allow account takeover |
 | A scheduler outside the app | Free hosting has no scheduled jobs, so a nightly call with a shared secret does the tidy-up. An external scheduler makes the call on time; the workflow's own schedule is the backup |
@@ -454,6 +471,7 @@ image and a Gitleaks scan for committed secrets.
 | Pages show no styles locally | Run `npm run build`. During development, keep `npm run dev` running |
 | A provider sign-in says the account already exists | Sign in with the password first, then connect the provider from the account page |
 | `/cron` returns 404 | `CRON_TOKEN` is not set |
+| Downloaded PDFs have no bookmarks or tags | Typst is not installed or `TYPST_BINARY` does not point at it. The log has a warning for each untagged PDF |
 | Database connection fails over TLS | `MYSQL_ATTR_SSL_CA` must point at the CA file inside the container |
 | The database host stops resolving and the site returns 502 | A free database plan has powered the service off. Power it on in the provider's console, then redeploy |
 

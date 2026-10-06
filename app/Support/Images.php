@@ -44,7 +44,7 @@ class Images
         return (string) ob_get_clean();
     }
 
-    /** a round copy with transparent corners, for places that cannot clip an image to a circle, such as mpdf */
+    /** a round copy with transparent corners, for places that do not clip an image to a circle, such as the pdf renderers */
     public static function circlePng(string $bytes, int $size): ?string
     {
         $source = @imagecreatefromstring($bytes);
