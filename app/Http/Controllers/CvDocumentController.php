@@ -79,8 +79,10 @@ class CvDocumentController extends Controller
             // pdfs open in the browser's viewer; word files always download
             'Content-Disposition' => ($document->isPdf() ? 'inline' : 'attachment').'; filename="'.$document->filename.'"',
             'X-Content-Type-Options' => 'nosniff',
-            // an uploaded file runs in a sandbox, so any script inside a pdf cannot touch the site
-            'Content-Security-Policy' => 'sandbox; default-src \'none\'; object-src \'self\'; style-src \'unsafe-inline\'',
+            // nothing in an uploaded file may load or run anything. Chrome's pdf viewer cannot open inside a
+            // sandbox, so a pdf goes without one; it still cannot reach the site, since the viewer runs pdf
+            // code apart from the page and nosniff stops the file being treated as html. word files download
+            'Content-Security-Policy' => ($document->isPdf() ? '' : 'sandbox; ')."default-src 'none'; object-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'self'",
             'Cache-Control' => 'private, no-store',
         ]);
     }

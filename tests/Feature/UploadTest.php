@@ -18,7 +18,7 @@ class UploadTest extends TestCase
         return UploadedFile::fake()->createWithContent('My CV.pdf', $body);
     }
 
-    public function test_a_pdf_is_stored_and_served_in_a_sandbox(): void
+    public function test_a_pdf_is_stored_and_served_with_a_locked_down_policy(): void
     {
         $cv = Cv::factory()->create();
         $this->actingAs($cv->user)->post(route('cvs.document', $cv), ['document' => $this->pdf()])->assertSessionHasNoErrors();
@@ -28,7 +28,12 @@ class UploadTest extends TestCase
         $this->assertSame('My CV.pdf', $document->filename);
 
         $response = $this->get(route('cv.file', $cv))->assertOk()->assertHeader('Content-Type', 'application/pdf');
-        $this->assertStringContainsString('sandbox', $response->headers->get('Content-Security-Policy'));
+        // one policy only, which allows the browser's pdf viewer but nothing else
+        $this->assertCount(1, $response->headers->all('content-security-policy'));
+        $csp = $response->headers->get('Content-Security-Policy');
+        $this->assertStringContainsString("default-src 'none'", $csp);
+        $this->assertStringNotContainsString("object-src 'none'", $csp);
+        $response->assertHeader('X-Content-Type-Options', 'nosniff');
         $this->assertSame('%PDF-1.4 a test cv', $response->getContent());
     }
 

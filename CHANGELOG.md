@@ -55,6 +55,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- An uploaded or LaTeX-compiled PDF opens in Chrome instead of showing a blocked page. The file carried the site-wide security policy as well as its own. That policy forbids the browser's PDF viewer. A PDF still cannot load or run anything; Word files keep their sandbox and download.
 - The footer's Legal column listed Copyright twice.
 - LaTeX CVs compile in the editor. A bullet list made pdfLaTeX stop with no output, because its default bullet needs a font outside the core packages. The starter templates now load Latin Modern, which is in the core set and covers bullets and accented letters. All four templates compile with pdfLaTeX, XeLaTeX and LuaLaTeX.
 - Flowcharts on the documentation and What is new pages are drawn as diagrams, with the source available as text underneath, instead of showing as code.
