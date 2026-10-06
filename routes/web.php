@@ -21,6 +21,7 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Middleware\ConfirmPasswordFirst;
 use App\Support\HelpTopics;
+use Illuminate\Routing\RedirectController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', DirectoryController::class)->name('home');
@@ -36,7 +37,7 @@ Route::get('/robots.txt', [SiteController::class, 'robots'])->name('robots');
 Route::get('/.well-known/security.txt', [SiteController::class, 'securityTxt'])->name('security.txt');
 Route::get('/.well-known/microsoft-identity-association.json', [SiteController::class, 'microsoftIdentity'])->name('microsoft.identity');
 // browsers and password managers send people here after a breach alert
-Route::redirect('/.well-known/change-password', '/settings/security', 302);
+Route::get('/.well-known/change-password', RedirectController::class)->defaults('destination', '/settings/security')->defaults('status', 302);
 Route::get('/indexnow.txt', [SiteController::class, 'indexNowKey'])->name('indexnow.key');
 Route::get('/offline', [SiteController::class, 'offline'])->name('offline');
 
@@ -84,9 +85,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // settings: public profile, photo and handle, then sign-in and data; old addresses redirect here
-    Route::redirect('/settings', '/settings/profile');
-    Route::redirect('/profile', '/settings/profile');
-    Route::redirect('/account', '/settings/account');
+    // these answer page visits only. A plain redirect answers every method. The cached router in
+    // production picks the first match. So a plain redirect would swallow the profile save and the
+    // account deletion that share these addresses
+    Route::get('/settings', RedirectController::class)->defaults('destination', '/settings/profile')->defaults('status', 302);
+    Route::get('/profile', RedirectController::class)->defaults('destination', '/settings/profile')->defaults('status', 302);
+    Route::get('/account', RedirectController::class)->defaults('destination', '/settings/account')->defaults('status', 302);
     Route::get('/settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/settings/account', [AccountController::class, 'edit'])->name('account');
     foreach (SettingsController::PAGES as $page) {
