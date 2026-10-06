@@ -2,13 +2,15 @@
 \documentclass[10pt,a4paper]{article}
 \usepackage[margin=1.3cm]{geometry}
 \usepackage[hidelinks]{hyperref}
-\usepackage{enumitem}
-\usepackage{titlesec}
-\setlist{leftmargin=1em,itemsep=0pt,topsep=1pt,parsep=0pt}
-\titleformat{\section}{\normalsize\bfseries\scshape}{}{0em}{}[\vspace{-2pt}\titlerule]
-\titlespacing{\section}{0pt}{6pt}{3pt}
-\pagestyle{empty}
 \setlength{\parindent}{0pt}
+\pagestyle{empty}
+% plain LaTeX for list spacing and headings, so the template only needs the core packages
+\makeatletter
+\setlength{\leftmargini}{1em}
+\renewcommand{\@listI}{\leftmargin\leftmargini \topsep 1pt \itemsep 0pt \parsep 0pt}
+\let\@listi\@listI
+\makeatother
+\renewcommand{\section}[1]{\par\vspace{6pt}{\normalsize\bfseries\scshape #1}\par\vspace{2pt}\hrule\vspace{3pt}}
 
 \begin{document}
 \begin{center}
