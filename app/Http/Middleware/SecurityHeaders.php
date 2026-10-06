@@ -65,6 +65,12 @@ class SecurityHeaders
             $headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
         }
 
+        // a response that sets its own policy keeps it alone. A second policy would be enforced as
+        // well. The site-wide one forbids the browser's pdf viewer on an uploaded cv
+        if ($response->headers->has('Content-Security-Policy')) {
+            unset($headers['Content-Security-Policy']);
+        }
+
         foreach ($headers as $name => $value) {
             $response->headers->set($name, $value, false);
         }
