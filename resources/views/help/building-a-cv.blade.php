@@ -6,6 +6,9 @@
     <h2>Skills</h2>
     <p>Type skills separated by commas. Common spellings are joined together, so <em>JS</em> and <em>JavaScript</em> become one skill. Skills on public CVs appear as filters in the directory, which helps people find you.</p>
 
+    <h2>Cover letter</h2>
+    <p>Each CV can carry one cover letter, written on the <strong>Cover letter</strong> tab. Write plain paragraphs with a blank line between them. Add who it is for, such as the team and the role, if you like. The letter uses the CV's theme and privacy setting. Visitors switch between the CV and the letter at the top of the page and can download the letter as a PDF or Word document. Leave the letter empty and it is not shown at all.</p>
+
     <h2>Projects</h2>
     <p>Add up to twelve projects to a CV, each with a title, a link and a description of what you did and what came of it. A project can show one image or one short video (up to 90 seconds). Describe the image or video for people who cannot see it; the description is read aloud by screen readers.</p>
 

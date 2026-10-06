@@ -16,19 +16,7 @@ class WordCv
     public static function build(Cv $cv): string
     {
         $user = $cv->user;
-        $accent = ltrim(config('vitafolio.accents')[$cv->accent]['hex'] ?? '#14213d', '#');
-        $body = [self::paragraph($user->name, 'Title')];
-        if ($cv->displayHeadline()) {
-            $body[] = self::paragraph((string) $cv->displayHeadline(), 'Subtitle');
-        }
-        $details = array_filter([
-            $user->pronouns, $user->location, $user->university,
-            $cv->key_language ? 'Main language: '.$cv->key_language : null,
-            $cv->show_email ? $user->email : null,
-        ]);
-        if ($details !== []) {
-            $body[] = self::paragraph(implode('  ·  ', $details));
-        }
+        $body = self::header($cv);
 
         foreach ($cv->orderedSections() as $section) {
             if ($section === 'profile' && filled($cv->profile)) {
@@ -49,6 +37,44 @@ class WordCv
             }
         }
 
+        return self::package($cv, $user->name.' CV', $body);
+    }
+
+    /** the cv's cover letter under the same name and details, so the pair reads as one set */
+    public static function letter(Cv $cv): string
+    {
+        $body = [...self::header($cv), self::paragraph('Cover letter', 'Heading1')];
+        if (filled($cv->letter_to)) {
+            $body[] = self::paragraph((string) $cv->letter_to, 'Subtitle');
+        }
+        array_push($body, ...self::text($cv->cover_letter));
+
+        return self::package($cv, $cv->user->name.' cover letter', $body);
+    }
+
+    /** the name, headline and contact line that open both the cv and its letter */
+    private static function header(Cv $cv): array
+    {
+        $user = $cv->user;
+        $body = [self::paragraph($user->name, 'Title')];
+        if ($cv->displayHeadline()) {
+            $body[] = self::paragraph((string) $cv->displayHeadline(), 'Subtitle');
+        }
+        $details = array_filter([
+            $user->pronouns, $user->location, $user->university,
+            $cv->key_language ? 'Main language: '.$cv->key_language : null,
+            $cv->show_email ? $user->email : null,
+        ]);
+        if ($details !== []) {
+            $body[] = self::paragraph(implode('  ·  ', $details));
+        }
+
+        return $body;
+    }
+
+    private static function package(Cv $cv, string $title, array $body): string
+    {
+        $accent = ltrim(config('vitafolio.accents')[$cv->accent]['hex'] ?? '#14213d', '#');
         $path = tempnam(sys_get_temp_dir(), 'cvdocx');
         $zip = new ZipArchive;
         if ($zip->open($path, ZipArchive::OVERWRITE) !== true) {
@@ -56,7 +82,7 @@ class WordCv
         }
         $zip->addFromString('[Content_Types].xml', self::contentTypes());
         $zip->addFromString('_rels/.rels', self::rootRels());
-        $zip->addFromString('docProps/core.xml', self::core($user->name.' CV'));
+        $zip->addFromString('docProps/core.xml', self::core($title));
         $zip->addFromString('word/_rels/document.xml.rels', self::documentRels());
         $zip->addFromString('word/styles.xml', self::styles($accent));
         $zip->addFromString('word/numbering.xml', self::numbering());

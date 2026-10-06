@@ -46,11 +46,12 @@ private.
 
 ### Building a CV
 
-Each CV has five tabs:
+Each CV has six tabs:
 
 | Tab | What you do there |
 | --- | --- |
 | Content | Headline, main language, profile, experience, education and skills, plus the order the sections appear in |
+| Cover letter | An optional letter to send with this CV, with a line saying who it is for |
 | Projects | Up to twelve projects with a link, a description and an image or short video |
 | File and LaTeX | Upload a PDF or Word file. The LaTeX editor writes and compiles one instead |
 | Look and privacy | Title, address, theme, accent colour, font, whether to show your email and who can see the CV |
@@ -58,6 +59,22 @@ Each CV has five tabs:
 
 Themes are Classic, Modern, Minimal and Plain. Plain is designed to be read easily by screen readers
 and the applicant tracking systems employers use to scan CVs.
+
+### Cover letters
+
+Each CV can hold one cover letter, written on the **Cover letter** tab as plain paragraphs with a
+blank line between them, up to 6,000 characters. An optional "Who it is for" line, such as the team
+and role, sits above it. The letter is stored on the CV itself, so it always shares that CV's theme,
+accent colour, font and visibility.
+
+| Address | What it serves |
+| --- | --- |
+| `/cv/{address}/letter` | The letter as a web page, with a CV and Cover letter switch at the top |
+| `/cv/{address}/letter/pdf` | The letter as a PDF in the same layout as the CV's PDF |
+| `/cv/{address}/letter/word` | The letter as an editable Word document |
+
+Every one of these addresses obeys the CV's own visibility rules, including moderator hiding, and
+answers 404 while the letter is empty. A CV without a letter shows no switch and no letter links.
 
 ### Sharing a CV
 
@@ -136,7 +153,7 @@ erDiagram
 | Table | Notes |
 | --- | --- |
 | `users` | Profile fields live here: handle, headline, bio, links, university, availability, photo and visibility. `role` is `member` or `admin`. `has_password` is false for accounts made through a sign-in provider until a password is set |
-| `cvs` | Title, address (`slug`), content sections, saved section order, LaTeX source, theme, accent, font and visibility. `hidden_at` is set by moderators |
+| `cvs` | Title, address (`slug`), content sections, saved section order, LaTeX source, theme, accent, font and visibility. `letter_to` and `cover_letter` hold the optional cover letter. `hidden_at` is set by moderators |
 | `cv_documents` | One file per CV. `storage` says whether the bytes are on Cloudinary (`public_id`) or in the `data` column |
 | `projects` | Up to twelve per CV, each with optional media on Cloudinary, its size and a description for people who cannot see it |
 | `tags` and `cv_tag` | Skills, with spelling variants such as "JS" and "JavaScript" folded into one tag |
@@ -188,6 +205,8 @@ private profile also takes its CVs out of the directory and out of search engine
 | Unlisted | No | Yes | No (`noindex`) | No |
 | Private | No | Owner and admins only | No | No |
 | Hidden by a moderator | No | Owner and admins only | No | No |
+
+A CV's cover letter, with its PDF and Word downloads, follows exactly the same rules as the CV.
 
 A public CV is also kept out of the directory and search when its owner's profile is private, their
 email is unverified or the account is suspended. Owners and admins always see a banner saying which of

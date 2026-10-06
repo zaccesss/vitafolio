@@ -1,5 +1,5 @@
 @php
-    $tabs = ['details' => 'Content', 'projects' => 'Projects', 'file' => 'File and LaTeX', 'settings' => 'Look and privacy', 'import' => 'Import and export'];
+    $tabs = ['details' => 'Content', 'letter' => 'Cover letter', 'projects' => 'Projects', 'file' => 'File and LaTeX', 'settings' => 'Look and privacy', 'import' => 'Import and export'];
     $sectionLabels = ['profile' => 'Profile', 'experience' => 'Experience', 'projects' => 'Projects', 'education' => 'Education', 'skills' => 'Skills', 'links' => 'Links'];
     $cloudinary = \App\Support\Cloudinary::enabled();
     $limits = config('vitafolio.limits');
@@ -70,6 +70,25 @@
                             {{-- without javascript the current order is shown as a list --}}
                             <ol class="list-decimal pl-6">@foreach ($cv->orderedSections() as $key)<li>{{ $sectionLabels[$key] }}</li>@endforeach</ol>
                         </div>
+                    </section>
+
+                @elseif ($tab === 'letter')
+                    <section class="card p-6" aria-labelledby="letter-title">
+                        <h2 id="letter-title" class="text-xl">Cover letter</h2>
+                        <p class="mt-1 text-muted">An optional letter to send with this CV. It uses the same theme and privacy setting as the CV. It opens from the CV's own page. Leave it empty and nobody sees a letter at all.</p>
+                        <form method="POST" action="{{ route('cvs.letter', $cv) }}" class="mt-5 grid gap-5">
+                            @csrf @method('PUT')
+                            <x-field name="letter_to" label="Who it is for" :value="$cv->letter_to" maxlength="160"
+                                     hint="Shown above the letter, for example: Hiring team, Graduate software engineer at Acme." />
+                            <x-field name="cover_letter" label="Letter" type="textarea" :value="$cv->cover_letter" rows="14" maxlength="6000" counter
+                                     hint="Plain paragraphs. Leave a blank line between paragraphs." />
+                            <div class="flex flex-wrap gap-3">
+                                <button type="submit" class="btn btn-primary">Save cover letter</button>
+                                @if ($cv->hasCoverLetter())
+                                    <a class="btn btn-secondary" href="{{ route('cv.letter', $cv) }}" target="_blank" rel="noopener">Preview<x-new-tab /></a>
+                                @endif
+                            </div>
+                        </form>
                     </section>
 
                 @elseif ($tab === 'projects')
@@ -248,6 +267,10 @@
                             <a class="btn btn-secondary" href="{{ route('cvs.export', $cv) }}">Download JSON Resume</a>
                             <a class="btn btn-secondary" href="{{ route('cv.pdf', $cv) }}">Download PDF</a>
                             <a class="btn btn-secondary" href="{{ route('cv.word', $cv) }}">Download as Word</a>
+                            @if ($cv->hasCoverLetter())
+                                <a class="btn btn-secondary" href="{{ route('cv.letter.pdf', $cv) }}">Download cover letter as PDF</a>
+                                <a class="btn btn-secondary" href="{{ route('cv.letter.word', $cv) }}">Download cover letter as Word</a>
+                            @endif
                         </div>
                     </section>
                 @endif

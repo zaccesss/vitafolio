@@ -106,6 +106,7 @@ class AccountController extends Controller
                 'resume' => JsonResume::export($cv->setRelation('user', $user)),
                 'settings' => $cv->only(['title', 'slug', 'visibility', 'show_email', 'theme', 'accent', 'font', 'section_order', 'view_count', 'created_at', 'updated_at']),
                 'latex_source' => $cv->latex_source,
+                'cover_letter' => $cv->hasCoverLetter() ? $cv->only(['letter_to', 'cover_letter']) : null,
                 'uploaded_file' => $cv->document?->only(['filename', 'mime', 'size']),
             ]),
         ], 200, ['Content-Disposition' => 'attachment; filename="vitafolio-my-data.json"'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

@@ -19,9 +19,9 @@ browser.
 | --- | --- |
 | Profiles | A handle at `/@name`, a photo with a crop tool, a headline, links with recognised sites and a visibility setting |
 | CVs | Up to ten per account, each with its own address, theme, accent colour, font, section order and visibility |
-| Content | Rich sections, skills as tags, projects with images or short videos, JSON Resume import and export |
+| Content | Rich sections, skills as tags, projects with images or short videos, an optional cover letter, JSON Resume import and export |
 | Files | Uploaded PDF and Word files. LaTeX compiled in the browser with pdfLaTeX, XeLaTeX or LuaLaTeX |
-| Sharing | A clean link, a QR code, a generated PDF and a share image for each CV, plus private view counts |
+| Sharing | A clean link, a QR code, generated PDF and Word files and a share image for each CV, plus private view counts. A cover letter shares its CV's link and privacy |
 | Directory | Public CVs listed with search, skill tags, availability and university filters |
 | Sign-in | Email and password, passkeys, two-factor authentication, plus Google, GitHub and Microsoft |
 | Safety | Ownership checks on every change, reports with a moderation queue, suspensions and a strict content security policy |
