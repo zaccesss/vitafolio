@@ -20,7 +20,7 @@
             <div>
                 <h1 class="text-3xl">{{ $cv->title }}</h1>
                 <p class="mt-1 text-muted">
-                    <span class="badge">{{ __(ucfirst($cv->visibility)) }}</span>
+                    <x-visibility class="align-middle" :value="$cv->visibility" />
                     <span class="ms-2" dir="ltr">{{ preg_replace('#^https?://#', '', route('cv.show', $cv)) }}</span>
                 </p>
             </div>
