@@ -85,6 +85,9 @@ class Sector
         'windows engineer' => 'software', 'linux engineer' => 'software', 'environmental engineer' => 'engineering',
         'investment banking' => 'finance', 'legal engineer' => 'law', 'project management' => 'business',
         'project manager' => 'business', 'programme management' => 'business', 'digital marketing' => 'creative',
+        'civil engineer' => 'engineering', 'highways' => 'engineering', 'structural engineer' => 'engineering',
+        'it infrastructure' => 'software', 'cloud infrastructure' => 'software', 'platform engineer' => 'software',
+        'infrastructure engineer' => 'software', 'geospatial' => 'science',
     ];
 
     /** title terms per field, checked in this order so "embedded software" lands in hardware */
@@ -94,7 +97,7 @@ class Sector
         'data' => ['data', 'machine learning', 'ml', 'ai', 'artificial intelligence', 'analytics', 'data science', 'data scientist',
             'deep learning', 'nlp', 'computer vision', 'business intelligence', 'bi'],
         'software' => ['software', 'developer', 'devops', 'cloud', 'cyber', 'security engineer', 'it', 'technology', 'tech', 'web',
-            'frontend', 'front-end', 'backend', 'back-end', 'full stack', 'full-stack', 'sre', 'platform', 'infrastructure',
+            'frontend', 'front-end', 'backend', 'back-end', 'full stack', 'full-stack', 'sre',
             'network', 'networks', 'systems engineer', 'qa', 'test engineer', 'programmer', 'computing', 'digital'],
         'law' => ['law', 'legal', 'solicitor', 'barrister', 'paralegal', 'trainee solicitor', 'training contract', 'vacation scheme',
             'pupillage', 'compliance', 'regulatory'],
