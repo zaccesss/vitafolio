@@ -18,11 +18,12 @@ final class AtsReport
         'keywords' => ['label' => 'Keywords', 'max' => 10],
     ];
 
-    private const STRONG_VERBS = ['achieved', 'analysed', 'analyzed', 'built', 'created', 'delivered', 'designed', 'developed', 'improved', 'increased', 'introduced', 'launched', 'led', 'managed', 'mentored', 'organised', 'organized', 'reduced', 'researched', 'resolved', 'streamlined', 'tested', 'trained', 'won', 'wrote', 'implemented', 'automated', 'coordinated', 'presented', 'produced'];
+    // base forms; a line counts when its first word is one of these with or without -s, -d, -ed or -ing
+    private const STRONG_VERBS = ['achieve', 'analyse', 'analyze', 'architect', 'assess', 'automate', 'build', 'built', 'coach', 'collaborate', 'collect', 'complete', 'coordinate', 'create', 'cut', 'debug', 'define', 'deliver', 'deploy', 'design', 'develop', 'diagnose', 'document', 'drive', 'elect', 'engineer', 'establish', 'evaluate', 'examine', 'expand', 'facilitate', 'generate', 'grow', 'guide', 'identify', 'implement', 'improve', 'increase', 'install', 'integrate', 'introduce', 'investigate', 'judge', 'launch', 'lead', 'led', 'maintain', 'manage', 'measure', 'mentor', 'migrate', 'model', 'monitor', 'negotiate', 'operate', 'optimise', 'optimize', 'organise', 'organize', 'oversee', 'plan', 'present', 'process', 'produce', 'program', 'prototype', 'publish', 'raise', 'redesign', 'reduce', 'refactor', 'research', 'resolve', 'review', 'run', 'save', 'scale', 'secure', 'serve', 'service', 'ship', 'simplify', 'solve', 'spearhead', 'streamline', 'support', 'teach', 'test', 'train', 'transform', 'troubleshoot', 'upgrade', 'validate', 'win', 'won', 'write', 'wrote'];
 
     private const WEAK_PHRASES = ['responsible for', 'duties included', 'helped with', 'worked on', 'tasks included', 'involved in'];
 
-    private const STOP_WORDS = ['the', 'and', 'for', 'with', 'you', 'your', 'our', 'are', 'will', 'this', 'that', 'have', 'from', 'who', 'all', 'can', 'able', 'work', 'role', 'team', 'skills', 'experience', 'including', 'within', 'their', 'they', 'what', 'about', 'more', 'also', 'such', 'join', 'looking', 'would', 'should', 'must', 'well', 'good', 'strong', 'into', 'across', 'other', 'per', 'any', 'not', 'but', 'has', 'how', 'its', 'job', 'new', 'one', 'out', 'use', 'year', 'years', 'day', 'days', 'part', 'time', 'apply', 'applicants', 'candidate', 'candidates', 'opportunity', 'company', 'please', 'help', 'make', 'working', 'both', 'each', 'where', 'which', 'while', 'when', 'than', 'them', 'then', 'there', 'these', 'those', 'being', 'been', 'over', 'very', 'just', 'like', 'some', 'only', 'plus', 'etc', 'need', 'needs', 'seeking', 'seek', 'want', 'ideally', 'preferred', 'essential', 'desirable', 'required', 'requirements', 'responsibilities', 'benefits', 'salary', 'apply', 'applications', 'we', 'us', 'an', 'in', 'of', 'to', 'or', 'on', 'at', 'as', 'be', 'is', 'it'];
+    private const STOP_WORDS = ['the', 'and', 'for', 'with', 'you', 'your', 'our', 'are', 'will', 'this', 'that', 'have', 'from', 'who', 'all', 'can', 'able', 'work', 'role', 'team', 'skills', 'experience', 'including', 'within', 'their', 'they', 'what', 'about', 'more', 'also', 'such', 'join', 'looking', 'would', 'should', 'must', 'well', 'good', 'strong', 'into', 'across', 'other', 'per', 'any', 'not', 'but', 'has', 'how', 'its', 'job', 'new', 'one', 'out', 'use', 'year', 'years', 'day', 'days', 'part', 'time', 'apply', 'applicants', 'candidate', 'candidates', 'opportunity', 'company', 'please', 'help', 'make', 'working', 'both', 'each', 'where', 'which', 'while', 'when', 'than', 'them', 'then', 'there', 'these', 'those', 'being', 'been', 'over', 'very', 'just', 'like', 'some', 'only', 'plus', 'etc', 'need', 'needs', 'seeking', 'seek', 'want', 'ideally', 'preferred', 'essential', 'desirable', 'required', 'requirements', 'responsibilities', 'benefits', 'salary', 'apply', 'applications', 'we', 'us', 'an', 'in', 'of', 'to', 'or', 'on', 'at', 'as', 'be', 'is', 'it', 'around', 'now', 'related', 'relevant', 'qualification', 'qualifications', 'scale', 'challenges', 'challenge', 'alongside', 'gbr', 'gb', 'ltd', 'plc', 'inc', 'location', 'hybrid', 'remote', 'office', 'based', 'full', 'permanent', 'contract', 'start', 'date', 'closing', 'deadline', 'apply', 'today', 'world', 'leading', 'exciting', 'passionate', 'great', 'excellent', 'range', 'variety', 'within', 'across', 'every', 'many', 'most', 'may', 'might', 'could', 'via', 'including', 'include', 'includes', 'etc', 'get', 'gain', 'offer', 'offers', 'provide', 'support', 'ensure', 'ability', 'knowledge', 'understanding', 'business', 'people', 'customers', 'clients', 'opportunities', 'key', 'main', 'high', 'quality', 'level', 'levels', 'whilst', 'ideal', 'successful', 'diverse', 'inclusive', 'equal', 'employer'];
 
     /** @var array<string, int> */
     public array $scores = [];
@@ -111,7 +112,7 @@ final class AtsReport
                 $this->suggestions[] = match ($field) {
                     'name' => 'Put your full name on its own line at the very top.',
                     'email' => 'Add a professional email address near the top, as plain text.',
-                    default => 'Add a phone number with its country code, for example +44 7700 900123.',
+                    default => 'Most UK employers expect a phone number. Add one with its country code, for example +44 7700 900123.',
                 };
             }
         }
@@ -205,7 +206,8 @@ final class AtsReport
         $cv = mb_strtolower($this->source->text);
         if ($this->jobAdvert !== null) {
             $keywords = $this->advertKeywords($this->jobAdvert);
-            $matched = array_values(array_filter($keywords, fn ($word) => preg_match('/\b'.preg_quote($word, '/').'\b/u', $cv)));
+            // "engineer" in the advert also counts when the CV says "engineers"
+            $matched = array_values(array_filter($keywords, fn ($word) => preg_match('/\b'.preg_quote($word, '/').'(s|es)?\b/u', $cv)));
             $absent = array_values(array_diff($keywords, $matched));
             $this->keywordMatch = ['matched' => $matched, 'missing' => $absent];
             $this->scores['keywords'] = $keywords === [] ? 0 : (int) round(10 * count($matched) / count($keywords));
@@ -215,13 +217,33 @@ final class AtsReport
 
             return;
         }
-        // without an advert, judge the language itself: strong verbs at the start of lines
-        $lines = array_merge($this->parsed->section('experience'), $this->parsed->section('projects'));
-        $strong = count(array_filter($lines, fn ($line) => in_array(strtok(mb_strtolower(preg_replace('/^[\s\x{2022}\x{2013}*-]+/u', '', $line)), ' '), self::STRONG_VERBS, true)));
-        $this->scores['keywords'] = $lines === [] ? 0 : min(10, (int) round(10 * $strong / max(3, (int) ceil(count($lines) / 2))));
+        // without an advert, judge the language itself: how many description lines open with a
+        // strong verb. Short lines are titles, dates or tool lists, so only lines of six or more
+        // words count
+        $lines = array_values(array_filter(
+            array_merge($this->parsed->section('experience'), $this->parsed->section('projects')),
+            fn ($line) => str_word_count($line) >= 6,
+        ));
+        $strong = count(array_filter($lines, fn ($line) => self::startsWithStrongVerb($line)));
+        $this->scores['keywords'] = $lines === [] ? 0 : min(10, (int) round(10 * $strong / max(3, (int) ceil(count($lines) * 0.6))));
         if ($this->scores['keywords'] < 7) {
             $this->suggestions[] = 'Start more bullet points with a strong verb such as built, led, designed or improved. Paste a job advert to check its keywords too.';
         }
+    }
+
+    private static function startsWithStrongVerb(string $line): bool
+    {
+        $first = strtok(mb_strtolower(preg_replace('/^[\s\x{2022}\x{2013}*-]+/u', '', $line)), ' ,');
+        if ($first === false) {
+            return false;
+        }
+        foreach ([$first, preg_replace('/(ing|ed|d|s)$/', '', $first), preg_replace('/(ied)$/', 'y', $first), preg_replace('/(ed)$/', 'e', $first)] as $form) {
+            if (in_array($form, self::STRONG_VERBS, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** @return list<string> */
@@ -231,8 +253,18 @@ final class AtsReport
         $counts = [];
         foreach ($words[0] as $word) {
             $word = rtrim($word, '.');
-            if (! in_array($word, self::STOP_WORDS, true) && mb_strlen($word) >= 3) {
-                $counts[$word] = ($counts[$word] ?? 0) + 1;
+            if (in_array($word, self::STOP_WORDS, true) || mb_strlen($word) < 3) {
+                continue;
+            }
+            $counts[$word] = ($counts[$word] ?? 0) + 1;
+        }
+        // a plural folds into its singular only when both appear, so "network" and "networks"
+        // become one keyword while a name such as "kubernetes" is left whole
+        foreach (array_keys($counts) as $word) {
+            $single = preg_replace('/s$/', '', $word);
+            if ($single !== $word && isset($counts[$single])) {
+                $counts[$single] += $counts[$word];
+                unset($counts[$word]);
             }
         }
         arsort($counts);
@@ -262,7 +294,7 @@ final class AtsReport
             $this->formatting[] = 'Contact details are in the page header, which many systems ignore.';
         }
         if (($s['pages'] ?? 1) > 2) {
-            $this->formatting[] = 'Runs to '.$s['pages'].' pages. Two pages is the usual UK limit for students and graduates.';
+            $this->formatting[] = 'Runs to '.$s['pages'].' pages. Two pages is the usual UK limit for students and graduates; a page that holds only a line or two is the easiest to remove.';
         }
         if (preg_match('/(^|\n)\s*I\s/', $this->source->text)) {
             $this->formatting[] = 'Uses "I" to start sentences. CVs read better without it: "Built a web app", not "I built a web app".';

@@ -90,6 +90,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- Check a CV finds a name written with a nickname in brackets or placed after the contact line, recognises more standard headings such as Research & Publications and Spoken Languages, ignores filler words in job adverts and matches singular and plural forms. Strong verbs in any tense now count.
 - Translations committed to the repository are no longer replaced with English by the next Crowdin sync. A manual run of the sync workflow can now upload them to Crowdin first and approve them, so they come back down.
 - The developer documentation lists all seven LaTeX starter templates instead of four.
 - Arabic and Urdu text in generated PDF, Word and LaTeX files no longer breaks apart. Lines were split on a byte that is part of some Arabic letters.

@@ -100,4 +100,38 @@ class AtsReportTest extends TestCase
         $this->assertStringContainsString('table', implode(' ', $report->formatting));
         $this->assertStringContainsString('page header', implode(' ', $report->formatting));
     }
+
+    public function test_a_name_after_the_contact_line_and_with_a_nickname_is_found(): void
+    {
+        $parsed = (new ResumeParser)->parse("contact@example.com | www.example.com\nISAAC (ZAC) ADJEI\nProfile\nStudent.");
+
+        $this->assertSame('Isaac (Zac) Adjei', $parsed->name);
+    }
+
+    public function test_common_extra_headings_count_as_standard(): void
+    {
+        $parsed = (new ResumeParser)->parse(SampleResumes::TEXT."\nRESEARCH & PUBLICATIONS\nA paper\nSPOKEN LANGUAGES\nEnglish\nAwards and Achievements\nA prize");
+
+        $this->assertSame([], $parsed->unclearHeadings);
+    }
+
+    public function test_advert_filler_is_ignored_and_plurals_match(): void
+    {
+        $report = AtsReport::analyse(ResumeText::fromString(SampleResumes::TEXT."\nWorked with other engineers"), 'Engineer role at scale. Apply now, related qualifications, networks and network automation around the UK.');
+
+        $all = array_merge($report->keywordMatch['matched'], $report->keywordMatch['missing']);
+        foreach (['now', 'around', 'related', 'qualifications', 'scale'] as $filler) {
+            $this->assertNotContains($filler, $all);
+        }
+        $this->assertContains('engineer', $report->keywordMatch['matched']);
+        $this->assertSame(1, count(array_intersect(['network', 'networks'], $all)));
+    }
+
+    public function test_bullets_opening_with_any_tense_of_a_strong_verb_count(): void
+    {
+        $text = "Jo Bloggs\njo@example.com\nExperience\nArchitected a platform used by forty students each week\nEngineered a secure login with two factor checks\nFacilitate weekly sessions for over thirty students here";
+        $report = AtsReport::analyse(ResumeText::fromString($text));
+
+        $this->assertSame(10, $report->scores['keywords']);
+    }
 }
