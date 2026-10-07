@@ -5,7 +5,7 @@
 
         <form method="POST" action="{{ route('check.run') }}" enctype="multipart/form-data" class="card mt-6 grid gap-5 p-6">
             @csrf
-            <fieldset class="grid gap-3">
+            <fieldset class="grid gap-3" x-data="cvSource">
                 <legend class="field-label">{{ __('Which CV?') }}</legend>
                 <label class="flex items-center gap-3"><input type="radio" name="source" value="file" class="check" @checked(old('source', $cvs->isEmpty() ? 'file' : 'cv') === 'file')> {{ __('Upload a PDF or Word (.docx) file') }}</label>
                 <x-field name="resume" :label="__('CV file')" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" :hint="__('Up to 5 MB.')" />
@@ -34,6 +34,7 @@
                 <div class="card p-6">
                     <h2 id="result-title" class="text-2xl">{{ __('Score: :score out of 100', ['score' => $report['score']['total']]) }}</h2>
                     <p class="mt-1 text-lg font-semibold">{{ $report['score']['grade'] }}</p>
+                    <p class="mt-1 text-sm text-muted">{{ __('Checked: :name', ['name' => $checked]) }}</p>
                     <x-english-only class="mt-3" />
                     <p class="mt-3 text-sm text-muted">{{ __('This score is guidance based on how common applicant tracking systems read CVs. Each employer sets up its own system differently. Most rank and search applications rather than reject them automatically, so a recruiter will usually still read your CV.') }}</p>
                     <table class="mt-4 w-full max-w-xl text-sm">

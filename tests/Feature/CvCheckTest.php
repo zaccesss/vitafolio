@@ -71,6 +71,19 @@ class CvCheckTest extends TestCase
             ->assertSee('Experience: 2 lines.');
     }
 
+    public function test_an_uploaded_file_is_checked_even_with_the_vitafolio_option_still_selected(): void
+    {
+        $cv = Cv::factory()->create(['title' => 'Saved CV']);
+        $file = new UploadedFile(SampleResumes::pdf($this->dir), 'uploaded.pdf', 'application/pdf', null, true);
+
+        $this->actingAs($cv->user)
+            ->post(route('check.run'), ['source' => 'cv', 'cv' => $cv->id, 'resume' => $file])
+            ->assertOk()
+            ->assertSee('Checked: uploaded.pdf')
+            ->assertSee('sam.taylor@example.com')
+            ->assertDontSee('Checked: Saved CV');
+    }
+
     public function test_nobody_can_check_someone_elses_cv(): void
     {
         $cv = Cv::factory()->create();

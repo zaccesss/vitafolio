@@ -1154,5 +1154,6 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} ایک مسئلہ درست کرنا ہے|[2,*] :count مسائل درست کرنے ہیں",
     "“:title” has been deleted.": "“:title” حذف کر دی گئی ہے۔",
     "“:title” is now hidden from everyone except its owner.": "“:title” اب اس کے مالک کے علاوہ سب سے پوشیدہ ہے۔",
-    "“:title” is visible again.": "“:title” دوبارہ نظر آ رہی ہے۔"
+    "“:title” is visible again.": "“:title” دوبارہ نظر آ رہی ہے۔",
+    "Checked: :name": "جانچا گیا: :name"
 }

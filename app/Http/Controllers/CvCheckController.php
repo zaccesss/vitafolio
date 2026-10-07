@@ -34,6 +34,11 @@ class CvCheckController extends Controller
 
     public function check(Request $request): View
     {
+        // a file that was sent is always the CV meant, even if the Vitafolio CV option stayed selected
+        if ($request->hasFile('resume')) {
+            $request->merge(['source' => 'file']);
+        }
+
         $data = $request->validate([
             'source' => ['required', Rule::in(['file', 'cv'])],
             'resume' => ['exclude_unless:source,file', 'required', 'file', 'max:5120', 'mimes:pdf,docx'],
@@ -44,10 +49,12 @@ class CvCheckController extends Controller
         if ($data['source'] === 'cv') {
             $cv = Cv::whereKey($data['cv'])->where('user_id', $request->user()->id)->firstOrFail();
             $text = ResumeText::fromCv($cv);
+            $checked = $cv->title;
         } else {
             $file = $request->file('resume');
             try {
                 $text = ResumeText::fromFile($file->getRealPath(), $file->getClientOriginalExtension());
+                $checked = $file->getClientOriginalName();
             } catch (UnreadableResume $e) {
                 throw ValidationException::withMessages(['resume' => __($e->getMessage())]);
             }
@@ -59,6 +66,7 @@ class CvCheckController extends Controller
         return view('check', [
             'cvs' => $request->user()->cvs()->orderBy('title')->get(['id', 'title']),
             'report' => $report->toArray(),
+            'checked' => $checked,
             'advert' => null,
             'job' => null,
         ]);
