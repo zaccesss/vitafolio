@@ -184,7 +184,7 @@ flowchart LR
 | `resources/latex` | The seven LaTeX starter templates |
 | `resources/brand` | SVG sources for every icon and share image, rendered by `scripts/brand-assets.sh` |
 | `resources/brand/linkedin` | Logo, cover image and profile text for the [LinkedIn page](../resources/brand/linkedin/README.md) |
-| `public/demo` | The demo clips on the Features page and in the README, each with a full-quality video and a still frame for reduced motion |
+| `public/demo` | The demo clips on the Features page and in the README, in light and dark, each with a full-quality video and a still frame for reduced motion. `App\Support\Demos` lists them and each has a player page at `/features/demo/<clip>` |
 | `scripts/demo` | The [demo recording kit](../scripts/demo/README.md) that records those clips and the README screenshots from a local copy with made-up people |
 | `docs/assets/demo/originals` | The untouched recordings and full-resolution screenshots, kept for reuse elsewhere |
 | `docker` | The FrankenPHP config, PHP settings and the start script used by the production image |

@@ -18,7 +18,7 @@ clip() {
   [ -f "$in" ] || return 0
   tmp=$(mktemp -d)
   ffmpeg -v error -y -i "$in" -vf "fps=12,scale=960:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle" "$tmp/$name.gif"
-  gif2webp -q 70 -m 6 -lossy -mt -quiet "$tmp/$name.gif" -o "$demo/$name.webp"
+  gif2webp -q 70 -m 4 -lossy -mt -quiet "$tmp/$name.gif" -o "$demo/$name.webp"
   ffmpeg -v error -y -i "$in" -c:v libx264 -pix_fmt yuv420p -crf 23 -preset slow -movflags +faststart -an "$demo/$name.mp4"
   # the still is what people with reduced motion see, so it is taken where the clip says the most
   ffmpeg -v error -y -ss "$still_at" -i "$in" -frames:v 1 -vf "scale=960:-1" "$tmp/$name.png"
@@ -29,6 +29,9 @@ clip() {
 clip build 19
 clip share 10
 clip compile 13
+clip build-dark 19
+clip share-dark 10
+clip compile-dark 13
 
 for png in "$src"/shots/*.png; do
   [ -f "$png" ] || continue

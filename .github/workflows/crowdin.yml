@@ -7,8 +7,8 @@ name: Crowdin sync
 # opened with the automation account's token (CROWDIN_BOT_TOKEN), so it is credited to that account
 # and its CI checks start on their own, which a pull request from the built-in token never does.
 # Translations committed to the repository never reach Crowdin on their own, so its next download would
-# write english back over them. A manual run with upload_translations sends them up first; scheduled
-# and push runs never do, so work done by translators on Crowdin is not overwritten.
+# write english back over them. A manual run with upload_translations sends them up first and approves
+# them; scheduled and push runs never do, so work done by translators on Crowdin is not overwritten.
 
 permissions: {}
 
@@ -57,6 +57,8 @@ jobs:
         with:
           upload_sources: true
           upload_translations: ${{ inputs.upload_translations || false }}
+          # uploaded translations would otherwise wait as suggestions and never come back down
+          auto_approve_imported: ${{ inputs.upload_translations || false }}
           download_translations: true
           localization_branch_name: l10n_crowdin
           create_pull_request: true

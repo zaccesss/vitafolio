@@ -4,6 +4,9 @@
 @foreach (array_filter(['about', 'contact.show', 'privacy', 'terms', 'accessibility', 'cookies', 'copyright', 'features', 'help', 'changelog', 'docs', 'support'], fn ($r) => Route::has($r)) as $page)
     <url><loc>{{ route($page) }}</loc><lastmod>{{ $updated }}</lastmod><changefreq>monthly</changefreq></url>
 @endforeach
+@foreach (array_keys(\App\Support\Demos::all()) as $clip)
+    <url><loc>{{ route('features.demo', $clip) }}</loc><lastmod>{{ $updated }}</lastmod><changefreq>monthly</changefreq></url>
+@endforeach
 @foreach (array_keys(\App\Support\HelpTopics::ALL) as $topic)
     <url><loc>{{ route('help.topic', $topic) }}</loc><lastmod>{{ $updated }}</lastmod><changefreq>monthly</changefreq></url>
 @endforeach

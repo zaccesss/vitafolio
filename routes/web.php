@@ -54,6 +54,7 @@ Route::view('/support', 'pages.support')->name('support');
 Route::view('/copyright', 'pages.copyright')->name('copyright');
 Route::view('/contact/sent', 'pages.contact-sent')->name('contact.sent');
 Route::view('/features', 'pages.features')->name('features');
+Route::view('/features/demo/{clip}', 'pages.demo')->whereIn('clip', ['build', 'share', 'compile'])->name('features.demo');
 Route::view('/changelog', 'pages.changelog')->name('changelog');
 Route::view('/docs', 'pages.docs')->name('docs');
 Route::view('/help', 'help.index')->name('help');
