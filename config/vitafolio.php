@@ -39,6 +39,12 @@ return [
     // shared secret for the nightly tidy-up call to /cron; the address returns 404 when it is empty
     'cron_token' => env('CRON_TOKEN'),
 
+    // the employer job feed posts with this token; without it the feed address does not exist
+    'jobs_feed_token' => env('JOBS_FEED_TOKEN'),
+
+    // the first and last years of the recruitment cycle the jobs page lists
+    'jobs_cycle' => [(int) env('JOBS_CYCLE_FROM', 2026), (int) env('JOBS_CYCLE_TO', 2027)],
+
     // the typst binary that renders tagged cv and letter pdfs. the docker image carries it; without
     // it the downloads fall back to an untagged mpdf render, so a fresh checkout still works
     'typst_binary' => env('TYPST_BINARY', 'typst'),

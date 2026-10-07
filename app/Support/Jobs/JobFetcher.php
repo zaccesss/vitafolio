@@ -15,19 +15,13 @@ use Throwable;
  */
 class JobFetcher
 {
-    /** search terms per kind of role; a result is kept only when its title confirms the kind */
+    /** search terms per kind of role; each result's kind is then read from its own title, never assumed from the search */
     public const SEARCHES = [
         'internship' => ['internship', 'summer intern'],
         'placement' => ['industrial placement', 'placement year'],
+        'insight' => ['spring week', 'insight programme'],
         'graduate' => ['graduate scheme', 'graduate'],
         'part-time' => ['part time student'],
-    ];
-
-    private const TITLE_WORDS = [
-        'internship' => ['intern', 'internship', 'insight'],
-        'placement' => ['placement', 'industrial', 'sandwich', 'year in industry', '12 month', '12-month'],
-        'graduate' => ['graduate', 'grad ', 'entry level', 'entry-level', 'junior', 'trainee'],
-        'part-time' => ['part time', 'part-time', 'student', 'weekend', 'casual'],
     ];
 
     private const PER_SEARCH = 50;
@@ -79,16 +73,18 @@ class JobFetcher
             'results_per_page' => self::PER_SEARCH,
             'sort_by' => 'date',
             'content-type' => 'application/json',
+            ...($kind === 'part-time' ? ['part_time' => 1] : []),
         ])->throw();
 
         $rows = [];
         foreach ($response->json('results', []) as $job) {
-            if (! $this->titleMatches((string) ($job['title'] ?? ''), $kind) || blank($job['redirect_url'] ?? null)) {
+            $type = $this->kindOf((string) ($job['title'] ?? ''), $kind);
+            if ($type === null || blank($job['redirect_url'] ?? null)) {
                 continue;
             }
             $rows[] = [
                 'external_id' => (string) $job['id'],
-                'kind' => $kind,
+                'kind' => $type,
                 'title' => $this->clean($job['title'], 200),
                 'company' => $this->clean($job['company']['display_name'] ?? null, 160),
                 'location' => $this->clean($job['location']['display_name'] ?? null, 160),
@@ -117,12 +113,13 @@ class JobFetcher
 
         $rows = [];
         foreach ($response->json('results', []) as $job) {
-            if (! $this->titleMatches((string) ($job['jobTitle'] ?? ''), $kind) || blank($job['jobUrl'] ?? null)) {
+            $type = $this->kindOf((string) ($job['jobTitle'] ?? ''), $kind);
+            if ($type === null || blank($job['jobUrl'] ?? null)) {
                 continue;
             }
             $rows[] = [
                 'external_id' => (string) $job['jobId'],
-                'kind' => $kind,
+                'kind' => $type,
                 'title' => $this->clean($job['jobTitle'], 200),
                 'company' => $this->clean($job['employerName'] ?? null, 160),
                 'location' => $this->clean($job['locationName'] ?? null, 160),
@@ -138,9 +135,9 @@ class JobFetcher
         return $rows;
     }
 
-    private function titleMatches(string $title, string $kind): bool
+    private function kindOf(string $title, string $searched): ?string
     {
-        return Str::contains(mb_strtolower($title), self::TITLE_WORDS[$kind]);
+        return RoleType::inCycle($title) ? RoleType::classify($title, partTime: $searched === 'part-time') : null;
     }
 
     private function clean(?string $text, int $limit): ?string

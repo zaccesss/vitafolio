@@ -14,6 +14,7 @@ class JobListing extends Model
     public const KINDS = [
         'internship' => 'Internships',
         'placement' => 'Placement years',
+        'insight' => 'Spring weeks and insight days',
         'graduate' => 'Graduate roles',
         'part-time' => 'Part-time and student jobs',
     ];
@@ -24,18 +25,20 @@ class JobListing extends Model
         return [
             'internship' => __('Internships'),
             'placement' => __('Placement years'),
+            'insight' => __('Spring weeks and insight days'),
             'graduate' => __('Graduate roles'),
             'part-time' => __('Part-time and student jobs'),
         ];
     }
 
-    public const SOURCES = ['adzuna' => 'Adzuna', 'reed' => 'Reed'];
+    /** adzuna and reed are fetched from their own APIs; employer listings arrive through the feed */
+    public const SOURCES = ['adzuna' => 'Adzuna', 'reed' => 'Reed', 'employer' => 'Employer'];
 
-    protected $fillable = ['source', 'external_id', 'kind', 'title', 'company', 'location', 'salary_min', 'salary_max', 'description', 'url', 'posted_at', 'closes_at'];
+    protected $fillable = ['source', 'board', 'external_id', 'kind', 'title', 'company', 'location', 'salary_min', 'salary_max', 'description', 'url', 'posted_at', 'closes_at', 'last_seen_at'];
 
     protected function casts(): array
     {
-        return ['posted_at' => 'datetime', 'closes_at' => 'datetime'];
+        return ['posted_at' => 'datetime', 'closes_at' => 'datetime', 'last_seen_at' => 'datetime'];
     }
 
     /** @param  Builder<JobListing>  $query */

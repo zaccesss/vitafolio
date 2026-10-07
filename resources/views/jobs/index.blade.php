@@ -1,7 +1,7 @@
 <x-layouts.app :title="__('Jobs')">
     <div class="container-page py-8">
         <h1 class="text-3xl">{{ __('Jobs for students and graduates') }}</h1>
-        <p class="mt-1 max-w-3xl text-muted">{{ __('Internships, placement years, graduate roles and part-time jobs in the UK, gathered daily from job boards. Applications happen on the board each job comes from.') }}</p>
+        <p class="mt-1 max-w-3xl text-muted">{{ __('Internships, placement years, spring weeks, graduate roles and part-time jobs for the :from to :to recruitment cycle, gathered daily from employers\' own careers sites and job boards. Each one links to the page where you apply.', ['from' => config('vitafolio.jobs_cycle')[0], 'to' => config('vitafolio.jobs_cycle')[1]]) }}</p>
 
         <nav class="mt-6 flex flex-wrap gap-2" aria-label="{{ __('Kind of role') }}">
             <a class="btn btn-sm {{ $kind === '' ? 'btn-primary' : 'btn-secondary' }}" href="{{ route('jobs', array_filter(['q' => $q, 'where' => $where])) }}" @if($kind === '') aria-current="page" @endif>{{ __('All roles') }}</a>
@@ -42,16 +42,20 @@
                                 @if ($job->posted_at)<div><dt class="inline text-muted">{{ __('Posted') }}:</dt> <dd class="inline">{{ $job->posted_at->translatedFormat('j M Y') }}</dd></div>@endif
                                 @if ($job->closes_at)<div><dt class="inline text-muted">{{ __('Closes') }}:</dt> <dd class="inline">{{ $job->closes_at->translatedFormat('j M Y') }}</dd></div>@endif
                             </dl>
-                            @if ($job->description)<p class="mt-3 text-sm">{{ \Illuminate\Support\Str::limit($job->description, 280) }}</p>@endif
+                            @if ($job->description && $job->source !== 'employer')<p class="mt-3 text-sm">{{ \Illuminate\Support\Str::limit($job->description, 280) }}</p>@endif
                             <div class="mt-4 flex flex-wrap items-center gap-3">
                                 <a class="btn btn-primary btn-sm" href="{{ $job->url }}" target="_blank" rel="noopener nofollow">{{ __('View and apply') }}<x-new-tab /></a>
                                 @auth
-                                    <a class="btn btn-secondary btn-sm" href="{{ route('check', ['job' => $job->id]) }}">{{ __('Check my CV against this job') }}</a>
+                                    @if ($job->description)
+                                        <a class="btn btn-secondary btn-sm" href="{{ route('check', ['job' => $job->id]) }}">{{ __('Check my CV against this job') }}</a>
+                                    @endif
                                 @endauth
                                 @if ($job->source === 'adzuna')
-                                    {{-- adzuna's terms require this label on every listing, linked to adzuna --}}
+                                    {{-- adzuna's terms require this label on every listing, at least 116 by 23 pixels and linked to adzuna --}}
                                     <span class="ms-auto inline-flex items-center gap-1 text-sm text-muted"><a href="https://www.adzuna.co.uk" rel="noopener nofollow">{{ __('Jobs') }}</a> {{ __('by') }}
-                                        <a href="https://www.adzuna.co.uk" rel="noopener nofollow">@if (file_exists(public_path('images/adzuna-logo.svg')))<img src="{{ asset('images/adzuna-logo.svg') }}" alt="Adzuna" width="80" height="23" class="inline h-[23px] w-auto">@else Adzuna @endif</a></span>
+                                        <a href="https://www.adzuna.co.uk" rel="noopener nofollow" class="inline-flex min-h-[23px] min-w-[116px] items-center text-base font-semibold">@if (file_exists(public_path('images/adzuna-logo.svg')))<img src="{{ asset('images/adzuna-logo.svg') }}" alt="Adzuna" width="116" height="23" class="h-auto min-h-[23px] w-[116px]">@else Adzuna @endif</a></span>
+                                @elseif ($job->source === 'employer')
+                                    <span class="ms-auto text-sm text-muted">{{ __('From the employer\'s own careers site') }}</span>
                                 @else
                                     <span class="ms-auto text-sm text-muted">{{ __('From :source', ['source' => \App\Models\JobListing::SOURCES[$job->source]]) }}</span>
                                 @endif

@@ -28,7 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('web', SetLocale::class);
         $middleware->append(SecurityHeaders::class);
         // the nightly tidy-up is called by a scheduler with a bearer token, not from a page with a form
-        $middleware->validateCsrfTokens(except: ['cron']);
+        $middleware->validateCsrfTokens(except: ['cron', 'jobs/feed']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // errors go to sentry when SENTRY_LARAVEL_DSN is set; without it this does nothing
