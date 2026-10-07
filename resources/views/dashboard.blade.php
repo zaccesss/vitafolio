@@ -78,5 +78,13 @@
                 <a class="btn btn-secondary" href="{{ route('analytics') }}">{{ __('Open analytics') }}</a>
             </section>
         @endif
+
+        <section class="card mt-6 flex flex-wrap items-center justify-between gap-4 p-6" aria-labelledby="check-title">
+            <div>
+                <h2 id="check-title" class="text-xl">{{ __('Check a CV') }}</h2>
+                <p class="mt-1 text-muted">{{ __('See what an applicant tracking system can read in any CV, with a score and fixes.') }}</p>
+            </div>
+            <a class="btn btn-secondary" href="{{ route('check') }}">{{ __('Check a CV') }}</a>
+        </section>
     </div>
 </x-layouts.app>

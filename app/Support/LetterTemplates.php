@@ -17,6 +17,22 @@ class LetterTemplates
         'part-time' => 'Part-time or student job',
     ];
 
+    /**
+     * the labels in the reader's language. Written out with __() so the translation scanner sees
+     * each one; KINDS stays the list of valid template names
+     *
+     * @return array<string, string>
+     */
+    public static function labels(): array
+    {
+        return [
+            'internship' => __('Internship'),
+            'placement' => __('Placement year'),
+            'graduate' => __('Graduate role'),
+            'part-time' => __('Part-time or student job'),
+        ];
+    }
+
     public static function exists(?string $kind): bool
     {
         return $kind !== null && array_key_exists($kind, self::KINDS);

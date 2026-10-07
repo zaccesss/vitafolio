@@ -11,6 +11,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Added
 
+- A Check a CV page, linked from the menu and the dashboard. It scores a Vitafolio CV or an uploaded PDF or Word file out of 100 across heading clarity, contact details, skills, education, experience and keywords, the way an applicant tracking system reads it. The report lists what was found, what is missing, layout problems such as tables, columns, images, text boxes and contact details in the page header, plus fixes. A pasted job advert shows which of its keywords the CV has. Reports download as Markdown and the parsed CV as JSON. Uploads are read in memory and never stored. `php artisan cv:analyse` does the same from the command line.
 - The cover letter tab has templates for an internship, a placement year, a graduate role and a part-time or student job. Choosing one fills the box with a structure to complete, signed with the owner's name; nothing is saved until they press Save. An existing letter gets a warning and a way back.
 - Each demo clip has its own page at `/features/demo/<clip>` with a video player, a Back to Features link, a written description of what happens and links to the other clips. Selecting a clip on the Features page opens it there instead of the bare video file.
 - Dark versions of the demo clips. The Features page, the clip pages and the README show the one that matches the theme in use.

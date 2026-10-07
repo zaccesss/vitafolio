@@ -81,8 +81,8 @@
                         <nav class="mt-5" aria-labelledby="letter-templates-title">
                             <h3 id="letter-templates-title" class="text-base font-semibold">{{ __('Start from a template') }}</h3>
                             <ul class="mt-2 flex flex-wrap gap-2">
-                                @foreach (\App\Support\LetterTemplates::KINDS as $kind => $label)
-                                    <li><a class="btn btn-secondary btn-sm" href="{{ route('cvs.edit', [$cv, 'letter']) }}?template={{ $kind }}" @if($template === $kind) aria-current="true" @endif>{{ __($label) }}</a></li>
+                                @foreach (\App\Support\LetterTemplates::labels() as $kind => $label)
+                                    <li><a class="btn btn-secondary btn-sm" href="{{ route('cvs.edit', [$cv, 'letter']) }}?template={{ $kind }}" @if($template === $kind) aria-current="true" @endif>{{ $label }}</a></li>
                                 @endforeach
                             </ul>
                             <x-english-only class="mt-3" />
