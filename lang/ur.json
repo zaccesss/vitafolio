@@ -360,6 +360,7 @@
     "from :provider": ":provider سے",
     "From :source": ":source سے",
     "From people who know the work of :name. :name approves each one before it shows.": "ان لوگوں کی طرف سے جو :name کے کام سے واقف ہیں۔ :name ہر سفارش کو دکھائے جانے سے پہلے منظور کرتے ہیں۔",
+    "From the employer's own careers site": "آجر کی اپنی ملازمتوں کی ویب سائٹ سے",
     "Full name": "پورا نام",
     "Get in touch about your account, report a problem or suggest an idea.": "اپنے اکاؤنٹ کے بارے میں رابطہ کریں، کسی مسئلے کی اطلاع دیں یا کوئی تجویز دیں۔",
     "Getting started": "آغاز",
@@ -433,6 +434,7 @@
     "Inter (clean sans serif)": "Inter (صاف سان سیرف)",
     "Internship": "انٹرن شپ",
     "Internships": "انٹرن شپس",
+    "Internships, placement years, spring weeks, graduate roles and part-time jobs for the :from to :to recruitment cycle, gathered daily from employers' own careers sites and job boards. Each one links to the page where you apply.": ":from سے :to کے بھرتی کے دور کی انٹرن شپس، پلیسمنٹ سال، اسپرنگ ویکس، گریجویٹ ملازمتیں اور جز وقتی ملازمتیں، روزانہ آجروں کی اپنی ملازمتوں کی ویب سائٹس اور جاب بورڈز سے جمع کی جاتی ہیں۔ ہر ایک اس صفحے سے منسلک ہے جہاں آپ درخواست دیتے ہیں۔",
     "Invalid credential format.": "اسناد کا فارمیٹ غلط ہے۔",
     "Is it free?": "کیا یہ مفت ہے؟",
     "Is the site up? Check the status page and its history of incidents.": "کیا سائٹ کام کر رہی ہے؟ اسٹیٹس پیج اور اس پر واقعات کی تاریخ دیکھیں۔",
@@ -862,6 +864,7 @@
     "Source code": "سورس کوڈ",
     "Source Serif (classic serif)": "Source Serif (کلاسیکی سیرف)",
     "Spam or advertising": "اسپام یا اشتہار بازی",
+    "Spring weeks and insight days": "اسپرنگ ویکس اور تعارفی دن",
     "Start from a template": "ٹیمپلیٹ سے شروع کریں",
     "Start from a template and compile it in your browser, then save the PDF to your CV.": "کسی ٹیمپلیٹ سے شروع کریں، اسے اپنے براؤزر میں کمپائل کریں، پھر PDF اپنی سی وی میں محفوظ کریں۔",
     "Start in LaTeX": "LaTeX میں شروع کریں",
@@ -1154,8 +1157,5 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} ایک مسئلہ درست کرنا ہے|[2,*] :count مسائل درست کرنے ہیں",
     "“:title” has been deleted.": "“:title” حذف کر دی گئی ہے۔",
     "“:title” is now hidden from everyone except its owner.": "“:title” اب اس کے مالک کے علاوہ سب سے پوشیدہ ہے۔",
-    "“:title” is visible again.": "“:title” دوبارہ نظر آ رہی ہے۔",
-    "From the employer's own careers site": "آجر کی اپنی ملازمتوں کی ویب سائٹ سے",
-    "Internships, placement years, spring weeks, graduate roles and part-time jobs for the :from to :to recruitment cycle, gathered daily from employers' own careers sites and job boards. Each one links to the page where you apply.": ":from سے :to کے بھرتی کے دور کی انٹرن شپس، پلیسمنٹ سال، اسپرنگ ویکس، گریجویٹ ملازمتیں اور جز وقتی ملازمتیں، روزانہ آجروں کی اپنی ملازمتوں کی ویب سائٹس اور جاب بورڈز سے جمع کی جاتی ہیں۔ ہر ایک اس صفحے سے منسلک ہے جہاں آپ درخواست دیتے ہیں۔",
-    "Spring weeks and insight days": "اسپرنگ ویکس اور تعارفی دن"
+    "“:title” is visible again.": "“:title” دوبارہ نظر آ رہی ہے۔"
 }
