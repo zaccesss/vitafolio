@@ -1,0 +1,12 @@
+{
+  "name": "vitafolio-demo-recording",
+  "private": true,
+  "type": "module",
+  "description": "Records the README clips and screenshots from a local copy of the site",
+  "scripts": {
+    "capture": "node capture.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

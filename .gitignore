@@ -25,3 +25,7 @@ Homestead.yaml
 Thumbs.db
 # fetched by scripts/fetch-pdf-fonts.sh, too large for git
 /resources/pdf/fonts/NotoSansSC-*.otf
+
+# demo recording working files, see scripts/demo/README.md
+scripts/demo/node_modules/
+scripts/demo/out/

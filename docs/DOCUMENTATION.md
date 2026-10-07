@@ -184,6 +184,9 @@ flowchart LR
 | `resources/latex` | The seven LaTeX starter templates |
 | `resources/brand` | SVG sources for every icon and share image, rendered by `scripts/brand-assets.sh` |
 | `resources/brand/linkedin` | Logo, cover image and profile text for the [LinkedIn page](../resources/brand/linkedin/README.md) |
+| `public/demo` | The demo clips on the Features page and in the README, each with a full-quality video and a still frame for reduced motion |
+| `scripts/demo` | The [demo recording kit](../scripts/demo/README.md) that records those clips and the README screenshots from a local copy with made-up people |
+| `docs/assets/demo/originals` | The untouched recordings and full-resolution screenshots, kept for reuse elsewhere |
 | `docker` | The FrankenPHP config, PHP settings and the start script used by the production image |
 
 ## Data model
@@ -527,6 +530,7 @@ release. Host them anywhere that serves static files with CORS allowed, such as 
 | Moderation | `/admin` lists open reports and hidden CVs. Admins can hide or restore a CV, remove a photo, dismiss a report and suspend or reinstate an account. Admins are emailed when a report arrives |
 | Admins | `php artisan vitafolio:make-admin <email>`, with `--revoke` to remove the role |
 | Brand images | Edit the SVGs in `resources/brand`, then run `scripts/brand-assets.sh` |
+| Demo clips and screenshots | After an interface change, run `scripts/demo/record.sh` and then `scripts/demo/build-assets.sh`, as the [kit's guide](../scripts/demo/README.md) explains |
 | Dependencies | Dependabot opens weekly pull requests for Composer, npm, the Docker images and GitHub Actions |
 
 ## Incident response
