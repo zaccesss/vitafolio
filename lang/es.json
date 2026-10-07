@@ -1103,10 +1103,10 @@
     "“:title” has been deleted.": "Se ha eliminado “:title”.",
     "“:title” is now hidden from everyone except its owner.": "“:title” ahora está oculto para todos excepto para su propietario.",
     "“:title” is visible again.": "“:title” vuelve a estar visible.",
-    "Free for everyone.": "Gratis para todos.",
-    "By :site.": "Por :site.",
-    "Part-time or student job": "Trabajo a tiempo parcial o para estudiantes",
-    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "La plantilla está en el cuadro de abajo. Sustituye todo lo que va entre [corchetes] y guarda. No cambia nada hasta que pulses Guardar.",
-    "Saving will replace the letter you already have.": "Al guardar se sustituirá la carta que ya tienes.",
-    "Keep my current letter": "Conservar mi carta actual"
+    "Free for everyone.": "Free for everyone.",
+    "By :site.": "By :site.",
+    "Part-time or student job": "Part-time or student job",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.",
+    "Saving will replace the letter you already have.": "Saving will replace the letter you already have.",
+    "Keep my current letter": "Keep my current letter"
 }

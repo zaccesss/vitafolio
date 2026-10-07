@@ -1103,10 +1103,10 @@
     "“:title” has been deleted.": "تم حذف “:title”.",
     "“:title” is now hidden from everyone except its owner.": "أصبحت “:title” الآن مخفية عن الجميع باستثناء صاحبها.",
     "“:title” is visible again.": "أصبحت “:title” مرئية مرة أخرى.",
-    "Free for everyone.": "مجاني للجميع.",
-    "By :site.": "بواسطة :site.",
-    "Part-time or student job": "عمل بدوام جزئي أو للطلاب",
-    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "القالب في المربع أدناه. استبدل كل ما بين [الأقواس المربعة] ثم احفظ. لا يتغير شيء حتى تضغط حفظ.",
-    "Saving will replace the letter you already have.": "سيؤدي الحفظ إلى استبدال الرسالة الحالية.",
-    "Keep my current letter": "الإبقاء على رسالتي الحالية"
+    "Free for everyone.": "Free for everyone.",
+    "By :site.": "By :site.",
+    "Part-time or student job": "Part-time or student job",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.",
+    "Saving will replace the letter you already have.": "Saving will replace the letter you already have.",
+    "Keep my current letter": "Keep my current letter"
 }

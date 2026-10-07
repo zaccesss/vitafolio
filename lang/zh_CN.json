@@ -1103,10 +1103,10 @@
     "“:title” has been deleted.": "“:title”已删除。",
     "“:title” is now hidden from everyone except its owner.": "“:title”现已对除所有者以外的所有人隐藏。",
     "“:title” is visible again.": "“:title”已重新可见。",
-    "Free for everyone.": "对所有人免费。",
-    "By :site.": "由 :site 制作。",
-    "Part-time or student job": "兼职或学生工作",
-    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "模板在下面的文本框中。替换所有[方括号]中的内容,然后保存。在你点击保存之前不会有任何更改。",
-    "Saving will replace the letter you already have.": "保存后将替换你现有的求职信。",
-    "Keep my current letter": "保留我当前的求职信"
+    "Free for everyone.": "Free for everyone.",
+    "By :site.": "By :site.",
+    "Part-time or student job": "Part-time or student job",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.",
+    "Saving will replace the letter you already have.": "Saving will replace the letter you already have.",
+    "Keep my current letter": "Keep my current letter"
 }
