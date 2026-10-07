@@ -53,9 +53,10 @@ Each screenshot follows the light or dark theme GitHub is showing.
 | --- | --- |
 | Profiles | A handle at `/@name`, a photo with a crop tool, a headline, links with recognised sites and a visibility setting |
 | CVs | Up to ten per account, each with its own address, theme, accent colour, font, section order and visibility |
-| Content | Rich sections, skills as tags, projects with images or short videos, an optional cover letter, JSON Resume import and export |
+| Content | Rich sections, skills as tags, projects with images or short videos, an optional cover letter with templates for internships, placements, graduate roles and part-time jobs, JSON Resume import and export |
 | Files | Uploaded PDF and Word files. LaTeX compiled in the browser with pdfLaTeX, XeLaTeX or LuaLaTeX |
 | Sharing | A clean link, a QR code, generated PDF and Word files and a share image for each CV, plus private view counts. Generated PDFs are tagged PDF/UA-1 files that screen readers can follow. A cover letter shares its CV's link and privacy |
+| CV check | Scores any CV out of 100 the way an applicant tracking system reads it: a Vitafolio CV or an uploaded PDF or Word file. It shows what was found, what is missing, layout problems and fixes. A pasted job advert shows which of its keywords the CV has. Uploads are never stored. `php artisan cv:analyse resume.pdf` writes `parsed.json` and `report.md` |
 | Endorsements | People who know the owner's work can endorse a CV. Each one shows only after the owner approves it and only where the CV is visible |
 | Directory | Public CVs listed with search, skill tags, availability and university filters |
 | Sign-in | Email and password, passkeys, two-factor authentication, plus Google, GitHub and Microsoft |

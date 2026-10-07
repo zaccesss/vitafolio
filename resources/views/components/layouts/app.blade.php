@@ -68,6 +68,7 @@
         $menuLinks = $user ? array_filter([
             ['dashboard', __('My CVs'), ['dashboard', 'cvs.*']],
             Route::has('analytics') ? ['analytics', __('Analytics'), ['analytics']] : null,
+            ['check', __('Check a CV'), ['check', 'check.*']],
             ['profile.edit', __('Settings'), ['profile.*', 'account*', 'settings.*']],
             $user->isAdmin() ? ['admin.index', __('Admin'), ['admin.*']] : null,
         ]) : [];

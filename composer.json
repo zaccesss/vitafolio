@@ -15,6 +15,7 @@
         "mpdf/mpdf": "^8.3",
         "resend/resend-php": "^1.16",
         "sentry/sentry-laravel": "^4.28",
+        "smalot/pdfparser": "^2.12",
         "socialiteproviders/microsoft": "^4.10"
     },
     "require-dev": {

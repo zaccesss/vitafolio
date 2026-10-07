@@ -6,6 +6,7 @@ use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CronController;
+use App\Http\Controllers\CvCheckController;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\CvDocumentController;
 use App\Http\Controllers\CvEditorController;
@@ -67,6 +68,9 @@ Route::post('/contact', [ContactController::class, 'site'])->middleware('throttl
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/analytics', AnalyticsController::class)->name('analytics');
+    Route::get('/check', [CvCheckController::class, 'show'])->name('check');
+    Route::post('/check', [CvCheckController::class, 'check'])->middleware('throttle:uploads')->name('check.run');
+    Route::get('/check/report.{format}', [CvCheckController::class, 'download'])->whereIn('format', ['json', 'md'])->name('check.download');
 
     Route::post('/cvs', [CvEditorController::class, 'store'])->name('cvs.store');
     Route::prefix('/cvs/{cv}')->name('cvs.')->group(function () {
