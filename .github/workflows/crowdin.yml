@@ -3,7 +3,9 @@ name: Crowdin sync
 # keeps the interface translations in step with Crowdin. A change to the english strings on main is
 # uploaded straight away; translations made on Crowdin come back as one pull request from the
 # l10n_crowdin branch, checked daily. It needs the CROWDIN_PERSONAL_TOKEN secret and the
-# CROWDIN_PROJECT_ID variable; without them the job stops before doing anything.
+# CROWDIN_PROJECT_ID variable; without them the job stops before doing anything. The pull request is
+# opened with the automation account's token (CROWDIN_BOT_TOKEN), so it is credited to that account
+# and its CI checks start on their own, which a pull request from the built-in token never does.
 
 permissions: {}
 
@@ -34,8 +36,9 @@ jobs:
         env:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ vars.CROWDIN_PROJECT_ID }}
+          CROWDIN_BOT_TOKEN: ${{ secrets.CROWDIN_BOT_TOKEN }}
         run: |
-          if [ -z "$CROWDIN_PERSONAL_TOKEN" ] || [ -z "$CROWDIN_PROJECT_ID" ]; then
+          if [ -z "$CROWDIN_PERSONAL_TOKEN" ] || [ -z "$CROWDIN_PROJECT_ID" ] || [ -z "$CROWDIN_BOT_TOKEN" ]; then
             echo "Crowdin is not configured, skipping"; exit 1
           fi
 
@@ -54,7 +57,9 @@ jobs:
           pull_request_labels: "chore"
           pull_request_base_branch_name: main
           commit_message: "chore: update translations from Crowdin"
+          github_user_name: Zac Bot
+          github_user_email: automation@isaacadjei.me
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CROWDIN_BOT_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ vars.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

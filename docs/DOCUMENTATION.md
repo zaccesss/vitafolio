@@ -419,10 +419,10 @@ The `Crowdin sync` workflow (`.github/workflows/crowdin.yml`) does the rest:
 2. Every day it downloads finished translations and opens or updates one pull request from the
    `l10n_crowdin` branch. Each one is reviewed like any other change.
 
-It reads the `CROWDIN_PERSONAL_TOKEN` secret and the `CROWDIN_PROJECT_ID` repository variable; the
-project id and token are never written into `crowdin.yml`. A pull request opened by the workflow's
-own token does not start the CI checks, so before merging one, close and reopen it (or push any
-commit to the branch) to run them.
+It reads the `CROWDIN_PERSONAL_TOKEN` and `CROWDIN_BOT_TOKEN` secrets and the `CROWDIN_PROJECT_ID`
+repository variable; none of them is written into `crowdin.yml`. The pull request is opened with the
+automation account's token, limited to public repositories, so it is credited to that account and
+its CI checks start on their own.
 
 Crowdin's codes `zh-CN` and `pt-BR` are mapped to Laravel's `zh_CN` and `pt_BR` in `crowdin.yml`.
 
