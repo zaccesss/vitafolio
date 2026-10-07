@@ -16,7 +16,7 @@ final class ResumeParser
         'experience' => ['experience', 'work experience', 'professional experience', 'relevant experience', 'employment', 'employment history', 'work history', 'career history', 'internships'],
         'skills' => ['skills', 'key skills', 'technical skills', 'core skills', 'skills and competencies', 'competencies', 'skills and interests', 'technical and soft skills'],
         'projects' => ['projects', 'personal projects', 'academic projects', 'key projects', 'selected projects', 'portfolio'],
-        'other' => ['certifications', 'certificates', 'awards', 'achievements', 'volunteering', 'volunteer experience', 'interests', 'hobbies', 'languages', 'references', 'publications', 'leadership', 'activities', 'extracurricular activities', 'contact', 'contact details'],
+        'other' => ['certifications', 'certificates', 'awards', 'achievements', 'awards and achievements', 'awards & achievements', 'honours and awards', 'volunteering', 'volunteer experience', 'volunteer work', 'interests', 'hobbies', 'hobbies and interests', 'languages', 'spoken languages', 'language skills', 'references', 'publications', 'research', 'research and publications', 'research & publications', 'leadership', 'leadership experience', 'positions of responsibility', 'activities', 'extracurricular activities', 'contact', 'contact details', 'additional information', 'courses', 'training'],
     ];
 
     public function parse(string $text): ParsedResume
@@ -92,18 +92,23 @@ final class ResumeParser
         return str_ends_with($line, ':') || (mb_strtoupper($line) === $line && preg_match('/\p{Lu}{3,}/u', $line));
     }
 
-    /** @param  list<string>  $lines */
+    /**
+     * the first short line of two to four words near the top. PDFs sometimes put the contact line
+     * before the name when their text is read out, so a few lines are searched. A nickname in
+     * brackets such as "Isaac (Zac) Adjei" still counts
+     *
+     * @param  list<string>  $lines
+     */
     private function name(array $lines): ?string
     {
-        foreach (array_slice($lines, 0, 5) as $line) {
+        foreach (array_slice($lines, 0, 8) as $line) {
             $clean = trim(preg_replace('/\s+/', ' ', $line));
-            if ($this->headingKey($clean) !== null || preg_match('/[@\d|:\/]/', $clean)) {
+            if ($this->headingKey($clean) !== null || preg_match('/[@\d|:\/]|www\.|\.com/i', $clean)) {
                 continue;
             }
-            if (preg_match('/^\p{L}[\p{L}\'’.-]*(\s+\p{L}[\p{L}\'’.-]*){1,3}$/u', $clean)) {
-                return mb_convert_case(mb_strtolower($clean), MB_CASE_TITLE) === $clean || mb_strtoupper($clean) === $clean
-                    ? mb_convert_case(mb_strtolower($clean), MB_CASE_TITLE)
-                    : $clean;
+            $word = '\(?\p{L}[\p{L}\'\x{2019}.-]*\)?';
+            if (preg_match('/^'.$word.'(\s+'.$word.'){1,3}$/u', $clean)) {
+                return mb_strtoupper($clean) === $clean ? mb_convert_case(mb_strtolower($clean), MB_CASE_TITLE) : $clean;
             }
         }
 
