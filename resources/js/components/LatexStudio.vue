@@ -1,11 +1,12 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue';
+import { t } from '../i18n.js';
 
 // apple devices use Cmd where windows and linux use Ctrl; the editor's Mod- bindings already
 // follow that, so the labels do too
 // chrome reports "macOS", safari "MacIntel", so the check ignores case
 const isApple = /mac|iphone|ipad|ipod/i.test(navigator.userAgentData?.platform || navigator.platform || '');
-const modKey = isApple ? 'Cmd' : 'Ctrl';
+const modKey = isApple ? t('Cmd') : t('Ctrl');
 // browsers only start a worker from the page's own site, and the engine lives on another one. So the
 // worker script is fetched, its relative imports are pointed at the engine site and it starts from a
 // local blob instead. Only the engine's own worker is swapped; the original constructor comes back after
@@ -77,7 +78,7 @@ onMounted(async () => {
                 StreamLanguage.define(stex),
                 EditorView.lineWrapping,
                 EditorView.cspNonce.of(props.nonce),
-                EditorView.contentAttributes.of({ 'aria-label': 'LaTeX source', spellcheck: 'false' }),
+                EditorView.contentAttributes.of({ 'aria-label': t('LaTeX source'), spellcheck: 'false', dir: 'ltr' }),
                 keymap.of([
                     { key: 'Mod-Enter', run: () => { compile(); return true; } },
                     { key: 'Mod-s', run: () => { save(); return true; } },
@@ -120,20 +121,20 @@ function onPlainInput(event) {
 
 function useTemplate() {
     if (!template.value) return;
-    if (!window.confirm('Replace your current LaTeX with this template? Your saved version is kept until you save again.')) {
+    if (!window.confirm(t('Replace your current LaTeX with this template? Your saved version is kept until you save again.'))) {
         template.value = '';
         return;
     }
     setSource(props.starters[template.value] || '');
     dirty.value = true;
-    status.value = `Template loaded: ${props.templates[template.value]}`;
+    status.value = t('Template loaded: :name', { name: props.templates[template.value] });
     template.value = '';
 }
 
 async function compile() {
     if (busy.value) return;
     if (!props.assetsUrl) {
-        status.value = 'Compiling is not available on this site yet. You can still edit and save your LaTeX.';
+        status.value = t('Compiling is not available on this site yet. You can still edit and save your LaTeX.');
         return;
     }
     busy.value = true;
@@ -141,7 +142,7 @@ async function compile() {
     try {
         const mod = await import('texlyre-busytex');
         if (!runner) {
-            status.value = 'Downloading the LaTeX engine, about 120 MB the first time. After that your browser keeps it.';
+            status.value = t('Downloading the LaTeX engine, about 120 MB the first time. After that your browser keeps it.');
             const base = `${props.assetsUrl.replace(/\/$/, '')}/busytex`;
             const collection = (c) => `${base}/texlive-${c}.js`;
             // the core collection loads up front and covers every starter template. The larger
@@ -150,11 +151,11 @@ async function compile() {
                 busytexBasePath: base,
                 preloadDataPackages: [collection('basic')],
                 catalogDataPackages: ['basic', 'recommended', 'extra'].map(collection),
-                onDownloadProgress: (p) => { status.value = `Downloading the LaTeX engine: ${Math.min(100, Math.round(p.percent))}%`; },
+                onDownloadProgress: (p) => { status.value = t('Downloading the LaTeX engine: :percent%', { percent: Math.min(100, Math.round(p.percent)) }); },
             });
             await withSameOriginWorker(`${base}/busytex_worker.js`, () => runner.initialize(true));
         }
-        status.value = 'Compiling…';
+        status.value = t('Compiling…');
         const Engine = { pdflatex: mod.PdfLatex, xelatex: mod.XeLatex, lualatex: mod.LuaLatex }[engine.value];
         const result = await new Engine(runner).compile({ input: source.value, rerun: true });
         log.value = result.log || '';
@@ -162,12 +163,12 @@ async function compile() {
             lastPdf.value = result.pdf;
             if (pdfUrl.value) URL.revokeObjectURL(pdfUrl.value);
             pdfUrl.value = URL.createObjectURL(new Blob([result.pdf], { type: 'application/pdf' }));
-            status.value = 'Compiled. Check the preview, then save to attach the PDF to your CV.';
+            status.value = t('Compiled. Check the preview, then save to attach the PDF to your CV.');
         } else {
-            status.value = 'LaTeX reported an error. The log below shows where.';
+            status.value = t('LaTeX reported an error. The log below shows where.');
         }
     } catch (error) {
-        status.value = 'The LaTeX engine could not start. Try again with a recent version of Chrome, Edge, Firefox or Safari.';
+        status.value = t('The LaTeX engine could not start. Try again with a recent version of Chrome, Edge, Firefox or Safari.');
         log.value = String(error?.message || error);
     } finally {
         busy.value = false;
@@ -177,7 +178,7 @@ async function compile() {
 async function save() {
     if (busy.value) return;
     busy.value = true;
-    status.value = 'Saving…';
+    status.value = t('Saving…');
     const body = new FormData();
     body.append('_method', 'PUT');
     body.append('source', source.value);
@@ -193,12 +194,12 @@ async function save() {
         const data = await response.json();
         dirty.value = false;
         status.value = data.pdfError
-            ? `Saved at ${data.savedAt}. ${data.pdfError}`
+            ? t('Saved at :time. :error', { time: data.savedAt, error: data.pdfError })
             : lastPdf.value
-            ? `Saved at ${data.savedAt}. Your compiled PDF is now this CV's file.`
-            : `Saved at ${data.savedAt}. Compile to attach a PDF to your CV.`;
+            ? t('Saved at :time. Your compiled PDF is now this CV’s file.', { time: data.savedAt })
+            : t('Saved at :time. Compile to attach a PDF to your CV.', { time: data.savedAt });
     } catch (error) {
-        status.value = 'Saving failed. Check your connection and try again.';
+        status.value = t('Saving failed. Check your connection and try again.');
     } finally {
         busy.value = false;
     }
@@ -209,59 +210,59 @@ async function save() {
     <div class="grid gap-4">
         <div class="card flex flex-wrap items-end gap-3 p-4">
             <div>
-                <label for="latex-template" class="field-label text-sm">Start from a template</label>
+                <label for="latex-template" class="field-label text-sm">{{ t('Start from a template') }}</label>
                 <select id="latex-template" v-model="template" class="input min-h-10 py-1.5" @change="useTemplate">
-                    <option value="">Choose a template…</option>
+                    <option value="">{{ t('Choose a template…') }}</option>
                     <option v-for="(label, key) in templates" :key="key" :value="key">{{ label }}</option>
                 </select>
             </div>
             <div>
-                <label for="latex-engine" class="field-label text-sm">Engine</label>
+                <label for="latex-engine" class="field-label text-sm">{{ t('Engine') }}</label>
                 <select id="latex-engine" v-model="engine" class="input min-h-10 py-1.5">
-                    <option value="pdflatex">pdfLaTeX (most templates)</option>
-                    <option value="xelatex">XeLaTeX (system fonts, Unicode)</option>
+                    <option value="pdflatex">{{ t('pdfLaTeX (most templates)') }}</option>
+                    <option value="xelatex">{{ t('XeLaTeX (system fonts, Unicode)') }}</option>
                     <option value="lualatex">LuaLaTeX</option>
                 </select>
             </div>
-            <div class="ml-auto flex flex-wrap gap-2">
+            <div class="ms-auto flex flex-wrap gap-2">
                 <button type="button" class="btn btn-secondary" :disabled="busy" aria-keyshortcuts="Control+Enter Meta+Enter" @click="compile">
-                    Compile <span class="hidden text-sm font-normal sm:inline">({{ modKey }}+Enter)</span>
+                    {{ t('Compile') }} <span class="hidden text-sm font-normal sm:inline">({{ modKey }}+Enter)</span>
                 </button>
                 <button type="button" class="btn btn-primary" :disabled="busy" aria-keyshortcuts="Control+S Meta+S" @click="save">
-                    Save <span class="hidden text-sm font-normal sm:inline">({{ modKey }}+S)</span>
+                    {{ t('Save') }} <span class="hidden text-sm font-normal sm:inline">({{ modKey }}+S)</span>
                 </button>
             </div>
-            <p class="w-full text-sm text-muted" role="status" aria-live="polite">{{ status || (dirty ? 'You have unsaved changes.' : 'All changes saved.') }}</p>
+            <p class="w-full text-sm text-muted" role="status" aria-live="polite">{{ status || (dirty ? t('You have unsaved changes.') : t('All changes saved.')) }}</p>
         </div>
 
         <div class="grid gap-4 lg:grid-cols-2">
             <section class="card overflow-hidden p-0" aria-labelledby="source-title">
                 <div class="flex items-center justify-between border-b border-line px-4 py-2">
-                    <h2 id="source-title" class="text-base">LaTeX source</h2>
+                    <h2 id="source-title" class="text-base">{{ t('LaTeX source') }}</h2>
                     <label class="flex items-center gap-2 text-sm">
-                        <input v-model="plainMode" type="checkbox" class="check" /> Plain text box
+                        <input v-model="plainMode" type="checkbox" class="check" /> {{ t('Plain text box') }}
                     </label>
                 </div>
-                <textarea v-if="plainMode" class="input min-h-[60vh] rounded-none border-0 font-mono text-sm" aria-label="LaTeX source"
+                <textarea v-if="plainMode" class="input min-h-[60vh] rounded-none border-0 font-mono text-sm" dir="ltr" :aria-label="t('LaTeX source')"
                     :value="source" @input="onPlainInput"></textarea>
                 <div v-show="!plainMode" ref="editorHost" class="latex-editor min-h-[60vh] font-mono text-sm"></div>
             </section>
 
             <section class="card overflow-hidden p-0" aria-labelledby="preview-title">
                 <div class="flex items-center justify-between border-b border-line px-4 py-2">
-                    <h2 id="preview-title" class="text-base">PDF preview</h2>
-                    <a v-if="pdfUrl" :href="pdfUrl" download="cv.pdf" class="text-sm">Download this PDF</a>
+                    <h2 id="preview-title" class="text-base">{{ t('PDF preview') }}</h2>
+                    <a v-if="pdfUrl" :href="pdfUrl" download="cv.pdf" class="text-sm">{{ t('Download this PDF') }}</a>
                 </div>
-                <iframe v-if="pdfUrl" :src="pdfUrl" title="Compiled PDF preview" class="h-[60vh] w-full bg-white"></iframe>
+                <iframe v-if="pdfUrl" :src="pdfUrl" :title="t('Compiled PDF preview')" class="h-[60vh] w-full bg-white"></iframe>
                 <div v-else class="flex h-[60vh] items-center justify-center p-6 text-center text-muted">
-                    <p>Compile to see your PDF here. Everything runs in your browser; your LaTeX never leaves your device until you save.</p>
+                    <p>{{ t('Compile to see your PDF here. Everything runs in your browser; your LaTeX never leaves your device until you save.') }}</p>
                 </div>
             </section>
         </div>
 
         <details v-if="log" class="card p-4">
-            <summary class="cursor-pointer font-semibold">Compiler log</summary>
-            <pre class="mt-3 max-h-80 overflow-auto font-mono text-xs whitespace-pre-wrap">{{ log }}</pre>
+            <summary class="cursor-pointer font-semibold">{{ t('Compiler log') }}</summary>
+            <pre dir="ltr" class="mt-3 max-h-80 overflow-auto font-mono text-xs whitespace-pre-wrap">{{ log }}</pre>
         </details>
     </div>
 </template>

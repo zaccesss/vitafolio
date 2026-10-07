@@ -11,16 +11,16 @@
         </div>
     </div>
     @if ($cv->tags->isNotEmpty())
-        <ul class="relative z-10 flex flex-wrap gap-1.5" aria-label="Skills">
+        <ul class="relative z-10 flex flex-wrap gap-1.5" aria-label="{{ __('Skills') }}">
             @foreach ($cv->tags->take(6) as $tag)
                 <li><a class="tag" href="{{ route('home', ['tags' => [$tag->slug]]) }}">{{ $tag->name }}</a></li>
             @endforeach
-            @if ($cv->tags->count() > 6)<li class="tag border-dashed">+{{ $cv->tags->count() - 6 }} more</li>@endif
+            @if ($cv->tags->count() > 6)<li class="tag border-dashed">{{ __('+:count more', ['count' => $cv->tags->count() - 6]) }}</li>@endif
         </ul>
     @endif
     <p class="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
         @if ($cv->user->university)<span>{{ $cv->user->university }}</span>@endif
-        @if ($cv->user->availability !== 'none')<span class="badge">{{ config('vitafolio.availability')[$cv->user->availability] }}</span>@endif
-        <span>Updated {{ $cv->updated_at->diffForHumans() }}</span>
+        @if ($cv->user->availability !== 'none')<span class="badge">{{ __(config('vitafolio.availability')[$cv->user->availability]) }}</span>@endif
+        <span>{{ __('Updated :time', ['time' => $cv->updated_at->diffForHumans()]) }}</span>
     </p>
 </article>

@@ -1,15 +1,15 @@
 {{-- plain text, so values print raw: html escaping would turn an apostrophe into &#039; --}}
-{!! $endorsement->endorser->name !!} wrote an endorsement for your CV "{!! $endorsement->cv->title !!}" on {!! config('app.name') !!}.
+{!! __(':name wrote an endorsement for your CV ":title" on :app.', ['name' => $endorsement->endorser->name, 'title' => $endorsement->cv->title, 'app' => config('app.name')]) !!}
 
-Relationship: {!! $endorsement->relationshipLabel() !!}
+{!! __('Relationship: :relationship', ['relationship' => __($endorsement->relationshipLabel())]) !!}
 @if ($endorsement->context)
-Context: {!! $endorsement->context !!}
+{!! __('Context: :context', ['context' => $endorsement->context]) !!}
 @endif
 
-What they wrote:
+{!! __('What they wrote:') !!}
 {!! $endorsement->body !!}
 
-It stays hidden until you approve it. Approve, hide or delete it here: {!! route('cvs.edit', [$endorsement->cv, 'endorsements']) !!}
+{!! __('It stays hidden until you approve it. Approve, hide or delete it here: :url', ['url' => route('cvs.edit', [$endorsement->cv, 'endorsements'])]) !!}
 
 --
-If it breaks the terms of use, you can report it from the same page.
+{!! __('If it breaks the terms of use, you can report it from the same page.') !!}

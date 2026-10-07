@@ -38,7 +38,7 @@ class ModerationController extends Controller
         Audit::log('moderation.hide', ['admin' => auth()->id(), 'cv' => $cv->id]);
         $cv->reports()->whereNull('resolved_at')->update(['resolved_at' => now()]);
 
-        return back()->with('status', '"'.$cv->title.'" is now hidden from everyone except its owner.');
+        return back()->with('status', __('“:title” is now hidden from everyone except its owner.', ['title' => $cv->title]));
     }
 
     public function restore(Cv $cv): RedirectResponse
@@ -46,7 +46,7 @@ class ModerationController extends Controller
         $cv->forceFill(['hidden_at' => null])->save();
         Audit::log('moderation.restore', ['admin' => auth()->id(), 'cv' => $cv->id]);
 
-        return back()->with('status', '"'.$cv->title.'" is visible again.');
+        return back()->with('status', __('“:title” is visible again.', ['title' => $cv->title]));
     }
 
     /** hides one endorsement from everyone whatever its owner chose, then closes its reports */
@@ -56,7 +56,7 @@ class ModerationController extends Controller
         Audit::log('moderation.hide_endorsement', ['admin' => auth()->id(), 'endorsement' => $endorsement->id]);
         $endorsement->reports()->whereNull('resolved_at')->update(['resolved_at' => now()]);
 
-        return back()->with('status', 'The endorsement by '.$endorsement->endorser->name.' is now hidden.');
+        return back()->with('status', __('The endorsement by :name is now hidden.', ['name' => $endorsement->endorser->name]));
     }
 
     public function restoreEndorsement(Endorsement $endorsement): RedirectResponse
@@ -64,7 +64,7 @@ class ModerationController extends Controller
         $endorsement->forceFill(['hidden_at' => null])->save();
         Audit::log('moderation.restore_endorsement', ['admin' => auth()->id(), 'endorsement' => $endorsement->id]);
 
-        return back()->with('status', 'The endorsement by '.$endorsement->endorser->name.' is no longer hidden. It shows if its CV owner has approved it.');
+        return back()->with('status', __('The endorsement by :name is no longer hidden. It shows if its CV owner has approved it.', ['name' => $endorsement->endorser->name]));
     }
 
     public function dismiss(Report $report): RedirectResponse
@@ -72,7 +72,7 @@ class ModerationController extends Controller
         $report->forceFill(['resolved_at' => now()])->save();
         Audit::log('moderation.dismiss', ['admin' => auth()->id(), 'report' => $report->id]);
 
-        return back()->with('status', 'Report dismissed.');
+        return back()->with('status', __('Report dismissed.'));
     }
 
     /** removes a photo that breaks the terms without touching anything else on the account */
@@ -81,12 +81,12 @@ class ModerationController extends Controller
         $user->forceFill(['avatar' => null, 'avatar_type' => null, 'avatar_version' => null])->save();
         Audit::log('moderation.remove_photo', ['admin' => auth()->id(), 'user' => $user->id]);
 
-        return back()->with('status', $user->name.'\'s photo has been removed.');
+        return back()->with('status', __('The photo of :name has been removed.', ['name' => $user->name]));
     }
 
     public function suspend(Request $request, User $user): RedirectResponse
     {
-        abort_if($user->is($request->user()) || $user->isAdmin(), 403, 'Admins cannot be suspended here.');
+        abort_if($user->is($request->user()) || $user->isAdmin(), 403, __('Admins cannot be suspended here.'));
         $suspending = ! $user->isSuspended();
         // a new remember token means a "keep me signed in" cookie cannot carry a suspended account on
         $user->forceFill(['suspended_at' => $suspending ? now() : null, 'remember_token' => Str::random(60)])->save();
@@ -94,6 +94,6 @@ class ModerationController extends Controller
         DB::table('sessions')->where('user_id', $user->id)->delete();
         Audit::log($suspending ? 'moderation.suspend' : 'moderation.reinstate', ['admin' => auth()->id(), 'user' => $user->id]);
 
-        return back()->with('status', $user->isSuspended() ? $user->name.' has been suspended.' : $user->name.' has been reinstated.');
+        return back()->with('status', $user->isSuspended() ? __(':name has been suspended.', ['name' => $user->name]) : __(':name has been reinstated.', ['name' => $user->name]));
     }
 }

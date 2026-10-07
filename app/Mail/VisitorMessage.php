@@ -13,6 +13,7 @@ class VisitorMessage extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /** the heading is an english key with an :app placeholder, translated in the reader's language */
     public function __construct(public array $data, public string $heading, public ?string $cvUrl = null) {}
 
     public function envelope(): Envelope
@@ -22,7 +23,7 @@ class VisitorMessage extends Mailable
 
         return new Envelope(
             replyTo: [new Address($this->data['sender_email'], $name)],
-            subject: $this->heading.' from '.$name,
+            subject: __(':heading from :name', ['heading' => __($this->heading, ['app' => config('app.name')]), 'name' => $name]),
         );
     }
 

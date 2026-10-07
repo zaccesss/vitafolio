@@ -28,7 +28,7 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => ['accepted'],
             'cf-turnstile-response' => [new Turnstile],
         ], [
-            'terms.accepted' => 'Please agree to the terms and privacy policy to create an account.',
+            'terms.accepted' => __('Please agree to the terms and privacy policy to create an account.'),
         ])->validate();
 
         // a first empty cv is created with the account, so the editor is ready straight away
@@ -38,8 +38,10 @@ class CreateNewUser implements CreatesNewUsers
                 'email' => Str::lower(trim($input['email'])),
                 'password' => Hash::make($input['password']),
                 'handle' => User::suggestHandle($input['name']),
+                // emails then arrive in the language the account was made in
+                'locale' => app()->getLocale(),
             ]);
-            $user->cvs()->create(['title' => 'My CV', 'slug' => Cv::uniqueSlug($user->name), 'visibility' => 'private']);
+            $user->cvs()->create(['title' => __('My CV'), 'slug' => Cv::uniqueSlug($user->name), 'visibility' => 'private']);
 
             return $user;
         });

@@ -1,4 +1,4 @@
-<x-prose-page title="Accessibility statement" intro="Vitafolio is built to be usable by as many people as possible." updated="7 October 2026">
+<x-prose-page english-only title="Accessibility statement" intro="Vitafolio is built to be usable by as many people as possible." updated="7 October 2026">
     <h2>What to expect</h2>
     <ul>
         <li>Every page works with a keyboard alone, with a visible focus outline on every control.</li>
@@ -31,6 +31,9 @@
             </tbody>
         </table>
     </div>
+
+    <h2 id="languages">Languages</h2>
+    <p>The interface is available in English, Spanish, French, Brazilian Portuguese, Simplified Chinese, Arabic and Urdu. The language follows your browser's preference on a first visit and can be changed from the language menu at the top and the foot of every page, where each language is named in its own script. Arabic and Urdu pages read right to left, while code, web addresses and email addresses stay left to right. CVs are always shown exactly as their owners wrote them. Legal pages and the technical documentation are in English only.</p>
 
     <h2 id="browsers">Browsers and systems</h2>
     <p>The site is built for the current and previous versions of Chrome, Edge, Firefox and Safari on Windows, macOS, Linux, iOS, iPadOS and Android. That means Safari 16.4 or later, Chrome and Edge 111 or later and Firefox 128 or later. Older browsers can still read CVs, though some styling may look plainer. Windows contrast themes and system light or dark mode are both followed.</p>

@@ -31,7 +31,7 @@ class Turnstile implements ValidationRule
             ])->json('success') === true, false);
 
         if (! $passed) {
-            $fail('Please complete the security check and try again.');
+            $fail(__('Please complete the security check and try again.'));
         }
     }
 }

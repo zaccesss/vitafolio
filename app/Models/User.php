@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Support\IndexNow;
+use App\Support\Locales;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,9 +24,9 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $handle_changed_at
  * @property Carbon|null $suspended_at
  */
-#[Fillable(['name', 'email', 'password', 'handle', 'pronouns', 'headline', 'bio', 'location', 'university', 'availability', 'links', 'profile_visibility'])]
+#[Fillable(['name', 'email', 'password', 'handle', 'pronouns', 'headline', 'bio', 'location', 'university', 'availability', 'links', 'profile_visibility', 'locale'])]
 #[Hidden(['password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes', 'avatar'])]
-class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
+class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail, PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
@@ -62,6 +64,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             }
             IndexNow::submit(...$urls);
         });
+    }
+
+    /** emails to this person use the language they chose; english until they choose one */
+    public function preferredLocale(): string
+    {
+        return Locales::supported($this->locale) ? $this->locale : Locales::DEFAULT;
     }
 
     public function isAdmin(): bool

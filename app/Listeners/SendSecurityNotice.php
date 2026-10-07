@@ -67,9 +67,11 @@ class SendSecurityNotice
         };
     }
 
-    public static function send(User $user, string $headline, string $detail): void
+    /** @param  array<string, string>  $replace */
+    public static function send(User $user, string $headline, string $detail, array $replace = []): void
     {
-        rescue(fn () => Mail::to($user->email)->send(new SecurityNotice($headline, $detail)), report: false);
+        // sent to the account itself, so it arrives in the language the owner chose
+        rescue(fn () => Mail::to($user)->send(new SecurityNotice($headline, $detail, $replace)), report: false);
     }
 
     /** a browser the account has not signed in from before gets a notice; known ones only get logged */
@@ -81,7 +83,7 @@ class SendSecurityNotice
             ->where('user_agent', $agent)->where('id', '<>', $request->session()->getId())->exists();
         Audit::log('login', ['user' => $user->id, 'new_device' => ! $known]);
         if (! $known) {
-            self::send($user, 'New sign-in', 'Your account was signed in from a browser it has not used before: '.($agent ?: 'unknown browser').'.');
+            self::send($user, 'New sign-in', 'Your account was signed in from a browser it has not used before: :agent.', ['agent' => $agent ?: 'unknown browser']);
         }
     }
 }

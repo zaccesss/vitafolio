@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Support\Cloudinary;
 use App\Support\DocumentStore;
 use App\Support\IndexNow;
+use App\Support\Locales;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +23,7 @@ class Cv extends Model
     protected $fillable = [
         'title', 'slug', 'headline', 'key_language', 'profile', 'education', 'experience',
         'visibility', 'show_email', 'theme', 'accent', 'font', 'latex_source', 'section_order',
-        'letter_to', 'cover_letter',
+        'letter_to', 'cover_letter', 'language',
     ];
 
     protected function casts(): array
@@ -43,6 +44,12 @@ class Cv extends Model
     /** search engines hear about public cv changes, including one that just went private or was deleted */
     protected static function booted(): void
     {
+        // a new cv starts in the language its owner is using the site in
+        static::creating(function (Cv $cv) {
+            if (! Locales::supported($cv->language)) {
+                $cv->language = Locales::supported(app()->getLocale()) ? app()->getLocale() : Locales::DEFAULT;
+            }
+        });
         static::saved(function (Cv $cv) {
             $fields = ['title', 'slug', 'headline', 'key_language', 'profile', 'education', 'experience', 'section_order', 'visibility', 'hidden_at', 'theme'];
             $wasPublic = $cv->getOriginal('visibility') === 'public' && $cv->getOriginal('hidden_at') === null;
@@ -154,6 +161,18 @@ class Cv extends Model
     }
 
     /** sections in the owner's chosen order; anything missing from a saved order goes at the end */
+    /** the language code of the cv's own labels and downloads */
+    public function documentLocale(): string
+    {
+        return Locales::supported($this->language) ? $this->language : Locales::DEFAULT;
+    }
+
+    /** a fixed cv label in the cv's own language, whatever language the reader uses the site in */
+    public function label(string $key, array $replace = []): string
+    {
+        return __($key, $replace, $this->documentLocale());
+    }
+
     public function orderedSections(): array
     {
         $all = ['profile', 'experience', 'projects', 'education', 'skills', 'links'];

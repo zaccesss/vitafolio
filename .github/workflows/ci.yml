@@ -42,6 +42,10 @@ jobs:
           sudo install /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/typst
           typst --version
 
+      # the chinese pdf font is fetched rather than kept in git, the same way the docker build does it
+      - name: Fetch the pdf fonts
+        run: sh scripts/fetch-pdf-fonts.sh
+
       - name: Prepare the environment
         run: |
           cp .env.example .env

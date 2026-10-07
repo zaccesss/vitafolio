@@ -33,7 +33,7 @@ class EnsureAccountIsUsable
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('login')->with('error', 'This account cannot sign in. Contact us if you think this is a mistake.');
+            return redirect()->route('login')->with('error', __('This account cannot sign in. Contact us if you think this is a mistake.'));
         }
 
         $route = (string) $request->route()?->getName();

@@ -3,6 +3,7 @@
 use App\Http\Middleware\EnsureAccountIsUsable;
 use App\Http\Middleware\RedirectToCanonicalHost;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\ThrottleAuthForms;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prepend(RedirectToCanonicalHost::class);
         $middleware->append(ThrottleAuthForms::class);
         $middleware->appendToGroup('web', EnsureAccountIsUsable::class);
+        $middleware->appendToGroup('web', SetLocale::class);
         $middleware->append(SecurityHeaders::class);
         // the nightly tidy-up is called by a scheduler with a bearer token, not from a page with a form
         $middleware->validateCsrfTokens(except: ['cron']);

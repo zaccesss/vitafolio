@@ -1,0 +1,20 @@
+# community translation through crowdin's github integration. english is the source; crowdin opens
+# pull requests with new translations from its own l10n branch. no token or account details live here:
+# the integration is connected once from the crowdin project, see "Community translation" in
+# docs/DOCUMENTATION.md. the build never needs crowdin
+preserve_hierarchy: true
+commit_message: 'chore: update %language% translations'
+append_commit_message: false
+
+files:
+  # interface strings, keyed by their english text
+  - source: /lang/en.json
+    translation: /lang/%two_letters_code%.json
+    languages_mapping: &mapping
+      two_letters_code:
+        zh-CN: zh_CN
+        pt-BR: pt_BR
+  # framework messages: validation, sign-in, password reset and pagination
+  - source: /lang/en/*.php
+    translation: /lang/%two_letters_code%/%original_file_name%
+    languages_mapping: *mapping

@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DirectoryController;
 use App\Http\Controllers\EndorsementController;
 use App\Http\Controllers\LatexController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\OgImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -58,6 +59,8 @@ Route::view('/docs', 'pages.docs')->name('docs');
 Route::view('/help', 'help.index')->name('help');
 Route::get('/help/{topic}', fn (string $topic) => view('help.'.$topic))
     ->whereIn('topic', array_keys(HelpTopics::ALL))->name('help.topic');
+// the language menu posts here; guests keep the choice in a cookie, accounts save it as well
+Route::post('/language', LocaleController::class)->middleware('throttle:30,1')->name('locale');
 Route::post('/contact', [ContactController::class, 'site'])->middleware('throttle:messages')->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {

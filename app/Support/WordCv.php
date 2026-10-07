@@ -20,36 +20,36 @@ class WordCv
 
         foreach ($cv->orderedSections() as $section) {
             if ($section === 'profile' && filled($cv->profile)) {
-                array_push($body, self::paragraph('Profile', 'Heading1'), ...self::text($cv->profile));
+                array_push($body, self::paragraph($cv->label('Profile'), 'Heading1'), ...self::text($cv->profile));
             } elseif ($section === 'experience' && filled($cv->experience)) {
-                array_push($body, self::paragraph('Experience', 'Heading1'), ...self::text($cv->experience));
+                array_push($body, self::paragraph($cv->label('Experience'), 'Heading1'), ...self::text($cv->experience));
             } elseif ($section === 'education' && filled($cv->education)) {
-                array_push($body, self::paragraph('Education', 'Heading1'), ...self::text($cv->education));
+                array_push($body, self::paragraph($cv->label('Education'), 'Heading1'), ...self::text($cv->education));
             } elseif ($section === 'projects' && $cv->projects->isNotEmpty()) {
-                array_push($body, self::paragraph('Projects', 'Heading1'), ...self::projects($cv));
+                array_push($body, self::paragraph($cv->label('Projects'), 'Heading1'), ...self::projects($cv));
             } elseif ($section === 'skills' && $cv->tags->isNotEmpty()) {
-                array_push($body, self::paragraph('Skills', 'Heading1'), self::paragraph($cv->tags->pluck('name')->implode('  ·  ')));
+                array_push($body, self::paragraph($cv->label('Skills'), 'Heading1'), self::paragraph($cv->tags->pluck('name')->implode('  ·  ')));
             } elseif ($section === 'links' && ($links = Links::parse($user->links)) !== []) {
-                $body[] = self::paragraph('Links', 'Heading1');
+                $body[] = self::paragraph($cv->label('Links'), 'Heading1');
                 foreach ($links as $link) {
                     $body[] = self::paragraph($link['label'].': '.$link['url'], 'ListBullet');
                 }
             }
         }
 
-        return self::package($cv, $user->name.' CV', $body);
+        return self::package($cv, $cv->label(':name CV', ['name' => $user->name]), $body);
     }
 
     /** the cv's cover letter under the same name and details, so the pair reads as one set */
     public static function letter(Cv $cv): string
     {
-        $body = [...self::header($cv), self::paragraph('Cover letter', 'Heading1')];
+        $body = [...self::header($cv), self::paragraph($cv->label('Cover letter'), 'Heading1')];
         if (filled($cv->letter_to)) {
             $body[] = self::paragraph((string) $cv->letter_to, 'Subtitle');
         }
         array_push($body, ...self::text($cv->cover_letter));
 
-        return self::package($cv, $cv->user->name.' cover letter', $body);
+        return self::package($cv, $cv->label(':name cover letter', ['name' => $cv->user->name]), $body);
     }
 
     /** the name, headline and contact line that open both the cv and its letter */
@@ -62,7 +62,7 @@ class WordCv
         }
         $details = array_filter([
             $user->pronouns, $user->location, $user->university,
-            $cv->key_language ? 'Main language: '.$cv->key_language : null,
+            $cv->key_language ? $cv->label('Main language: :language', ['language' => $cv->key_language]) : null,
             $cv->show_email ? $user->email : null,
         ]);
         if ($details !== []) {
@@ -82,9 +82,9 @@ class WordCv
         }
         $zip->addFromString('[Content_Types].xml', self::contentTypes());
         $zip->addFromString('_rels/.rels', self::rootRels());
-        $zip->addFromString('docProps/core.xml', self::core($title));
+        $zip->addFromString('docProps/core.xml', self::core($title, Locales::html($cv->documentLocale())));
         $zip->addFromString('word/_rels/document.xml.rels', self::documentRels());
-        $zip->addFromString('word/styles.xml', self::styles($accent));
+        $zip->addFromString('word/styles.xml', self::styles($accent, $cv->documentLocale()));
         $zip->addFromString('word/numbering.xml', self::numbering());
         $zip->addFromString('word/document.xml', self::document(implode('', $body)));
         $zip->close();
@@ -98,7 +98,7 @@ class WordCv
     private static function text(?string $text): array
     {
         $out = [];
-        foreach (preg_split('/\R/', trim((string) $text)) ?: [] as $line) {
+        foreach (preg_split('/\R/u', trim((string) $text)) ?: [] as $line) {
             $line = trim($line);
             if ($line === '') {
                 continue;
@@ -146,14 +146,18 @@ class WordCv
             .'</w:body></w:document>';
     }
 
-    private static function styles(string $accent): string
+    private static function styles(string $accent, string $locale): string
     {
         $font = '<w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>';
+        // word reads the language from three slots: latin, east asian and right-to-left scripts
+        $tag = Locales::html($locale);
+        $rtl = Locales::dir($locale) === 'rtl';
+        $lang = '<w:lang w:val="'.$tag.'"'.(str_starts_with($tag, 'zh') ? ' w:eastAsia="'.$tag.'"' : '').($rtl ? ' w:bidi="'.$tag.'"' : '').'/>'.($rtl ? '<w:rtl/>' : '');
 
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             .'<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
-            .'<w:docDefaults><w:rPrDefault><w:rPr>'.$font.'<w:sz w:val="22"/><w:lang w:val="en-GB"/></w:rPr></w:rPrDefault>'
-            .'<w:pPrDefault><w:pPr><w:spacing w:after="80" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>'
+            .'<w:docDefaults><w:rPrDefault><w:rPr>'.$font.'<w:sz w:val="22"/>'.$lang.'</w:rPr></w:rPrDefault>'
+            .'<w:pPrDefault><w:pPr>'.($rtl ? '<w:bidi/>' : '').'<w:spacing w:after="80" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>'
             .'<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>'
             .'<w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="40"/></w:pPr><w:rPr><w:b/><w:color w:val="'.$accent.'"/><w:sz w:val="48"/></w:rPr></w:style>'
             .'<w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:basedOn w:val="Normal"/><w:rPr><w:sz w:val="26"/></w:rPr></w:style>'
@@ -202,10 +206,10 @@ class WordCv
             .'</Relationships>';
     }
 
-    private static function core(string $title): string
+    private static function core(string $title, string $language): string
     {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             .'<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
-            .'<dc:title>'.self::xml($title).'</dc:title><dc:language>en-GB</dc:language></cp:coreProperties>';
+            .'<dc:title>'.self::xml($title).'</dc:title><dc:language>'.$language.'</dc:language></cp:coreProperties>';
     }
 }

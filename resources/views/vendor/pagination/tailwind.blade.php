@@ -1,14 +1,14 @@
 @if ($paginator->hasPages())
-    <nav role="navigation" aria-label="Pages">
+    <nav role="navigation" aria-label="{{ __('Pages') }}">
         <p class="mb-3 text-center text-sm text-muted">
-            Showing {{ $paginator->firstItem() }} to {{ $paginator->lastItem() }} of {{ $paginator->total() }}
+            {{ __('Showing :first to :last of :total', ['first' => $paginator->firstItem(), 'last' => $paginator->lastItem(), 'total' => $paginator->total()]) }}
         </p>
         <ul class="flex flex-wrap items-center justify-center gap-2">
             <li>
                 @if ($paginator->onFirstPage())
-                    <span class="btn btn-sm btn-secondary opacity-50" aria-disabled="true">Previous</span>
+                    <span class="btn btn-sm btn-secondary opacity-50" aria-disabled="true">{{ __('Previous') }}</span>
                 @else
-                    <a class="btn btn-sm btn-secondary" href="{{ $paginator->previousPageUrl() }}" rel="prev">Previous<span class="sr-only"> page</span></a>
+                    <a class="btn btn-sm btn-secondary" href="{{ $paginator->previousPageUrl() }}" rel="prev">{{ __('Previous') }}<span class="sr-only"> {{ __('page') }}</span></a>
                 @endif
             </li>
             @foreach ($elements as $element)
@@ -19,9 +19,9 @@
                     @foreach ($element as $page => $url)
                         <li>
                             @if ($page == $paginator->currentPage())
-                                <span class="btn btn-sm btn-primary" aria-current="page"><span class="sr-only">Page </span>{{ $page }}</span>
+                                <span class="btn btn-sm btn-primary" aria-current="page"><span class="sr-only">{{ __('Page') }} </span>{{ $page }}</span>
                             @else
-                                <a class="btn btn-sm btn-secondary" href="{{ $url }}"><span class="sr-only">Page </span>{{ $page }}</a>
+                                <a class="btn btn-sm btn-secondary" href="{{ $url }}"><span class="sr-only">{{ __('Page') }} </span>{{ $page }}</a>
                             @endif
                         </li>
                     @endforeach
@@ -29,9 +29,9 @@
             @endforeach
             <li>
                 @if ($paginator->hasMorePages())
-                    <a class="btn btn-sm btn-secondary" href="{{ $paginator->nextPageUrl() }}" rel="next">Next<span class="sr-only"> page</span></a>
+                    <a class="btn btn-sm btn-secondary" href="{{ $paginator->nextPageUrl() }}" rel="next">{{ __('Next') }}<span class="sr-only"> {{ __('page') }}</span></a>
                 @else
-                    <span class="btn btn-sm btn-secondary opacity-50" aria-disabled="true">Next</span>
+                    <span class="btn btn-sm btn-secondary opacity-50" aria-disabled="true">{{ __('Next') }}</span>
                 @endif
             </li>
         </ul>

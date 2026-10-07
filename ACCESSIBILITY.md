@@ -14,6 +14,7 @@ A CV site is only useful if everyone can build one and everyone can read one. Vi
 | Motion sensitivity | Animation is decoration only and stops when the device asks for reduced motion. Videos never play on their own |
 | Reading CVs | The Plain CV theme is built for screen readers and applicant tracking systems. Every project image or video has a description |
 | Signing in | No puzzles and no retyping: codes can be pasted, every field allows paste and passkeys or recovery codes stand in for an authenticator app |
+| Languages | The interface comes in seven languages, picked from the browser or a language menu that names each language in its own script. Arabic and Urdu pages mirror to read right to left, while code, web addresses and email addresses stay left to right. Each CV, its PDF and its Word file declare their own language, so screen readers pronounce them correctly |
 
 ## Known gaps
 

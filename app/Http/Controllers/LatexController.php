@@ -28,7 +28,7 @@ class LatexController extends Controller
             'cv' => $cv,
             'source' => $cv->latex_source ?: $starters[array_key_exists($template, $starters) ? $template : 'classic'],
             'starters' => $starters,
-            'templates' => Latex::TEMPLATES,
+            'templates' => array_map('__', Latex::TEMPLATES),
             'assetsUrl' => config('vitafolio.latex_assets_url'),
         ]);
     }
@@ -47,13 +47,13 @@ class LatexController extends Controller
         if ($request->hasFile('pdf')) {
             $bytes = (string) file_get_contents($request->file('pdf')->getRealPath());
             // the compiled file is checked by its signature, like any other upload
-            abort_unless(str_starts_with($bytes, '%PDF-'), 422, 'That is not a PDF.');
+            abort_unless(str_starts_with($bytes, '%PDF-'), 422, __('That is not a PDF.'));
             $replacing = (int) CvDocument::where('cv_id', $cv->id)->value('size');
             if (! $request->user()->canStore(strlen($bytes), $replacing)) {
                 return response()->json(['saved' => true, 'savedAt' => now()->format('H:i'), 'pdfError' => CvDocumentController::fullMessage()], 200);
             }
             if (! DocumentStore::put($cv, $bytes, Str::slug($cv->user->name.' '.$cv->title).'.pdf', 'application/pdf', 'latex')) {
-                return response()->json(['saved' => true, 'savedAt' => now()->format('H:i'), 'pdfError' => 'Your LaTeX was saved, but the PDF could not be stored. Please try again.'], 200);
+                return response()->json(['saved' => true, 'savedAt' => now()->format('H:i'), 'pdfError' => __('Your LaTeX was saved, but the PDF could not be stored. Please try again.')], 200);
             }
         }
 
