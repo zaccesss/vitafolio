@@ -79,6 +79,15 @@ Alpine.data('counter', () => ({
     get text() { return this.max ? t(':count of :max characters', { count: this.count, max: this.max }) : t(':count characters', { count: this.count }); },
 }));
 
+// choosing a file or a Vitafolio CV selects its option, so the CV that gets checked is the one just picked
+Alpine.data('cvSource', () => ({
+    init() {
+        const pick = (value) => { const radio = this.$el.querySelector(`input[name="source"][value="${value}"]`); if (radio) radio.checked = true; };
+        this.$el.querySelector('input[name="resume"]')?.addEventListener('change', (e) => { if (e.target.files.length) pick('file'); });
+        this.$el.querySelector('select[name="cv"]')?.addEventListener('change', () => pick('cv'));
+    },
+}));
+
 Alpine.data('toast', () => ({
     shown: true,
     init() { setTimeout(() => { this.shown = false; }, 7000); },

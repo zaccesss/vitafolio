@@ -1154,5 +1154,6 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Il y a un problème à corriger|[2,*] Il y a :count problèmes à corriger",
     "“:title” has been deleted.": "« :title » a été supprimé.",
     "“:title” is now hidden from everyone except its owner.": "« :title » est désormais masqué pour tous, sauf pour son propriétaire.",
-    "“:title” is visible again.": "« :title » est de nouveau visible."
+    "“:title” is visible again.": "« :title » est de nouveau visible.",
+    "Checked: :name": "Vérifié : :name"
 }

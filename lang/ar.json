@@ -1154,5 +1154,6 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} توجد مشكلة واحدة يجب إصلاحها|[2,*] عدد المشكلات التي يجب إصلاحها: :count",
     "“:title” has been deleted.": "تم حذف “:title”.",
     "“:title” is now hidden from everyone except its owner.": "أصبحت “:title” الآن مخفية عن الجميع باستثناء صاحبها.",
-    "“:title” is visible again.": "أصبحت “:title” مرئية مرة أخرى."
+    "“:title” is visible again.": "أصبحت “:title” مرئية مرة أخرى.",
+    "Checked: :name": "تم الفحص: :name"
 }
