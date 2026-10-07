@@ -48,8 +48,7 @@ class RoleType
     {
         // "post-graduate" names a research or teaching post; joined up it can no longer match "graduate"
         $t = str_replace(['post-graduate', 'post graduate'], 'postgraduate', mb_strtolower(trim(preg_replace('/\s+/', ' ', $title))));
-        if ($t === '' || preg_match('/\b(apprentice|apprenticeship|apprenticeships)\b/', $t)) {
-            // apprenticeships are a different route, often for school leavers, so they are not mixed in
+        if ($t === '') {
             return null;
         }
         $staff = (bool) preg_match(self::STAFF, $t);
@@ -60,6 +59,10 @@ class RoleType
         }
         if ($staff && ! $intern) {
             return null;
+        }
+        // apprenticeships are their own route, from school-leaver levels to degree apprenticeships
+        if (preg_match('/\b(apprentice|apprentices|apprenticeship|apprenticeships)\b/', $t)) {
+            return 'apprenticeship';
         }
 
         return match (true) {
@@ -81,10 +84,11 @@ class RoleType
         [$first, $last] = config('vitafolio.jobs_cycle');
         $t = mb_strtolower($title);
 
-        // "2026/27" and "2026-27" name the second year in short
-        preg_match_all('/\b(20\d\d)\s*[\/-]\s*(\d\d)\b/', $t, $short, PREG_SET_ORDER);
-        $years = array_map(fn ($m) => (int) (substr($m[1], 0, 2).$m[2]), $short);
-        preg_match_all('/\b(20\d\d)\b/', $t, $full);
+        // a range such as "2027-28" or "2027 - 2028" is the year a placement or scheme starts, so only its
+        // first year counts; the range is removed before single years are read
+        preg_match_all('/\b(20\d\d)\s*[\/-]\s*(?:20)?\d\d\b/', $t, $ranges);
+        $years = array_map('intval', $ranges[1]);
+        preg_match_all('/\b(20\d\d)\b/', preg_replace('/\b(20\d\d)\s*[\/-]\s*(?:20)?\d\d\b/', '', $t), $full);
         $years = array_merge($years, array_map('intval', $full[1]));
         foreach ($years as $year) {
             if ($year < $first || $year > $last) {

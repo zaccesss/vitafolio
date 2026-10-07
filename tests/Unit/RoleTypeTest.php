@@ -15,7 +15,8 @@ class RoleTypeTest extends TestCase
             ['Software Engineering Internship', false, 'internship'],
             ['Summer Analyst 2027', false, 'internship'],
             ['International Trade Intern', false, 'internship'],
-            ['Industrial Placement 2027/28', false, null],
+            ['Industrial Placement 2027/28', false, 'placement'],
+            ['Industrial Placement 2025/26', false, null],
             ['Industrial Placement Year 2026/27', false, 'placement'],
             ['12 Month Placement - Electronic Engineering', false, 'placement'],
             ['Spring Insight Week 2027', false, 'insight'],
@@ -28,7 +29,9 @@ class RoleTypeTest extends TestCase
             ['Placement Coordinator', false, null],
             ['Replacement Window Fitter', false, null],
             ['Postgraduate Research Fellow', false, null],
-            ['Degree Apprenticeship in Software', false, null],
+            ['Degree Apprenticeship in Software', false, 'apprenticeship'],
+            ['Level 3 Accounting Apprentice', false, 'apprenticeship'],
+            ['Apprenticeship Programme Manager', false, null],
             ['Senior Software Engineer', false, null],
             ['12 month contract - Project Manager', false, null],
             ['2026 Machine Learning Center of Excellence (NLP)-Internship', false, 'internship'],
@@ -66,5 +69,8 @@ class RoleTypeTest extends TestCase
         $this->assertFalse(RoleType::inCycle('Graduate Scheme 2025', $now));
         $this->assertFalse(RoleType::inCycle('Graduate Programme 2028', $now));
         $this->assertFalse(RoleType::inCycle('Placement 2025/26', $now));
+        $this->assertTrue(RoleType::inCycle('Undergraduate Placement Year 2027-28', $now));
+        $this->assertTrue(RoleType::inCycle('Technology Analyst Graduate Programme 2027 - 2028', $now));
+        $this->assertFalse(RoleType::inCycle('Graduate Programme 2028 - 2029', $now));
     }
 }

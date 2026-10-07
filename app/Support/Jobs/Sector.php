@@ -89,7 +89,7 @@ class Sector
     /** title terms per field, checked in this order so "embedded software" lands in hardware */
     private const TERMS = [
         'hardware' => ['embedded', 'firmware', 'fpga', 'asic', 'vlsi', 'electronic', 'electronics', 'hardware', 'pcb', 'semiconductor',
-            'silicon', 'rf', 'microelectronics', 'microwave', 'dram', 'nand', 'cpu', 'gpu', 'chip', 'memory', 'wafer', 'fab', 'electrical', 'robotics', 'mechatronics', 'photonics', 'signal processing'],
+            'silicon', 'rf', 'microelectronics', 'microwave', 'dram', 'nand', 'cpu', 'gpu', 'chip', 'memory', 'wafer', 'fab', 'robotics', 'mechatronics', 'photonics', 'signal processing'],
         'data' => ['data', 'machine learning', 'ml', 'ai', 'artificial intelligence', 'analytics', 'data science', 'data scientist',
             'deep learning', 'nlp', 'computer vision', 'business intelligence', 'bi'],
         'software' => ['software', 'developer', 'devops', 'cloud', 'cyber', 'security engineer', 'it', 'technology', 'tech', 'web',
@@ -107,7 +107,7 @@ class Sector
             'physics', 'physicist', 'biotech', 'pharmaceutical', 'environmental', 'ecology', 'geoscience'],
         'public' => ['civil service', 'government', 'public sector', 'policy', 'council', 'charity', 'nonprofit', 'non-profit',
             'fast stream', 'police', 'local authority', 'housing'],
-        'engineering' => ['engineer', 'engineering', 'mechanical', 'civil', 'structural', 'aerospace', 'manufacturing', 'process',
+        'engineering' => ['engineer', 'engineering', 'mechanical', 'electrical', 'civil', 'structural', 'aerospace', 'manufacturing', 'process',
             'chemical engineering', 'automotive', 'nuclear', 'energy', 'construction', 'quantity surveyor', 'surveyor', 'design engineer'],
         'creative' => ['marketing', 'media', 'design', 'designer', 'creative', 'content', 'communications', 'pr', 'public relations',
             'journalism', 'journalist', 'advertising', 'brand', 'social media', 'copywriter', 'ux', 'ui', 'graphic', 'film',

@@ -42,14 +42,26 @@ class JobsTest extends TestCase
         $this->artisan('vitafolio:fetch-jobs')->assertSuccessful();
         $this->artisan('vitafolio:fetch-jobs')->assertSuccessful();
 
-        $this->assertSame(1, JobListing::where('source', 'adzuna')->where('external_id', 'a1')->count());
-        $this->assertDatabaseMissing('job_listings', ['external_id' => 'a2']);
-        $intern = JobListing::where('external_id', 'a1')->first();
+        $this->assertSame(1, JobListing::where('source', 'adzuna')->where('title', 'Software Engineering Internship')->count());
+        $this->assertDatabaseMissing('job_listings', ['title' => 'Senior Architect']);
+        $intern = JobListing::where('title', 'Software Engineering Internship')->first();
         $this->assertSame('internship', $intern->kind);
         $this->assertSame('Summer internship', $intern->description);
-        $grad = JobListing::where('source', 'reed')->where('external_id', '77')->where('kind', 'graduate')->first();
+        $grad = JobListing::where('source', 'reed')->where('title', 'Graduate Data Analyst')->where('kind', 'graduate')->first();
         $this->assertNotNull($grad->closes_at);
         Http::assertSent(fn ($request) => str_contains($request->url(), 'reed.co.uk') && $request->hasHeader('Authorization'));
+    }
+
+    public function test_one_role_posted_for_several_cities_is_one_listing(): void
+    {
+        config(['services.adzuna.app_id' => 'id', 'services.adzuna.app_key' => 'key']);
+        $ad = fn ($id, $city) => ['id' => $id, 'title' => 'Aquatic Ecologist Graduate', 'company' => ['display_name' => 'APEM'], 'location' => ['display_name' => $city], 'redirect_url' => "https://www.adzuna.co.uk/jobs/land/ad/{$id}"];
+        Http::fake(['api.adzuna.com/*' => Http::response(['results' => [$ad('x1', 'Leeds'), $ad('x2', 'Nottingham'), $ad('x3', 'Leeds')]])]);
+
+        $this->artisan('vitafolio:fetch-jobs')->assertSuccessful();
+
+        $this->assertSame(1, JobListing::where('title', 'Aquatic Ecologist Graduate')->count());
+        $this->assertSame('Leeds; Nottingham', JobListing::where('title', 'Aquatic Ecologist Graduate')->value('location'));
     }
 
     public function test_a_failing_board_never_stops_the_other(): void
@@ -61,7 +73,7 @@ class JobsTest extends TestCase
         ]);
 
         $this->artisan('vitafolio:fetch-jobs')->assertSuccessful();
-        $this->assertDatabaseHas('job_listings', ['source' => 'reed', 'external_id' => '5']);
+        $this->assertDatabaseHas('job_listings', ['source' => 'reed', 'title' => 'Graduate Engineer']);
     }
 
     public function test_the_jobs_page_lists_filters_and_attributes_listings(): void

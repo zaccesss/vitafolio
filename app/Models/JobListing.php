@@ -16,6 +16,7 @@ class JobListing extends Model
         'placement' => 'Placement years',
         'insight' => 'Spring weeks and insight days',
         'graduate' => 'Graduate roles',
+        'apprenticeship' => 'Apprenticeships',
         'part-time' => 'Part-time and student jobs',
     ];
 
@@ -27,6 +28,7 @@ class JobListing extends Model
             'placement' => __('Placement years'),
             'insight' => __('Spring weeks and insight days'),
             'graduate' => __('Graduate roles'),
+            'apprenticeship' => __('Apprenticeships'),
             'part-time' => __('Part-time and student jobs'),
         ];
     }
@@ -45,6 +47,17 @@ class JobListing extends Model
     public function scopeOpen(Builder $query): void
     {
         $query->where(fn ($q) => $q->whereNull('closes_at')->orWhere('closes_at', '>=', now()));
+    }
+
+    /** a role posted for many cities lists the first three and how many more */
+    public function locationText(): ?string
+    {
+        $places = array_values(array_filter(array_map('trim', explode(';', (string) $this->location))));
+        if (count($places) <= 3) {
+            return $places === [] ? null : implode(', ', $places);
+        }
+
+        return implode(', ', array_slice($places, 0, 3)).' '.__('and :count more', ['count' => count($places) - 3]);
     }
 
     public function salaryText(): ?string

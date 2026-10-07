@@ -22,7 +22,14 @@
                 @endif
             </fieldset>
             @if ($job)
-                <p class="alert alert-info">{{ __('Checking against :title at :company. The advert is filled in below.', ['title' => $job->title, 'company' => $job->company ?? __('an employer')]) }}</p>
+                <div class="alert alert-info">
+                    <p>{{ __('Checking against :title at :company. The advert is filled in below.', ['title' => $job->title, 'company' => $job->company ?? __('an employer')]) }}</p>
+                    @if ($job->source !== 'employer')
+                        {{-- job boards share only a preview of each advert through their APIs --}}
+                        <p class="mt-2">{{ __('Job boards share only the start of each advert. For a full check, open the advert, copy all of it and paste it over the text below.') }}</p>
+                        <a class="btn btn-secondary btn-sm mt-3" href="{{ $job->url }}" target="_blank" rel="noopener nofollow">{{ __('Open the full advert') }}<x-new-tab /></a>
+                    @endif
+                </div>
             @endif
             <x-field name="job_advert" :label="__('Job advert')" type="textarea" rows="6" maxlength="10000" :value="$advert"
                      :hint="__('Paste the advert to see which of its keywords your CV has and which it is missing.')" />
