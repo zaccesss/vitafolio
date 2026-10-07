@@ -1,8 +1,17 @@
 <?php
 
-// default validation messages
-
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validation Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines contain the default error messages used by
+    | the validator class. Some of these rules have multiple versions such
+    | as the size rules. Feel free to tweak each of these messages here.
+    |
+    */
 
     'accepted' => ':attribute فیلڈ کو قبول کرنا ضروری ہے۔',
     'accepted_if' => 'جب :other کی قدر :value ہو تو :attribute فیلڈ کو قبول کرنا ضروری ہے۔',
@@ -160,7 +169,16 @@ return [
     'ulid' => ':attribute فیلڈ ایک درست ULID ہونی چاہیے۔',
     'uuid' => ':attribute فیلڈ ایک درست UUID ہونی چاہیے۔',
 
-    // custom messages per attribute and rule
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify custom validation messages for attributes using the
+    | convention "attribute.rule" to name the lines. This makes it quick to
+    | specify a specific custom language line for a given attribute rule.
+    |
+    */
 
     'custom' => [
         'attribute-name' => [
@@ -168,7 +186,16 @@ return [
         ],
     ],
 
-    // reader-friendly names that replace the :attribute placeholder
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Attributes
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used to swap our attribute placeholder
+    | with something more reader friendly such as "E-Mail Address" instead
+    | of "email". This simply helps us make our message more expressive.
+    |
+    */
 
     'attributes' => [
         'accent' => 'نمایاں رنگ',
