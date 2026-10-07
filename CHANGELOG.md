@@ -74,6 +74,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- The developer documentation lists all seven LaTeX starter templates instead of four.
 - Arabic and Urdu text in generated PDF, Word and LaTeX files no longer breaks apart. Lines were split on a byte that is part of some Arabic letters.
 - The site went down on 6 October when the free database plan powered the database off for inactivity. The database now runs on TiDB Cloud Starter in Frankfurt, which stays on, with every table and row copied across and checked. The privacy policy names the new host.
 - Saving your public profile and deleting your account work on the live site. The redirects from the old /profile and /account addresses answered every kind of request. Once routes were cached in production they caught those forms first, so nothing was saved. The redirects now answer page visits only.

@@ -181,7 +181,7 @@ flowchart LR
 | `resources/views` | Blade pages and components, the fallback PDF layout and plain-text emails |
 | `resources/pdf` | `cv.typ`, the Typst layout for the tagged CV and cover letter PDFs |
 | `resources/js` | Alpine components in `app.js` and the Vue islands in `components/` |
-| `resources/latex` | The four LaTeX starter templates |
+| `resources/latex` | The seven LaTeX starter templates |
 | `resources/brand` | SVG sources for every icon and share image, rendered by `scripts/brand-assets.sh` |
 | `resources/brand/linkedin` | Logo, cover image and profile text for the [LinkedIn page](../resources/brand/linkedin/README.md) |
 | `docker` | The FrankenPHP config, PHP settings and the start script used by the production image |
@@ -304,7 +304,8 @@ TeX Live compiled to WebAssembly, to compile in the browser with pdfLaTeX, XeLaT
 is sent to a server until the owner saves. The engine files (about 120 MB, cached after the first
 compile) are hosted separately and named by `LATEX_ASSETS_URL`.
 
-Four starter templates fill in the owner's details: Classic, Compact, Modern and Academic. Saving
+Seven starter templates fill in the owner's details: Classic, Compact, Modern, Academic, Sidebar,
+Elegant and Minimal. They are listed in `App\Support\Latex::TEMPLATES`. Saving
 stores the source. When a compile has succeeded, saving also attaches the PDF as the CV's file.
 `Ctrl+Enter` compiles and `Ctrl+S` saves (`Cmd` on a Mac). A plain text box can replace the code
 editor for anyone who finds it easier with a screen reader.
