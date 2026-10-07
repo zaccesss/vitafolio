@@ -16,6 +16,7 @@ class JobListingFactory extends Factory
             'source' => 'reed',
             'external_id' => (string) fake()->unique()->numberBetween(1000, 999999),
             'kind' => 'graduate',
+            'sector' => 'software',
             'title' => 'Graduate Software Engineer',
             'company' => 'Acme Ltd',
             'location' => 'Birmingham',

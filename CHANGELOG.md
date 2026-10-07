@@ -6,6 +6,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Changed
 
+- The Jobs search box looks for a job title or employer only, beside separate Field and Location filters. Role checks also catch hyphenated titles, year-long internships as placement years, insight experiences and summer schools, bank analyst and associate programmes and off-cycle roles.
 - Jobs from Adzuna and Reed are classified by whole words in their titles instead of by the search that found them. Titles such as Internal Audit Manager, Senior Graduate Recruiter or Placement Coordinator are no longer listed as student roles, apprenticeships are left out and titles naming a year outside the cycle are skipped.
 - Check a CV follows how the main tracking systems behave. A new Readable layout area (10 points) covers tables, columns, text boxes, images, contact details in the page header, scans, icon and decorative symbols that turn into garbled text, ligatures, letters spaced one by one, more than two pages, mixed date styles and UK personal details such as date of birth. It suggests a Profile when there is none and a Word file when a PDF has parsing problems. The page explains that the score is guidance and that most systems rank rather than reject.
 - Crowdin's daily pull request merges itself once a check confirms no translation is removed or turned back into English. Translations committed here are uploaded on every push to main. The Crowdin branch is pushed by the automation account so its checks start without manual approval.
@@ -14,6 +15,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Added
 
+- A Field filter on the Jobs page covering every area: software and IT, hardware and embedded, data and AI, engineering, finance, business, law, healthcare, science, creative and media, education, public sector and retail. Each listing shows its field. Adzuna's own category is used where it is specific; otherwise the field is read from the title.
 - Employer listings on the Jobs page, received at `/jobs/feed` from employers' own hiring systems such as Greenhouse, Lever and Workday, so each one links straight to the employer's application page. Every listing is checked again on arrival: its kind of role is read from its title, roles outside the 2026 to 2027 cycle, closed roles and unsafe links are refused. An employer's advert is used only to fill in Check a CV. A listing stops showing three days after the feed last sent it.
 - Spring weeks and insight days as their own kind of role on the Jobs page.
 - A Jobs page with UK internships, placement years, graduate roles and part-time student jobs from the free Adzuna and Reed job APIs, fetched each night with the tidy-up. It filters by kind of role, keyword and location. Each listing links to the board it came from to apply, with the attribution Adzuna's terms require. Signed-in people can check a CV against any listing, which opens Check a CV with the advert filled in. Listings are removed once they close or after 30 days.

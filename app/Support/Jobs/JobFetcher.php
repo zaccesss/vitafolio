@@ -85,6 +85,7 @@ class JobFetcher
             $rows[] = [
                 'external_id' => (string) $job['id'],
                 'kind' => $type,
+                'sector' => Sector::fromAdzuna($job['category']['tag'] ?? null, (string) $job['title'], $job['company']['display_name'] ?? null),
                 'title' => $this->clean($job['title'], 200),
                 'company' => $this->clean($job['company']['display_name'] ?? null, 160),
                 'location' => $this->clean($job['location']['display_name'] ?? null, 160),
@@ -120,6 +121,7 @@ class JobFetcher
             $rows[] = [
                 'external_id' => (string) $job['jobId'],
                 'kind' => $type,
+                'sector' => Sector::guess((string) $job['jobTitle'], $job['employerName'] ?? null),
                 'title' => $this->clean($job['jobTitle'], 200),
                 'company' => $this->clean($job['employerName'] ?? null, 160),
                 'location' => $this->clean($job['locationName'] ?? null, 160),

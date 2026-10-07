@@ -34,7 +34,7 @@ class JobListing extends Model
     /** adzuna and reed are fetched from their own APIs; employer listings arrive through the feed */
     public const SOURCES = ['adzuna' => 'Adzuna', 'reed' => 'Reed', 'employer' => 'Employer'];
 
-    protected $fillable = ['source', 'board', 'external_id', 'kind', 'title', 'company', 'location', 'salary_min', 'salary_max', 'description', 'url', 'posted_at', 'closes_at', 'last_seen_at'];
+    protected $fillable = ['source', 'board', 'external_id', 'kind', 'sector', 'title', 'company', 'location', 'salary_min', 'salary_max', 'description', 'url', 'posted_at', 'closes_at', 'last_seen_at'];
 
     protected function casts(): array
     {

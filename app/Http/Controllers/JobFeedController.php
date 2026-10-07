@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JobListing;
 use App\Support\Jobs\RoleType;
+use App\Support\Jobs\Sector;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -17,6 +18,14 @@ use Illuminate\Support\Str;
 class JobFeedController extends Controller
 {
     private const MAX = 1000;
+
+    /** the sender's own tech categories mapped to fields; anything else is read from the title */
+    private const CATEGORIES = [
+        'Software Engineering' => 'software', 'IT' => 'software', 'DevOps and Infrastructure' => 'software',
+        'Cyber Security' => 'software', 'Hardware' => 'hardware', 'Embedded' => 'hardware',
+        'AI and Machine Learning' => 'data', 'Data Science' => 'data', 'Quant Developer' => 'finance',
+        'Tech Consulting' => 'business',
+    ];
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -34,6 +43,7 @@ class JobFeedController extends Controller
             'jobs.*.deadline' => ['nullable', 'date'],
             'jobs.*.opened' => ['nullable', 'date'],
             'jobs.*.description' => ['nullable', 'string', 'max:50000'],
+            'jobs.*.category' => ['nullable', 'string', 'max:60'],
         ]);
 
         $now = now();
@@ -59,6 +69,7 @@ class JobFeedController extends Controller
             JobListing::updateOrCreate(['source' => 'employer', 'external_id' => sha1($job['url'])], [
                 'board' => $this->text($job['board'] ?? null, 40),
                 'kind' => $kind,
+                'sector' => self::CATEGORIES[$job['category'] ?? ''] ?? Sector::guess($title, $job['company']),
                 'title' => Str::limit($title, 200, '...'),
                 'company' => $this->text($job['company'], 160),
                 'location' => $this->text($job['location'] ?? null, 160),

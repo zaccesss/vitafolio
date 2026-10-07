@@ -11,17 +11,24 @@ use Illuminate\Support\Carbon;
  */
 class RoleType
 {
-    private const PLACEMENT = ['placement', 'placement year', 'year in industry', 'industrial placement', 'industrial year',
+    private const PLACEMENT = ['placement', 'placements', 'placement year', 'year in industry', 'industrial placement', 'industrial year',
         'sandwich year', 'sandwich placement', '12 month placement', '12-month placement', 'year-long placement', 'year long placement', 'work placement'];
 
     private const INSIGHT = ['spring week', 'spring insight', 'insight week', 'insight day', 'insight days', 'insight programme',
-        'insight program', 'spring programme', 'spring program', 'discovery programme', 'discovery day', 'spring intern', 'spring internship'];
+        'insight program', 'insight experience', 'insight event', 'insight evening', 'insights summer school', 'insight summer school',
+        'spring programme', 'spring program', 'discovery programme', 'discovery day', 'discovery week', 'spring intern', 'spring internship'];
 
     private const GRADUATE = ['graduate', 'graduates', 'grad', 'graduate scheme', 'graduate programme', 'graduate program', 'grad scheme',
-        'new grad', 'entry level', 'entry-level', 'early careers', 'early career', 'early talent'];
+        'new grad', 'entry level', 'entry-level', 'early careers', 'early career', 'early talent', 'analyst programme',
+        'analyst program', 'associate programme', 'associate program', 'development programme', 'development program',
+        'rotational programme', 'rotational program', 'graduate rotational'];
 
     private const INTERNSHIP = ['intern', 'interns', 'internship', 'internships', 'summer intern', 'off-cycle intern', 'co-op',
-        'student researcher', 'undergraduate researcher', 'vacation scheme', 'summer analyst'];
+        'student researcher', 'undergraduate researcher', 'vacation scheme', 'summer analyst', 'off-cycle analyst', 'off cycle analyst',
+        'off-cycle internship', 'summer associate'];
+
+    /** an internship that lasts a year is a placement year in UK terms */
+    private const YEAR_LONG = '/\b(12|13|12\.5|11|10|9)[ -]?months?\b|\byear[- ]long\b/';
 
     /** staff who run these schemes and senior roles that mention them are never listed */
     private const STAFF = '/\b(senior|sr\.?|staff|lead|principal|head of|director|manager|vp|vice president|architect|recruiter|recruitment|'
@@ -39,7 +46,8 @@ class RoleType
     /** the kind of role the title names; null when it is not a student or graduate role */
     public static function classify(string $title, bool $partTime = false): ?string
     {
-        $t = mb_strtolower(trim(preg_replace('/\s+/', ' ', $title)));
+        // "post-graduate" names a research or teaching post; joined up it can no longer match "graduate"
+        $t = str_replace(['post-graduate', 'post graduate'], 'postgraduate', mb_strtolower(trim(preg_replace('/\s+/', ' ', $title))));
         if ($t === '' || preg_match('/\b(apprentice|apprenticeship|apprenticeships)\b/', $t)) {
             // apprenticeships are a different route, often for school leavers, so they are not mixed in
             return null;
@@ -55,7 +63,7 @@ class RoleType
         }
 
         return match (true) {
-            self::has(self::PLACEMENT, $t) => 'placement',
+            self::has(self::PLACEMENT, $t), $intern && preg_match(self::YEAR_LONG, $t) => 'placement',
             self::has(self::INSIGHT, $t) => 'insight',
             self::has(self::GRADUATE, $t) => 'graduate',
             $intern => 'internship',
@@ -99,7 +107,7 @@ class RoleType
     private static function has(array $terms, string $text): bool
     {
         foreach ($terms as $term) {
-            if (preg_match('/(?<![\w-])'.preg_quote($term, '/').'(?![\w-])/u', $text)) {
+            if (preg_match('/(?<![\w])'.preg_quote($term, '/').'(?![\w])/u', $text)) {
                 return true;
             }
         }

@@ -77,6 +77,18 @@ class JobsTest extends TestCase
         $this->get(route('jobs', ['q' => 'marketing']))->assertSee('Marketing Internship')->assertDontSee('Graduate Analyst');
     }
 
+    public function test_the_field_filter_and_the_search_box_narrow_the_list(): void
+    {
+        JobListing::factory()->create(['title' => 'Trainee Solicitor 2027', 'company' => 'Clifford Chance', 'sector' => 'law', 'description' => 'Python skills welcome']);
+        JobListing::factory()->create(['title' => 'Graduate Nurse', 'company' => 'Leeds Hospitals', 'sector' => 'health']);
+
+        $this->get(route('jobs', ['sector' => 'law']))->assertSee('Trainee Solicitor 2027')->assertDontSee('Graduate Nurse');
+        $this->get(route('jobs', ['q' => 'clifford']))->assertSee('Trainee Solicitor 2027')->assertDontSee('Graduate Nurse');
+        // the search box matches titles and employers, never an advert's text
+        $this->get(route('jobs', ['q' => 'python']))->assertDontSee('Trainee Solicitor 2027');
+        $this->get(route('jobs', ['sector' => 'nonsense']))->assertSee('Graduate Nurse')->assertSee('Trainee Solicitor 2027');
+    }
+
     public function test_check_my_cv_against_a_job_fills_in_the_advert(): void
     {
         $job = JobListing::factory()->create(['title' => 'Graduate Analyst', 'description' => 'Must know Tableau and SQL']);
