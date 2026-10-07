@@ -36,9 +36,11 @@
                             <h2 class="text-lg">{{ $cv->title }}</h2>
                             <p class="truncate text-sm text-muted" dir="ltr">{{ preg_replace('#^https?://#', '', route('cv.show', $cv)) }}</p>
                         </div>
-                        <span class="badge shrink-0">
-                            @if ($cv->hidden_at) {{ __('Hidden by a moderator') }} @else {{ __(ucfirst($cv->visibility)) }} @endif
-                        </span>
+                        @if ($cv->hidden_at)
+                            <span class="badge shrink-0">{{ __('Hidden by a moderator') }}</span>
+                        @else
+                            <x-visibility class="shrink-0" :value="$cv->visibility" />
+                        @endif
                     </div>
                     <dl class="grid grid-cols-3 gap-3 text-sm">
                         <div><dt class="text-muted">{{ __('Views') }}</dt><dd class="text-lg font-semibold">{{ number_format($cv->view_count) }}</dd></div>

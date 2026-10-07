@@ -60,4 +60,16 @@ class VisibilityTest extends TestCase
         $this->get(route('home'))->assertDontSee($user->name);
         $this->get(route('cv.show', $cv))->assertOk()->assertSee('content="noindex"', false);
     }
+
+    public function test_the_dashboard_shows_each_visibility_as_an_icon_with_its_word(): void
+    {
+        $owner = User::factory()->create();
+        Cv::factory()->for($owner)->visibility('private')->create(['title' => 'Private one']);
+        Cv::factory()->for($owner)->visibility('unlisted')->create(['title' => 'Unlisted one']);
+
+        $page = $this->actingAs($owner)->get(route('dashboard'))->assertOk();
+        $page->assertSee('Private')->assertSee('Unlisted');
+        $page->assertDontSee('<span class="badge shrink-0">', false);
+        $page->assertSee('aria-hidden="true" focusable="false"', false);
+    }
 }

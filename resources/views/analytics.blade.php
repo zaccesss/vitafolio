@@ -60,7 +60,7 @@
                 <tbody>
                     @forelse ($byCv as $row)
                         <tr class="border-b border-line last:border-0">
-                            <th scope="row" class="px-5 py-2 font-normal"><a href="{{ route('cv.show', $row['cv']) }}">{{ $row['cv']->title }}</a> <span class="badge ms-1">{{ __(ucfirst($row['cv']->visibility)) }}</span></th>
+                            <th scope="row" class="px-5 py-2 font-normal"><a href="{{ route('cv.show', $row['cv']) }}">{{ $row['cv']->title }}</a> <x-visibility class="ms-1 align-middle" :value="$row['cv']->visibility" /></th>
                             @foreach (array_keys(\App\Support\ViewRecorder::KINDS) as $kind)<td class="px-5 py-2 text-end">{{ $row['counts'][$kind] }}</td>@endforeach
                         </tr>
                     @empty

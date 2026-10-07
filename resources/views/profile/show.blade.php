@@ -68,7 +68,7 @@
                                     <a href="{{ route('cv.show', $cv) }}" class="text-ink no-underline after:absolute after:inset-0 after:content-[''] hover:underline">{{ $cv->title }}</a>
                                 </h3>
                                 @if ($cv->displayHeadline())<p class="text-sm text-muted">{{ $cv->displayHeadline() }}</p>@endif
-                                @if ($isOwner)<p><span class="badge">{{ __(ucfirst($cv->visibility)) }}</span></p>@endif
+                                @if ($isOwner)<p><x-visibility :value="$cv->visibility" /></p>@endif
                                 <p class="mt-auto text-sm text-muted">{{ __('Updated :time', ['time' => $cv->updated_at->diffForHumans()]) }}</p>
                             </article>
                         </li>

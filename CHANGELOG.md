@@ -4,6 +4,10 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+### Changed
+
+- A CV's visibility shows as an icon beside its word instead of a rounded badge: a closed padlock for Private, an open padlock for Public and a link for Unlisted. It appears on the dashboard, the analytics table, the profile and the CV editor.
+
 ### Added
 
 - Each demo clip has its own page at `/features/demo/<clip>` with a video player, a Back to Features link, a written description of what happens and links to the other clips. Selecting a clip on the Features page opens it there instead of the bare video file.
