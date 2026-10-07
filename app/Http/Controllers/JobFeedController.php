@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobListing;
+use App\Support\Jobs\JobFetcher;
 use App\Support\Jobs\RoleType;
 use App\Support\Jobs\Sector;
 use Illuminate\Http\JsonResponse;
@@ -80,6 +81,9 @@ class JobFeedController extends Controller
                 'closes_at' => $deadline,
                 'last_seen_at' => $now,
             ]);
+            // a board's copy of the same role gives way to the employer's own listing
+            JobListing::whereIn('source', ['adzuna', 'reed'])
+                ->where('external_id', JobFetcher::sameRole($title, (string) $job['company']))->delete();
             $stored++;
         }
 

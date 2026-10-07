@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\JobListing;
 use App\Models\User;
+use App\Support\Jobs\JobFetcher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
@@ -52,6 +53,20 @@ class JobFeedTest extends TestCase
             ->assertSee(route('check', ['job' => $intern->id]), false)
             ->assertDontSee(route('check', ['job' => JobListing::where('company', 'Beta')->value('id')]), false);
         $this->assertSame('You will build services in Go and Kubernetes.', $intern->description);
+    }
+
+    public function test_the_employers_own_listing_replaces_a_boards_copy(): void
+    {
+        Carbon::setTestNow('2026-10-08 06:00');
+        config(['vitafolio.jobs_feed_token' => 'feed-token']);
+        $board = JobListing::factory()->create(['source' => 'adzuna', 'title' => 'Software Engineering Intern (2027 Start)', 'company' => 'Acme Ltd',
+            'external_id' => JobFetcher::sameRole('Software Engineering Intern (2027 Start)', 'Acme Ltd')]);
+
+        $this->send([['title' => 'Software Engineering Intern (2027 Start)', 'company' => 'Acme', 'url' => 'https://jobs.lever.co/acme/1']])->assertOk();
+
+        $this->assertModelMissing($board);
+        $this->assertSame(1, JobListing::where('title', 'Software Engineering Intern (2027 Start)')->count());
+        $this->assertTrue(JobFetcher::employerHas('Software Engineering Intern (2027 Start)', 'ACME UK'));
     }
 
     public function test_tidy_removes_employer_listings_the_feed_stopped_sending(): void

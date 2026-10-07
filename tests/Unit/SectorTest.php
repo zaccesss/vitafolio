@@ -26,6 +26,8 @@ class SectorTest extends TestCase
             ['Research Scientist Placement', 'science'],
             ['Summer Internship', 'other'],
             ['Digital Project Management Industrial Placement', 'business'],
+            ['Graduate Civil Engineer Highways and Infrastructure Belfast (2027 Start)', 'engineering'],
+            ['Cloud Infrastructure Intern', 'software'],
             ['Year in Industry - Applied and Theoretical Scientist', 'science'],
         ];
     }

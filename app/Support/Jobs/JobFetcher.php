@@ -17,15 +17,21 @@ class JobFetcher
 {
     /** search terms per kind of role; each result's kind is then read from its own title, never assumed from the search */
     public const SEARCHES = [
-        'internship' => ['internship', 'summer intern'],
-        'placement' => ['industrial placement', 'placement year'],
-        'insight' => ['spring week', 'insight programme'],
-        'graduate' => ['graduate scheme', 'graduate'],
-        'apprenticeship' => ['apprenticeship', 'degree apprenticeship'],
-        'part-time' => ['part time student'],
+        'internship' => ['internship', 'summer intern', 'summer internship 2027', 'vacation scheme'],
+        'placement' => ['industrial placement', 'placement year', 'year in industry', 'sandwich placement'],
+        'insight' => ['spring week', 'insight programme', 'insight day'],
+        // one search per field as well, since a plain "graduate" search is dominated by a few fields
+        'graduate' => ['graduate scheme', 'graduate', 'graduate engineer', 'graduate analyst', 'graduate accountant',
+            'trainee solicitor', 'training contract', 'graduate nurse', 'graduate teacher', 'graduate marketing',
+            'graduate scientist', 'graduate software'],
+        'apprenticeship' => ['apprenticeship', 'degree apprenticeship', 'level 3 apprenticeship'],
+        'part-time' => ['part time student', 'student job'],
     ];
 
     private const PER_SEARCH = 50;
+
+    /** pages read per search; each page is one request against the board's daily allowance */
+    private const PAGES = 3;
 
     /** @return array<string, int> listings stored per source */
     public function fetch(): array
@@ -64,7 +70,11 @@ class JobFetcher
      */
     private function store(string $source, array $row): void
     {
-        $row['external_id'] = sha1(mb_strtolower(trim($row['title'])).'|'.self::employerKey((string) $row['company']));
+        $row['external_id'] = self::sameRole($row['title'], (string) $row['company']);
+        // the employer's own listing links straight to the job with the full advert, so it wins
+        if (self::employerHas($row['title'], (string) $row['company'])) {
+            return;
+        }
         $existing = JobListing::where('source', $source)->where('external_id', $row['external_id'])->first();
         if ($existing?->location) {
             $known = array_map('mb_strtolower', array_map('trim', explode(';', $existing->location)));
@@ -85,7 +95,22 @@ class JobFetcher
     /** @return list<array<string, mixed>> */
     private function adzuna(string $term, string $kind): array
     {
-        $response = Http::timeout(20)->retry(2, 500)->get('https://api.adzuna.com/v1/api/jobs/gb/search/1', [
+        $rows = [];
+        for ($page = 1; $page <= self::PAGES; $page++) {
+            $found = $this->adzunaPage($term, $kind, $page);
+            $rows = array_merge($rows, $found['rows']);
+            if ($found['count'] < self::PER_SEARCH) {
+                break;
+            }
+        }
+
+        return $rows;
+    }
+
+    /** @return array{rows: list<array<string, mixed>>, count: int} */
+    private function adzunaPage(string $term, string $kind, int $page): array
+    {
+        $response = Http::timeout(20)->retry(2, 500)->get("https://api.adzuna.com/v1/api/jobs/gb/search/{$page}", [
             'app_id' => config('services.adzuna.app_id'),
             'app_key' => config('services.adzuna.app_key'),
             'what' => $term,
@@ -118,7 +143,7 @@ class JobFetcher
             ];
         }
 
-        return $rows;
+        return ['rows' => $rows, 'count' => count($response->json('results', []))];
     }
 
     /** @return list<array<string, mixed>> */
@@ -170,6 +195,20 @@ class JobFetcher
         $text = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
 
         return Str::limit($text, $limit, '...');
+    }
+
+    /** one role at one employer, whichever board or city it came through */
+    public static function sameRole(string $title, string $company): string
+    {
+        return sha1(mb_strtolower(trim($title)).'|'.self::employerKey($company));
+    }
+
+    public static function employerHas(string $title, string $company): bool
+    {
+        $key = self::employerKey($company);
+
+        return JobListing::where('source', 'employer')->where('title', $title)->pluck('company')
+            ->contains(fn ($name) => self::employerKey((string) $name) === $key);
     }
 
     /** "Safran" and "SAFRAN UK Ltd" are one employer */
