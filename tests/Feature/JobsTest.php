@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\JobListing;
 use App\Models\User;
+use App\Support\Jobs\JobFetcher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
@@ -62,6 +63,8 @@ class JobsTest extends TestCase
 
         $this->assertSame(1, JobListing::where('title', 'Aquatic Ecologist Graduate')->count());
         $this->assertSame('Leeds; Nottingham', JobListing::where('title', 'Aquatic Ecologist Graduate')->value('location'));
+        $this->assertSame('safran', JobFetcher::employerKey('SAFRAN UK Ltd'));
+        $this->assertSame(JobFetcher::employerKey('Safran'), JobFetcher::employerKey('SAFRAN UK'));
     }
 
     public function test_a_failing_board_never_stops_the_other(): void

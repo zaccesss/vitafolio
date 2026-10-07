@@ -83,7 +83,8 @@ class Sector
         'quant researcher' => 'finance', 'data center' => 'hardware', 'data centre' => 'hardware',
         'solutions architect' => 'software', 'software architect' => 'software', 'cloud architect' => 'software',
         'windows engineer' => 'software', 'linux engineer' => 'software', 'environmental engineer' => 'engineering',
-        'investment banking' => 'finance', 'legal engineer' => 'law',
+        'investment banking' => 'finance', 'legal engineer' => 'law', 'project management' => 'business',
+        'project manager' => 'business', 'programme management' => 'business', 'digital marketing' => 'creative',
     ];
 
     /** title terms per field, checked in this order so "embedded software" lands in hardware */
@@ -120,9 +121,12 @@ class Sector
             'customer assistant', 'sales assistant', 'cashier', 'waiter', 'waitress', 'events', 'travel', 'tourism', 'leisure'],
     ];
 
+    /** the title decides first; adzuna files many roles under IT, so its category only fills a gap */
     public static function fromAdzuna(?string $tag, string $title, ?string $company = null): string
     {
-        return self::ADZUNA[$tag ?? ''] ?? self::guess($title, $company);
+        $fromTitle = self::guess($title);
+
+        return $fromTitle !== 'other' ? $fromTitle : (self::ADZUNA[$tag ?? ''] ?? self::guess('', $company));
     }
 
     public static function guess(string $title, ?string $company = null): string
