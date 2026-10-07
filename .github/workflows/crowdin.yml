@@ -6,9 +6,11 @@ name: Crowdin sync
 # CROWDIN_PROJECT_ID variable; without them the job stops before doing anything. The pull request is
 # opened with the automation account's token (CROWDIN_BOT_TOKEN), so it is credited to that account
 # and its CI checks start on their own, which a pull request from the built-in token never does.
-# Translations committed to the repository never reach Crowdin on their own, so its next download would
-# write english back over them. A manual run with upload_translations sends them up first and approves
-# them; scheduled and push runs never do, so work done by translators on Crowdin is not overwritten.
+# Translations committed to the repository are uploaded and approved on every push to main that
+# changes them, so Crowdin always has them and its next download cannot write english back over them.
+# A manual run can do the same with upload_translations. Before Crowdin's pull request is set to merge
+# itself, scripts/check-crowdin-pr.py confirms no translation is removed or reverted to english; one
+# that fails stays open with the blocked label for a person to look at.
 
 permissions: {}
 
@@ -16,7 +18,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "lang/en.json"
+      - "lang/*.json"
       - "lang/en/**"
   schedule:
     - cron: "15 4 * * *"
@@ -50,15 +52,20 @@ jobs:
             echo "Crowdin is not configured, skipping"; exit 1
           fi
 
+      # the automation account's token, so the branch push comes from that account; a push made with
+      # the built-in token comes from github-actions[bot] and its checks wait for manual approval
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.CROWDIN_BOT_TOKEN }}
+          fetch-depth: 0
 
       - name: Upload sources and download translations
         uses: crowdin/github-action@9c23991700c0ec5256fd41089b9d9d7d540e424e # v3.3.0
         with:
           upload_sources: true
-          upload_translations: ${{ inputs.upload_translations || false }}
+          upload_translations: ${{ github.event_name == 'push' || inputs.upload_translations || false }}
           # uploaded translations would otherwise wait as suggestions and never come back down
-          auto_approve_imported: ${{ inputs.upload_translations || false }}
+          auto_approve_imported: ${{ github.event_name == 'push' || inputs.upload_translations || false }}
           download_translations: true
           localization_branch_name: l10n_crowdin
           create_pull_request: true
@@ -73,3 +80,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.CROWDIN_BOT_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ vars.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+      - name: Merge Crowdin's pull request when it is safe
+        env:
+          GH_TOKEN: ${{ secrets.CROWDIN_BOT_TOKEN }}
+        run: |
+          number=$(gh pr list --head l10n_crowdin --state open --json number --jq '.[0].number // empty')
+          if [ -z "$number" ]; then echo "no Crowdin pull request open"; exit 0; fi
+          git fetch --quiet origin main l10n_crowdin
+          if python3 scripts/check-crowdin-pr.py origin/main origin/l10n_crowdin; then
+            gh pr merge "$number" --squash --delete-branch --auto
+          else
+            gh pr edit "$number" --add-label blocked
+            gh pr comment "$number" --body "Not merging automatically: this would remove translations or turn them back into english. Run Crowdin sync with upload_translations, then close this pull request."
+          fi

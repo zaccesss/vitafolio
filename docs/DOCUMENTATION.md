@@ -417,10 +417,14 @@ translations. Nothing in the build needs Crowdin or an account.
 
 The `Crowdin sync` workflow (`.github/workflows/crowdin.yml`) does the rest:
 
-1. When the English strings change on `main` (`lang/en.json` or `lang/en/*.php`), it uploads them so
-   translators see the new text straight away.
+1. When a language file changes on `main`, it uploads the English strings so translators see new
+   text straight away. It also uploads and approves the translations committed in the repository,
+   so Crowdin always has them.
 2. Every day it downloads finished translations and opens or updates one pull request from the
-   `l10n_crowdin` branch. Each one is reviewed like any other change.
+   `l10n_crowdin` branch.
+3. `scripts/check-crowdin-pr.py` compares that branch with `main`. If no translation is removed or
+   turned back into English, the pull request is set to merge itself once its checks pass. If any
+   is, it stays open with the `blocked` label and a comment saying what to do.
 
 It reads the `CROWDIN_PERSONAL_TOKEN` and `CROWDIN_BOT_TOKEN` secrets and the `CROWDIN_PROJECT_ID`
 repository variable; none of them is written into `crowdin.yml`. The pull request is opened with the

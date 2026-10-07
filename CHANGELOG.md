@@ -6,6 +6,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Changed
 
+- Crowdin's daily pull request merges itself once a check confirms no translation is removed or turned back into English. Translations committed here are uploaded on every push to main. The Crowdin branch is pushed by the automation account so its checks start without manual approval.
 - The home page says Free for everyone, as plain text rather than a badge. The footer credit reads By isaacadjei.me.
 - A CV's visibility shows as an icon beside its word instead of a rounded badge: a closed padlock for Private, an open padlock for Public and a link for Unlisted. It appears on the dashboard, the analytics table, the profile and the CV editor.
 
