@@ -13,6 +13,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Added
 
+- A Jobs page with UK internships, placement years, graduate roles and part-time student jobs from the free Adzuna and Reed job APIs, fetched each night with the tidy-up. It filters by kind of role, keyword and location. Each listing links to the board it came from to apply, with the attribution Adzuna's terms require. Signed-in people can check a CV against any listing, which opens Check a CV with the advert filled in. Listings are removed once they close or after 30 days.
 - A Check a CV page, linked from the menu and the dashboard. It scores a Vitafolio CV or an uploaded PDF or Word file out of 100 across heading clarity, contact details, skills, education, experience and keywords, the way an applicant tracking system reads it. The report lists what was found, what is missing, layout problems such as tables, columns, images, text boxes and contact details in the page header, plus fixes. A pasted job advert shows which of its keywords the CV has. Reports download as Markdown and the parsed CV as JSON. Uploads are read in memory and never stored. `php artisan cv:analyse` does the same from the command line.
 - The cover letter tab has templates for an internship, a placement year, a graduate role and a part-time or student job. Choosing one fills the box with a structure to complete, signed with the owner's name; nothing is saved until they press Save. An existing letter gets a warning and a way back.
 - Each demo clip has its own page at `/features/demo/<clip>` with a video player, a Back to Features link, a written description of what happens and links to the other clips. Selecting a clip on the Features page opens it there instead of the bare video file.
@@ -91,6 +92,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- The job advert box on Check a CV said optional twice.
 - Check a CV finds a name written with a nickname in brackets or placed after the contact line, recognises more standard headings such as Research & Publications and Spoken Languages, ignores filler words in job adverts and matches singular and plural forms. Strong verbs in any tense now count.
 - Translations committed to the repository are no longer replaced with English by the next Crowdin sync. A manual run of the sync workflow can now upload them to Crowdin first and approve them, so they come back down.
 - The developer documentation lists all seven LaTeX starter templates instead of four.

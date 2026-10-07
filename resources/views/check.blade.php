@@ -21,7 +21,10 @@
                     </div>
                 @endif
             </fieldset>
-            <x-field name="job_advert" :label="__('Job advert (optional)')" type="textarea" rows="6" maxlength="10000"
+            @if ($job)
+                <p class="alert alert-info">{{ __('Checking against :title at :company. The advert is filled in below.', ['title' => $job->title, 'company' => $job->company ?? __('an employer')]) }}</p>
+            @endif
+            <x-field name="job_advert" :label="__('Job advert')" type="textarea" rows="6" maxlength="10000" :value="$advert"
                      :hint="__('Paste the advert to see which of its keywords your CV has and which it is missing.')" />
             <div><button type="submit" class="btn btn-primary">{{ __('Check my CV') }}</button></div>
         </form>

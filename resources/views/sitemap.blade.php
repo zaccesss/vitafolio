@@ -1,7 +1,7 @@
 {!! '<'.'?xml version="1.0" encoding="UTF-8"?'.'>' !!}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url><loc>{{ route('home') }}</loc><lastmod>{{ $updated }}</lastmod><changefreq>daily</changefreq></url>
-@foreach (array_filter(['about', 'contact.show', 'privacy', 'terms', 'accessibility', 'cookies', 'copyright', 'features', 'help', 'changelog', 'docs', 'support'], fn ($r) => Route::has($r)) as $page)
+@foreach (array_filter(['about', 'contact.show', 'privacy', 'terms', 'accessibility', 'cookies', 'copyright', 'features', 'jobs', 'help', 'changelog', 'docs', 'support'], fn ($r) => Route::has($r)) as $page)
     <url><loc>{{ route($page) }}</loc><lastmod>{{ $updated }}</lastmod><changefreq>monthly</changefreq></url>
 @endforeach
 @foreach (array_keys(\App\Support\Demos::all()) as $clip)

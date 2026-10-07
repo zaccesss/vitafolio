@@ -449,7 +449,8 @@ Copy `.env.example` to `.env`. Laravel's own settings are documented there; thes
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | File and media storage |
 | `LATEX_ASSETS_URL` | Where the LaTeX engine files are hosted |
 | `GOOGLE_*`, `GITHUB_*`, `MICROSOFT_*` | Sign-in providers, each a client id and secret |
-| `CRON_TOKEN` | Shared secret for the nightly tidy-up |
+| `CRON_TOKEN` | Shared secret for the nightly tidy-up and job fetch |
+| `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `REED_API_KEY` | Job listings on the Jobs page; either board can be left unset |
 | `SENTRY_LARAVEL_DSN` | Error tracking |
 | `INDEXNOW_KEY` | Search engine change notifications |
 | `STORAGE_ALLOWANCE_MB` | Storage per account, 100 by default |

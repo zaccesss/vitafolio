@@ -19,7 +19,10 @@ class CronController extends Controller
         abort_unless(hash_equals($token, (string) $request->bearerToken()), 403);
 
         Artisan::call('vitafolio:tidy');
+        $output = trim(Artisan::output());
+        Artisan::call('vitafolio:fetch-jobs');
+        $output .= "\n".trim(Artisan::output());
 
-        return response()->json(['ok' => true, 'output' => trim(Artisan::output())]);
+        return response()->json(['ok' => true, 'output' => $output]);
     }
 }
