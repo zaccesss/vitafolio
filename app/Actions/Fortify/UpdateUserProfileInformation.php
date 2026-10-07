@@ -28,7 +28,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             // a borrowed session cannot move the account to another address without the password
             'current_password' => $changingEmail && $user->has_password ? ['required', 'current_password'] : ['nullable'],
         ], [
-            'current_password.required' => 'Enter your password to change your email address.',
+            'current_password.required' => __('Enter your password to change your email address.'),
         ])->validateWithBag('updateProfileInformation');
 
         // every account verifies its email, so a new address has to be verified again
@@ -36,9 +36,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $previous = $user->email;
             $this->updateVerifiedUser($user, $input);
             // the old address hears about the change, so a takeover cannot go unnoticed
+            $locale = $user->preferredLocale();
             rescue(fn () => Mail::raw(
-                'The email address on your '.config('app.name')." account was changed from {$previous} to {$input['email']}.\n\nIf that was not you, reset your password straight away at ".route('password.request').' and contact us.',
-                fn ($message) => $message->to($previous)->subject('Your '.config('app.name').' email address was changed')
+                __('The email address on your :app account was changed from :old to :new.', ['app' => config('app.name'), 'old' => $previous, 'new' => $input['email']], $locale)
+                    ."\n\n".__('If that was not you, reset your password straight away at :url and contact us.', ['url' => route('password.request')], $locale),
+                fn ($message) => $message->to($previous)->subject(__('Your :app email address was changed', ['app' => config('app.name')], $locale))
             ));
         } else {
             $user->forceFill([

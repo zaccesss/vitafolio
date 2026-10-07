@@ -49,7 +49,7 @@ class SocialAuthController extends Controller
         } catch (\Throwable $e) {
             // a cancelled consent screen or an expired state both land here
             return redirect()->route($request->user() ? 'settings.connected' : 'login')
-                ->with('error', 'Signing in with '.config("vitafolio.social.$provider.label").' did not finish. Please try again.');
+                ->with('error', __('Signing in with :provider did not finish. Please try again.', ['provider' => config("vitafolio.social.$provider.label")]));
         }
 
         $linked = SocialAccount::where('provider', $provider)->where('provider_id', (string) $remote->getId())->first();
@@ -67,14 +67,14 @@ class SocialAuthController extends Controller
 
         $email = Str::lower((string) $remote->getEmail());
         if ($email === '') {
-            return redirect()->route('login')->with('error', config("vitafolio.social.$provider.label").' did not share an email address, so an account cannot be made from it.');
+            return redirect()->route('login')->with('error', __(':provider did not share an email address, so an account cannot be made from it.', ['provider' => config("vitafolio.social.$provider.label")]));
         }
         $verified = $this->emailVerified($provider, $remote);
         $existing = User::where('email', $email)->first();
 
         if ($existing) {
             if (! $verified) {
-                return redirect()->route('login')->with('error', 'An account with this email already exists. Sign in with your password, then connect '.config("vitafolio.social.$provider.label").' from your account page.');
+                return redirect()->route('login')->with('error', __('An account with this email already exists. Sign in with your password, then connect :provider from your account page.', ['provider' => config("vitafolio.social.$provider.label")]));
             }
             if (! $existing->hasVerifiedEmail()) {
                 // nobody has proved they own this address yet, so whoever created the account
@@ -88,7 +88,7 @@ class SocialAuthController extends Controller
 
         $user = $this->createAccount($provider, $remote, $email, $verified);
 
-        return $this->signIn($request, $user, 'Welcome to '.config('app.name').'. Your first CV is ready to edit.');
+        return $this->signIn($request, $user, __('Welcome to :app. Your first CV is ready to edit.', ['app' => config('app.name')]));
     }
 
     /** strips every sign-in method and session from an unverified account before a verified owner takes it */
@@ -116,14 +116,14 @@ class SocialAuthController extends Controller
         $user = $request->user();
         $others = $user->socialAccounts()->where('provider', '<>', $provider)->exists() || $user->has_password || $user->passkeys()->exists();
         if (! $others) {
-            return redirect()->route('settings.connected')->with('error', 'Set a password or add a passkey first, so you can still sign in afterwards.');
+            return redirect()->route('settings.connected')->with('error', __('Set a password or add a passkey first, so you can still sign in afterwards.'));
         }
         $user->socialAccounts()->where('provider', $provider)->delete();
         $label = config("vitafolio.social.$provider.label");
         Audit::log('account.disconnected', ['user' => $user->id, 'provider' => $provider]);
-        SendSecurityNotice::send($user, $label.' disconnected', $label.' can no longer be used to sign in to your account.');
+        SendSecurityNotice::send($user, ':provider disconnected', ':provider can no longer be used to sign in to your account.', ['provider' => $label]);
 
-        return redirect()->route('settings.connected')->with('status', $label.' has been disconnected.');
+        return redirect()->route('settings.connected')->with('status', __(':provider has been disconnected.', ['provider' => $label]));
     }
 
     /** copies the provider's photo once, re-encoded like any upload; it is never loaded from their site */
@@ -145,7 +145,7 @@ class SocialAuthController extends Controller
             @unlink($tmp);
         }
         if ($jpeg === null) {
-            return $back->with('error', 'That photo could not be copied. You can upload one on your profile instead.');
+            return $back->with('error', __('That photo could not be copied. You can upload one on your profile instead.'));
         }
         $request->user()->forceFill([
             'avatar' => $jpeg,
@@ -153,7 +153,7 @@ class SocialAuthController extends Controller
             'avatar_version' => base_convert((string) now()->getTimestampMs(), 10, 36),
         ])->save();
 
-        return $back->with('status', 'Your '.config("vitafolio.social.$provider.label").' photo is now your profile photo.');
+        return $back->with('status', __('Your :provider photo is now your profile photo.', ['provider' => config("vitafolio.social.$provider.label")]));
     }
 
     /** the route name maps to a socialite driver; anything unknown or switched off is a 404 */
@@ -187,13 +187,13 @@ class SocialAuthController extends Controller
         $back = redirect()->route('settings.connected');
         $label = config("vitafolio.social.$provider.label");
         if ($linked && $linked->user_id !== $user->id) {
-            return $back->with('error', 'That '.$label.' account is already connected to a different '.config('app.name').' account.');
+            return $back->with('error', __('That :provider account is already connected to a different :app account.', ['provider' => $label, 'app' => config('app.name')]));
         }
         $this->link($user, $provider, $remote);
         Audit::log('account.connected', ['user' => $user->id, 'provider' => $provider]);
-        SendSecurityNotice::send($user, $label.' connected', $label.' can now be used to sign in to your account.');
+        SendSecurityNotice::send($user, ':provider connected', ':provider can now be used to sign in to your account.', ['provider' => $label]);
 
-        return $back->with('status', $label.' is now connected. You can use it to sign in.');
+        return $back->with('status', __(':provider is now connected. You can use it to sign in.', ['provider' => $label]));
     }
 
     private function link(User $user, string $provider, ProviderUser $remote): void
@@ -221,9 +221,10 @@ class SocialAuthController extends Controller
                 // unusable until the owner sets one; has_password tells the account page to offer that
                 'password' => Hash::make(Str::random(64)),
                 'handle' => User::suggestHandle($name),
+                'locale' => app()->getLocale(),
             ]);
             $user->forceFill(['has_password' => false, 'email_verified_at' => $verified ? now() : null])->save();
-            $user->cvs()->create(['title' => 'My CV', 'slug' => Cv::uniqueSlug($user->name), 'visibility' => 'private']);
+            $user->cvs()->create(['title' => __('My CV'), 'slug' => Cv::uniqueSlug($user->name), 'visibility' => 'private']);
             $this->link($user, $provider, $remote);
 
             return $user;
@@ -234,7 +235,7 @@ class SocialAuthController extends Controller
     private function signIn(Request $request, User $user, ?string $welcome = null): RedirectResponse
     {
         if ($user->isSuspended()) {
-            return redirect()->route('login')->with('error', 'This account cannot sign in. Contact us if you think this is a mistake.');
+            return redirect()->route('login')->with('error', __('This account cannot sign in. Contact us if you think this is a mistake.'));
         }
         if ($user->two_factor_confirmed_at) {
             $request->session()->put(['login.id' => $user->id, 'login.remember' => true]);

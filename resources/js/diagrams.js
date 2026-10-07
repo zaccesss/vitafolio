@@ -10,6 +10,8 @@ function sized(svg) {
     return svg.replace(/<svg([^>]*?)\swidth="[^"]*"/, '<svg$1').replace('<svg', `<svg width="${box[1]}" height="${box[2]}"`);
 }
 
+import { t } from './i18n.js';
+
 export async function renderDiagrams(blocks) {
     const { default: mermaid } = await import('mermaid');
     const draw = async () => {
@@ -38,10 +40,10 @@ export function prepareDiagrams() {
         figure.className = 'diagram';
         figure.hidden = true;
         const image = document.createElement('img');
-        image.alt = `Diagram ${index + 1}. Its text version follows.`;
+        image.alt = t('Diagram :number. Its text version follows.', { number: index + 1 });
         const details = document.createElement('details');
         const summary = document.createElement('summary');
-        summary.textContent = 'Show the diagram as text';
+        summary.textContent = t('Show the diagram as text');
         const source = document.createElement('pre');
         source.textContent = code.textContent;
         details.append(summary, source);

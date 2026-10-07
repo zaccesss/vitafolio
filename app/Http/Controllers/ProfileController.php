@@ -64,7 +64,7 @@ class ProfileController extends Controller
         ]);
         $request->user()->update($data);
 
-        return redirect()->route('profile.edit')->with('status', 'Your profile has been saved.');
+        return redirect()->route('profile.edit')->with('status', __('Your profile has been saved.'));
     }
 
     public function updateHandle(Request $request): RedirectResponse
@@ -73,8 +73,8 @@ class ProfileController extends Controller
         $data = $request->validateWithBag('handle', [
             'handle' => ['required', 'string', 'min:3', 'max:30', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::notIn(User::RESERVED_HANDLES)],
         ], [
-            'handle.regex' => 'Use lowercase letters, numbers and single hyphens only.',
-            'handle.not_in' => 'That handle is reserved. Choose another.',
+            'handle.regex' => __('Use lowercase letters, numbers and single hyphens only.'),
+            'handle.not_in' => __('That handle is reserved. Choose another.'),
         ]);
         $new = $data['handle'];
 
@@ -82,10 +82,10 @@ class ProfileController extends Controller
             return redirect()->route('settings.handle');
         }
         if (! $user->canChangeHandle()) {
-            throw ValidationException::withMessages(['handle' => 'You can change your handle again on '.$user->nextHandleChange()->format('j F Y').'.'])->errorBag('handle');
+            throw ValidationException::withMessages(['handle' => __('You can change your handle again on :date.', ['date' => $user->nextHandleChange()->translatedFormat('j F Y')])])->errorBag('handle');
         }
         if (User::handleTaken($new, $user->id)) {
-            throw ValidationException::withMessages(['handle' => 'That handle is taken. Try adding a word or number.'])->errorBag('handle');
+            throw ValidationException::withMessages(['handle' => __('That handle is taken. Try adding a word or number.')])->errorBag('handle');
         }
 
         DB::transaction(function () use ($user, $new) {
@@ -99,7 +99,7 @@ class ProfileController extends Controller
             $user->forceFill(['handle' => $new, 'handle_changed_at' => now()])->save();
         });
 
-        return redirect()->route('settings.handle')->with('status', 'Your handle is now @'.$new.'. Links to your old handle redirect here for 30 days.');
+        return redirect()->route('settings.handle')->with('status', __('Your handle is now :handle. Links to your old handle redirect here for 30 days.', ['handle' => '@'.$new]));
     }
 
     public function updateAvatar(Request $request): RedirectResponse
@@ -117,7 +117,7 @@ class ProfileController extends Controller
             : null;
         $bytes = Images::squareJpeg($request->file('avatar')->getRealPath(), 600, $crop);
         if ($bytes === null) {
-            throw ValidationException::withMessages(['avatar' => 'That image could not be read. Try a JPG or PNG.'])->errorBag('avatar');
+            throw ValidationException::withMessages(['avatar' => __('That image could not be read. Try a JPG or PNG.')])->errorBag('avatar');
         }
         $request->user()->forceFill([
             'avatar' => $bytes,
@@ -125,13 +125,13 @@ class ProfileController extends Controller
             'avatar_version' => base_convert((string) now()->getTimestampMs(), 10, 36),
         ])->save();
 
-        return redirect()->route('settings.photo')->with('status', 'Profile photo updated.');
+        return redirect()->route('settings.photo')->with('status', __('Profile photo updated.'));
     }
 
     public function deleteAvatar(Request $request): RedirectResponse
     {
         $request->user()->forceFill(['avatar' => null, 'avatar_type' => null, 'avatar_version' => null])->save();
 
-        return redirect()->route('settings.photo')->with('status', 'Profile photo removed.');
+        return redirect()->route('settings.photo')->with('status', __('Profile photo removed.'));
     }
 }

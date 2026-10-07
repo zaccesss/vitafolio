@@ -14,7 +14,7 @@ class EndorsementReceived extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'A new endorsement is waiting for your approval on '.config('app.name'));
+        return new Envelope(subject: __('A new endorsement is waiting for your approval on :app', ['app' => config('app.name')]));
     }
 
     public function content(): Content

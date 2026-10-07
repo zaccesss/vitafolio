@@ -9,7 +9,8 @@
 <x-layouts.app title="Documentation" description="How Vitafolio is built, how it keeps data safe and how to run your own copy.">
     <div class="container-page py-8">
         <x-breadcrumbs :items="[['Documentation', null]]" />
-        <article data-reading class="mt-6 prose prose-lg max-w-4xl prose-headings:font-semibold prose-headings:text-ink prose-p:text-ink prose-li:text-ink prose-a:text-link prose-strong:text-ink prose-th:text-ink prose-td:text-ink dark:prose-invert">
+        <x-english-only class="mb-6 max-w-4xl" />
+        <article data-reading lang="en-GB" dir="ltr" class="mt-6 prose prose-lg max-w-4xl prose-headings:font-semibold prose-headings:text-ink prose-p:text-ink prose-li:text-ink prose-a:text-link prose-strong:text-ink prose-th:text-ink prose-td:text-ink dark:prose-invert">
             {!! $html ?: '<h1>Documentation</h1><p>The documentation is not available on this copy of the site.</p>' !!}
         </article>
     </div>

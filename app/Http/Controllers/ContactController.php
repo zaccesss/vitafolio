@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\VisitorMessage;
 use App\Models\Cv;
 use App\Rules\Turnstile;
+use App\Support\Locales;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -17,7 +18,8 @@ class ContactController extends Controller
         $data = $this->validated($request, 'default');
         // a filled hidden field means a bot, so it is told the message went through
         if ($data !== null && filled(config('vitafolio.contact_email'))) {
-            Mail::to(config('vitafolio.contact_email'))->send(new VisitorMessage($data, config('app.name').' enquiry'));
+            // the site's own inbox reads english, whatever language the visitor used
+            Mail::to(config('vitafolio.contact_email'))->locale(Locales::DEFAULT)->send(new VisitorMessage($data, ':app enquiry'));
         }
 
         return redirect()->route('contact.sent');
@@ -29,10 +31,11 @@ class ContactController extends Controller
         abort_unless($cv->isVisibleTo($request->user()), 404);
         $data = $this->validated($request, 'message');
         if ($data !== null) {
-            Mail::to($cv->user->email)->send(new VisitorMessage($data, 'Message about your CV on '.config('app.name'), route('cv.show', $cv)));
+            // addressed to the account, so it arrives in the owner's language rather than the visitor's
+            Mail::to($cv->user)->send(new VisitorMessage($data, 'Message about your CV on :app', route('cv.show', $cv)));
         }
 
-        return redirect()->to(route('cv.show', $cv).'#message')->with('status', 'Your message has been sent. They can reply to you directly.');
+        return redirect()->to(route('cv.show', $cv).'#message')->with('status', __('Your message has been sent. They can reply to you directly.'));
     }
 
     private function validated(Request $request, string $bag): ?array

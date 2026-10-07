@@ -1,9 +1,9 @@
-@props(['rows', 'title', 'id', 'empty' => 'Nothing to show yet.'])
+@props(['rows', 'title', 'id', 'empty' => null])
 @php $max = max(1, ...array_values($rows ?: [0])); @endphp
 <figure {{ $attributes->merge(['class' => 'card p-5']) }} aria-labelledby="{{ $id }}-title">
     <figcaption id="{{ $id }}-title" class="text-lg font-semibold">{{ $title }}</figcaption>
     @if ($rows === [])
-        <p class="mt-3 text-sm text-muted">{{ $empty }}</p>
+        <p class="mt-3 text-sm text-muted">{{ $empty ?? __('Nothing to show yet.') }}</p>
     @else
         {{-- a list rather than a picture: each row reads as its label and number --}}
         <ul class="mt-4 grid gap-3">

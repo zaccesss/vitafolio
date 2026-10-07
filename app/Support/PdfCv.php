@@ -50,30 +50,44 @@ class PdfCv
         $user = $cv->user;
         $sections = [];
         if ($letter) {
-            $sections[] = ['kind' => 'text', 'heading' => 'Cover letter', 'note' => filled($cv->letter_to) ? (string) $cv->letter_to : null, 'blocks' => self::blocks($cv->cover_letter)];
+            $sections[] = ['kind' => 'text', 'heading' => $cv->label('Cover letter'), 'note' => filled($cv->letter_to) ? (string) $cv->letter_to : null, 'blocks' => self::blocks($cv->cover_letter)];
         } else {
             foreach ($cv->orderedSections() as $section) {
-                $text = ['profile' => 'Profile', 'experience' => 'Experience', 'education' => 'Education'];
+                $text = ['profile' => $cv->label('Profile'), 'experience' => $cv->label('Experience'), 'education' => $cv->label('Education')];
                 if (isset($text[$section]) && filled($cv->{$section})) {
                     $sections[] = ['kind' => 'text', 'heading' => $text[$section], 'blocks' => self::blocks($cv->{$section})];
                 } elseif ($section === 'projects' && $cv->projects->isNotEmpty()) {
-                    $sections[] = ['kind' => 'projects', 'heading' => 'Projects', 'projects' => $cv->projects->map(fn ($project) => [
+                    $sections[] = ['kind' => 'projects', 'heading' => $cv->label('Projects'), 'projects' => $cv->projects->map(fn ($project) => [
                         'title' => (string) $project->title,
                         'url' => $project->url ?: null,
                         'blocks' => self::blocks($project->description),
                     ])->values()->all()];
                 } elseif ($section === 'skills' && $cv->tags->isNotEmpty()) {
-                    $sections[] = ['kind' => 'skills', 'heading' => 'Skills', 'items' => $cv->tags->pluck('name')->map(fn ($name) => (string) $name)->values()->all()];
+                    $sections[] = ['kind' => 'skills', 'heading' => $cv->label('Skills'), 'items' => $cv->tags->pluck('name')->map(fn ($name) => (string) $name)->values()->all()];
                 } elseif ($section === 'links' && ($links = Links::parse($user->links)) !== []) {
-                    $sections[] = ['kind' => 'links', 'heading' => 'Links', 'links' => array_map(fn ($link) => ['label' => $link['label'], 'url' => $link['url']], $links)];
+                    $sections[] = ['kind' => 'links', 'heading' => $cv->label('Links'), 'links' => array_map(fn ($link) => ['label' => $link['label'], 'url' => $link['url']], $links)];
                 }
             }
         }
 
+        $locale = $cv->documentLocale();
+        [$lang, $region] = array_pad(explode('-', strtolower(Locales::html($locale))), 2, null);
+
         return [
             'title' => self::title($cv, $letter),
+            // the pdf's language and reading direction follow the cv's document language
+            'lang' => $lang,
+            'region' => $region,
+            'dir' => Locales::dir($locale),
+            'script_fonts' => self::scriptFonts($locale),
+            'labels' => [
+                'page' => $cv->label('page :current of :total'),
+                'site' => $cv->label('Site'),
+                'address' => $cv->label('Address'),
+                'photo' => $cv->label('Photo of :name', ['name' => (string) $user->name]),
+            ],
             'name' => (string) $user->name,
-            'keywords' => [$letter ? 'Cover letter' : 'CV'],
+            'keywords' => [$letter ? $cv->label('Cover letter') : $cv->label('CV')],
             'accent' => config('vitafolio.accents')[$cv->accent]['hex'] ?? '#14213d',
             'theme' => (string) $cv->theme,
             'font' => ['sans' => 'DejaVu Sans', 'serif' => 'DejaVu Serif', 'mono' => 'DejaVu Sans Mono'][$cv->font] ?? 'DejaVu Sans',
@@ -83,8 +97,8 @@ class PdfCv
                 $user->pronouns,
                 $user->location,
                 $user->university,
-                $cv->key_language ? 'Main language: '.$cv->key_language : null,
-                $user->availability !== 'none' ? 'Looking for: '.(config('vitafolio.availability')[$user->availability] ?? '') : null,
+                $cv->key_language ? $cv->label('Main language: :language', ['language' => $cv->key_language]) : null,
+                $user->availability !== 'none' ? $cv->label('Looking for: :availability', ['availability' => $cv->label(config('vitafolio.availability')[$user->availability] ?? '')]) : null,
                 $cv->show_email ? $user->email : null,
             ]))),
             'photo' => $photo ? 'photo.png' : null,
@@ -94,7 +108,27 @@ class PdfCv
 
     public static function title(Cv $cv, bool $letter): string
     {
-        return $cv->user->name.($letter ? ' cover letter' : ' CV');
+        return $letter ? $cv->label(':name cover letter', ['name' => $cv->user->name]) : $cv->label(':name CV', ['name' => $cv->user->name]);
+    }
+
+    /**
+     * fonts for text outside latin, greek and cyrillic, in the order typst tries them. urdu reads in
+     * nastaliq and arabic in naskh; chinese and any other script fall through to the later entries
+     */
+    public static function scriptFonts(string $locale): array
+    {
+        return $locale === 'ur'
+            ? ['Noto Nastaliq Urdu', 'Noto Naskh Arabic', 'Noto Sans SC']
+            : ['Noto Naskh Arabic', 'Noto Nastaliq Urdu', 'Noto Sans SC'];
+    }
+
+    /**
+     * the folders typst reads fonts from: dejavu ships with mpdf, the arabic and urdu faces are in
+     * the repository and the chinese one is fetched into the same folder by scripts/fetch-pdf-fonts.sh
+     */
+    public static function fontPaths(): array
+    {
+        return [base_path('vendor/mpdf/mpdf/ttfonts'), resource_path('pdf/fonts')];
     }
 
     /**
@@ -105,7 +139,7 @@ class PdfCv
     {
         $blocks = [];
         $current = null;
-        foreach (preg_split('/\R/', trim((string) $text)) ?: [] as $line) {
+        foreach (preg_split('/\R/u', trim((string) $text)) ?: [] as $line) {
             $line = trim($line);
             $type = $line === '' ? null : (str_starts_with($line, '- ') ? 'list' : 'p');
             if ($type !== ($current['type'] ?? null) && $current !== null) {
@@ -150,14 +184,14 @@ class PdfCv
                 File::put($dir.'/photo.png', $picture);
             }
 
-            // the dejavu fonts ship with mpdf, so the pdf looks the same on every machine; system
-            // fonts are ignored for the same reason. pdf/ua-1 makes typst refuse to write a file
-            // that would break the standard, rather than quietly producing an inaccessible one
+            // only the fonts listed in fontPaths are used, so the pdf looks the same on every machine;
+            // system fonts are ignored for the same reason. pdf/ua-1 makes typst refuse to write a
+            // file that would break the standard, rather than quietly producing an inaccessible one
             $result = Process::path($dir)->timeout(30)->run([
                 $binary, 'compile',
                 '--root', $dir,
                 '--ignore-system-fonts',
-                '--font-path', base_path('vendor/mpdf/mpdf/ttfonts'),
+                ...collect(self::fontPaths())->flatMap(fn (string $path) => ['--font-path', $path])->all(),
                 '--pdf-standard', 'ua-1',
                 // the cv's own last change, so the same cv always gives the same file
                 ...($cv->updated_at ? ['--creation-timestamp', (string) $cv->updated_at->getTimestamp()] : []),

@@ -1,17 +1,17 @@
-<x-layouts.app :title="'LaTeX: '.$cv->title" noindex>
+<x-layouts.app :title="__('LaTeX: :title', ['title' => $cv->title])" noindex>
     <div class="container-page max-w-none py-8 xl:px-10">
-        <nav aria-label="Breadcrumb" class="text-sm text-muted">
+        <nav aria-label="{{ __('Breadcrumb') }}" class="text-sm text-muted">
             <ol class="flex flex-wrap gap-2">
-                <li><a href="{{ route('dashboard') }}">My CVs</a> <span aria-hidden="true">/</span></li>
-                <li><a href="{{ route('cvs.edit', [$cv, 'file']) }}">{{ $cv->title }}</a> <span aria-hidden="true">/</span></li>
+                <li><a href="{{ route('dashboard') }}">{{ __('My CVs') }}</a> <span aria-hidden="true" class="inline-block rtl:-scale-x-100">/</span></li>
+                <li><a href="{{ route('cvs.edit', [$cv, 'file']) }}">{{ $cv->title }}</a> <span aria-hidden="true" class="inline-block rtl:-scale-x-100">/</span></li>
                 <li aria-current="page">LaTeX</li>
             </ol>
         </nav>
-        <h1 class="mt-3 text-3xl">LaTeX editor</h1>
+        <h1 class="mt-3 text-3xl">{{ __('LaTeX editor') }}</h1>
         <p class="mt-1 max-w-3xl text-muted">
-            Write your CV in LaTeX and compile it to a PDF right here. Compiling happens in your browser, so your work stays on your device until you save.
-            The first compile downloads the LaTeX engine, about 120 MB, which your browser then keeps. Saving stores your source and attaches the latest compiled PDF to this CV.
-            <a href="{{ route('help.topic', 'files-and-latex') }}" target="_blank" rel="noopener">LaTeX help<x-new-tab /></a>
+            {{ __('Write your CV in LaTeX and compile it to a PDF right here. Compiling happens in your browser, so your work stays on your device until you save.') }}
+            {{ __('The first compile downloads the LaTeX engine, about 120 MB, which your browser then keeps. Saving stores your source and attaches the latest compiled PDF to this CV.') }}
+            <a href="{{ route('help.topic', 'files-and-latex') }}" target="_blank" rel="noopener">{{ __('LaTeX help') }}<x-new-tab /></a>
         </p>
 
         <div class="mt-6" data-vue="LatexStudio" data-props="{{ json_encode([
@@ -26,8 +26,8 @@
         ]) }}">
             {{-- without javascript the source can still be read and copied --}}
             <div class="card p-5">
-                <p class="text-muted">The LaTeX editor needs JavaScript. Your current source is below.</p>
-                <pre class="mt-3 max-h-[60vh] overflow-auto font-mono text-sm whitespace-pre-wrap">{{ $source }}</pre>
+                <p class="text-muted">{{ __('The LaTeX editor needs JavaScript. Your current source is below.') }}</p>
+                <pre dir="ltr" class="mt-3 max-h-[60vh] overflow-auto font-mono text-sm whitespace-pre-wrap">{{ $source }}</pre>
             </div>
         </div>
     </div>

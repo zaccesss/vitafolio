@@ -10,7 +10,6 @@ What comes after the first release. Ideas and requests are welcome as
 ## Later
 
 - Custom domains for a profile. This needs a paid host plan with setup for each domain
-- Interface translations
 
 ## Shipped
 
@@ -19,6 +18,7 @@ What comes after the first release. Ideas and requests are welcome as
 - More LaTeX starter templates, including a two-column layout (October 2026)
 - Tagged PDFs from the generated CV, so screen readers read them as well as the web page (October 2026)
 - Endorsements from people who worked with the CV's owner, approved by the owner before they show (October 2026)
+- Interface translations: English, Spanish, French, Brazilian Portuguese, Simplified Chinese, Arabic and Urdu (October 2026)
 
 ## Considered and not planned
 

@@ -1,4 +1,5 @@
 import Alpine from '@alpinejs/csp';
+import { t } from './i18n.js';
 
 // the csp build of alpine never evaluates strings, so every component is registered here
 
@@ -28,7 +29,7 @@ Alpine.data('helpSearch', () => ({
     },
     get announcement() {
         if (!this.query) return '';
-        return this.shown === 1 ? '1 topic matches.' : `${this.shown} topics match.`;
+        return this.shown === 1 ? t(':count topic matches.', { count: 1 }) : t(':count topics match.', { count: this.shown });
     },
 }));
 
@@ -42,7 +43,7 @@ Alpine.data('accountMenu', () => ({
 }));
 
 const THEMES = ['system', 'light', 'dark'];
-const THEME_NAMES = { system: 'System', light: 'Light', dark: 'Dark' };
+const THEME_NAMES = { system: () => t('System'), light: () => t('Light'), dark: () => t('Dark') };
 
 Alpine.data('themeToggle', () => ({
     choice: document.documentElement.dataset.themeChoice || 'system',
@@ -50,18 +51,18 @@ Alpine.data('themeToggle', () => ({
         this.choice = THEMES[(THEMES.indexOf(this.choice) + 1) % THEMES.length];
         window.__setTheme?.(this.choice);
     },
-    get label() { return THEME_NAMES[this.choice]; },
+    get label() { return THEME_NAMES[this.choice](); },
     get isLight() { return this.choice === 'light'; },
     get isDark() { return this.choice === 'dark'; },
     get isSystem() { return this.choice === 'system'; },
-    get ariaLabel() { return `Theme: ${THEME_NAMES[this.choice]}. Select to change.`; },
+    get ariaLabel() { return t('Theme: :name. Select to change.', { name: THEME_NAMES[this.choice]() }); },
 }));
 
 Alpine.data('password', () => ({
     visible: false,
     toggle() { this.visible = !this.visible; },
     get type() { return this.visible ? 'text' : 'password'; },
-    get label() { return this.visible ? 'Hide' : 'Show'; },
+    get label() { return this.visible ? t('Hide') : t('Show'); },
     get pressed() { return String(this.visible); },
 }));
 
@@ -75,7 +76,7 @@ Alpine.data('counter', () => ({
         this.count = field?.value.length || 0;
         field?.addEventListener('input', () => { this.count = field.value.length; });
     },
-    get text() { return this.max ? `${this.count} of ${this.max} characters` : `${this.count} characters`; },
+    get text() { return this.max ? t(':count of :max characters', { count: this.count, max: this.max }) : t(':count characters', { count: this.count }); },
 }));
 
 Alpine.data('toast', () => ({
@@ -93,13 +94,13 @@ Alpine.data('copyLink', () => ({
             setTimeout(() => { this.copied = false; }, 2500);
         } catch (e) { /* the visible link can still be copied by hand */ }
     },
-    get label() { return this.copied ? 'Link copied' : 'Copy link'; },
-    get announcement() { return this.copied ? 'Link copied to the clipboard' : ''; },
+    get label() { return this.copied ? t('Link copied') : t('Copy link'); },
+    get announcement() { return this.copied ? t('Link copied to the clipboard') : ''; },
 }));
 
 // passkeys: the library only loads on pages that use it and only when the browser supports them
 const loadPasskeys = () => import('@laravel/passkeys').then((module) => module.Passkeys);
-const PASSKEY_FAILED = 'That passkey did not work. Try again or sign in with your password.';
+const PASSKEY_FAILED = () => t('That passkey did not work. Try again or sign in with your password.');
 
 Alpine.data('passkeyLogin', () => ({
     supported: false,
@@ -126,21 +127,21 @@ Alpine.data('passkeyLogin', () => ({
             Passkeys.cancel();
             this.finish(await Passkeys.verify({ remember: this.remember() }));
         } catch (e) {
-            this.message = e?.name === 'NotAllowedError' ? 'Signing in with a passkey was cancelled.' : PASSKEY_FAILED;
+            this.message = e?.name === 'NotAllowedError' ? t('Signing in with a passkey was cancelled.') : PASSKEY_FAILED();
         } finally {
             this.busy = false;
         }
     },
     get unsupported() { return !this.supported; },
-    get buttonLabel() { return this.busy ? 'Waiting for your passkey…' : 'Sign in with a passkey'; },
+    get buttonLabel() { return this.busy ? t('Waiting for your passkey…') : t('Sign in with a passkey'); },
 }));
 
 // a sensible default name, so the list says which device each passkey lives on
 function deviceName() {
     const ua = navigator.userAgent;
     const device = /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) ? 'iPad' : /Android/.test(ua) ? 'Android'
-        : /Mac/.test(ua) ? 'Mac' : /Windows/.test(ua) ? 'Windows' : /Linux/.test(ua) ? 'Linux' : 'This device';
-    return `${device} passkey`;
+        : /Mac/.test(ua) ? 'Mac' : /Windows/.test(ua) ? 'Windows' : /Linux/.test(ua) ? 'Linux' : t('This device');
+    return t(':device passkey', { device });
 }
 
 Alpine.data('passkeyRegister', () => ({
@@ -157,14 +158,14 @@ Alpine.data('passkeyRegister', () => ({
             window.location.href = this.$root.dataset.doneUrl;
         } catch (e) {
             this.message = e?.name === 'NotAllowedError'
-                ? 'Adding the passkey was cancelled.'
-                : 'The passkey could not be added. If you already have one for this device, it may be saved already.';
+                ? t('Adding the passkey was cancelled.')
+                : t('The passkey could not be added. If you already have one for this device, it may be saved already.');
         } finally {
             this.busy = false;
         }
     },
     get unsupported() { return !this.supported; },
-    get buttonLabel() { return this.busy ? 'Waiting for your device…' : 'Add a passkey'; },
+    get buttonLabel() { return this.busy ? t('Waiting for your device…') : t('Add a passkey'); },
 }));
 
 window.Alpine = Alpine;
@@ -206,6 +207,7 @@ window.addEventListener('beforeunload', () => {
 });
 
 // a submitted form disables its button and says what it is doing, so it cannot be sent twice.
+// the busy words are english, so a page in another language says "please wait" in its own words
 // the check runs after every other submit handler, so a cancelled confirmation leaves it alone
 const BUSY = { save: 'Saving', send: 'Sending', upload: 'Uploading', create: 'Creating', add: 'Adding', change: 'Changing', set: 'Setting', update: 'Updating', delete: 'Deleting', remove: 'Removing', compile: 'Compiling', sign: 'Signing', connect: 'Connecting', import: 'Importing', duplicate: 'Duplicating', confirm: 'Confirming', reset: 'Resetting', report: 'Reporting', publish: 'Publishing' };
 function restoreButtons() {
@@ -227,7 +229,8 @@ document.addEventListener('submit', (event) => {
         button.dataset.label = button.textContent;
         button.setAttribute('aria-busy', 'true');
         button.disabled = true;
-        button.textContent = BUSY[word] ? `${BUSY[word]}${label.slice(word.length)}…` : 'Please wait…';
+        const english = document.documentElement.lang.startsWith('en');
+        button.textContent = english && BUSY[word] ? `${BUSY[word]}${label.slice(word.length)}…` : t('Please wait…');
         // a form that downloads a file never leaves the page, so the button comes back on its own
         setTimeout(restoreButtons, 10000);
     }, 0);
@@ -288,15 +291,15 @@ document.querySelectorAll('.prose pre').forEach((pre) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'copy-code btn btn-sm btn-secondary no-print';
-    button.textContent = 'Copy';
+    button.textContent = t('Copy');
     button.addEventListener('click', async () => {
         try {
             await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? pre.textContent);
-            button.textContent = 'Copied';
-            if (copyStatus) copyStatus.textContent = 'Code copied to the clipboard';
-            setTimeout(() => { button.textContent = 'Copy'; if (copyStatus) copyStatus.textContent = ''; }, 2000);
+            button.textContent = t('Copied');
+            if (copyStatus) copyStatus.textContent = t('Code copied to the clipboard');
+            setTimeout(() => { button.textContent = t('Copy'); if (copyStatus) copyStatus.textContent = ''; }, 2000);
         } catch {
-            button.textContent = 'Select and copy';
+            button.textContent = t('Select and copy');
         }
     });
     pre.classList.add('has-copy');

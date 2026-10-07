@@ -34,7 +34,7 @@ class CvDocumentController extends Controller
             default => null,
         };
         if ($mime === null) {
-            throw ValidationException::withMessages(['document' => 'Upload a PDF or a Word (.docx) file.']);
+            throw ValidationException::withMessages(['document' => __('Upload a PDF or a Word (.docx) file.')]);
         }
 
         $base = trim((string) preg_replace('/[^A-Za-z0-9 _.-]/', '', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))) ?: 'CV';
@@ -45,10 +45,10 @@ class CvDocumentController extends Controller
             throw ValidationException::withMessages(['document' => self::fullMessage()]);
         }
         if (! DocumentStore::put($cv, $bytes, $filename, $mime, 'upload')) {
-            throw ValidationException::withMessages(['document' => 'The upload failed. Please try again.']);
+            throw ValidationException::withMessages(['document' => __('The upload failed. Please try again.')]);
         }
 
-        return redirect()->route('cvs.edit', [$cv, 'file'])->with('status', 'Your CV file has been uploaded.');
+        return redirect()->route('cvs.edit', [$cv, 'file'])->with('status', __('Your CV file has been uploaded.'));
     }
 
     public function destroy(Cv $cv): RedirectResponse
@@ -56,13 +56,13 @@ class CvDocumentController extends Controller
         Gate::authorize('manage', $cv);
         DocumentStore::delete($cv);
 
-        return redirect()->route('cvs.edit', [$cv, 'file'])->with('status', 'Your CV file has been removed.');
+        return redirect()->route('cvs.edit', [$cv, 'file'])->with('status', __('Your CV file has been removed.'));
     }
 
     /** shown when an upload would take an account past its storage allowance */
     public static function fullMessage(): string
     {
-        return 'Your account has used its '.config('vitafolio.limits.storage_mb').' MB of storage. Remove an old CV file or project video, then try again.';
+        return __('Your account has used its :size MB of storage. Remove an old CV file or project video, then try again.', ['size' => config('vitafolio.limits.storage_mb')]);
     }
 
     public function show(Request $request, Cv $cv): Response

@@ -23,6 +23,6 @@ class ConfirmPasswordFirst
         $request->session()->put('url.intended', route($returnRoute));
 
         return redirect()->route('password.confirm')
-            ->with('status', 'For your security, confirm your password. You will come back to the same page to finish.');
+            ->with('status', __('For your security, confirm your password. You will come back to the same page to finish.'));
     }
 }

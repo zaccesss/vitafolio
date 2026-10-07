@@ -18,11 +18,11 @@
         @if ($headline)<p class="mt-1 text-lg {{ $band ? 'text-white/90' : 'text-muted' }}">{{ $headline }}</p>@endif
         <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm {{ $band ? 'text-white/90' : 'text-muted' }}">
             @if ($user->pronouns)<li>{{ $user->pronouns }}</li>@endif
-            @if ($user->location)<li><span class="sr-only">Location: </span>{{ $user->location }}</li>@endif
-            @if ($user->university)<li><span class="sr-only">University: </span>{{ $user->university }}</li>@endif
-            @if ($cv->key_language)<li>Main language: {{ $cv->key_language }}</li>@endif
-            @if ($user->availability !== 'none')<li>Looking for: {{ config('vitafolio.availability')[$user->availability] }}</li>@endif
-            @if ($cv->show_email)<li><a class="{{ $band ? 'text-white' : '' }}" href="mailto:{{ $user->email }}">{{ $user->email }}</a></li>@endif
+            @if ($user->location)<li><span class="sr-only">{{ $cv->label('Location:') }} </span>{{ $user->location }}</li>@endif
+            @if ($user->university)<li><span class="sr-only">{{ $cv->label('University:') }} </span>{{ $user->university }}</li>@endif
+            @if ($cv->key_language)<li>{{ $cv->label('Main language: :language', ['language' => $cv->key_language]) }}</li>@endif
+            @if ($user->availability !== 'none')<li>{{ $cv->label('Looking for: :availability', ['availability' => $cv->label(config('vitafolio.availability')[$user->availability])]) }}</li>@endif
+            @if ($cv->show_email)<li><a class="{{ $band ? 'text-white' : '' }}" dir="ltr" href="mailto:{{ $user->email }}">{{ $user->email }}</a></li>@endif
         </ul>
     </div>
 </header>

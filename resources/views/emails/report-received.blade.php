@@ -1,22 +1,22 @@
 {{-- plain text, so values print raw: html escaping would turn an apostrophe into &#039; --}}
-A visitor reported {!! $report->endorsement_id ? 'an endorsement on a CV' : 'a CV' !!} on {!! config('app.name') !!}.
+{!! $report->endorsement_id ? __('A visitor reported an endorsement on a CV on :app.', ['app' => config('app.name')]) : __('A visitor reported a CV on :app.', ['app' => config('app.name')]) !!}
 
-CV: {!! $report->cv->title !!} by {!! $report->cv->user->name !!}
-Address: {!! route('cv.show', $report->cv) !!}
+{!! __('CV: :title by :name', ['title' => $report->cv->title, 'name' => $report->cv->user->name]) !!}
+{!! __('Address: :url', ['url' => route('cv.show', $report->cv)]) !!}
 @if ($report->endorsement)
-Endorsement by: {!! $report->endorsement->endorser->name !!}
-Endorsement text:
+{!! __('Endorsement by: :name', ['name' => $report->endorsement->endorser->name]) !!}
+{!! __('Endorsement text:') !!}
 {!! $report->endorsement->body !!}
 
 @endif
-Reason: {!! \App\Models\Report::REASONS[$report->reason] ?? $report->reason !!}
+{!! __('Reason: :reason', ['reason' => __(\App\Models\Report::REASONS[$report->reason] ?? $report->reason)]) !!}
 @if ($report->details)
 
-What they said:
+{!! __('What they said:') !!}
 {!! $report->details !!}
 @endif
 
-Review it in moderation: {!! route('admin.index') !!}
+{!! __('Review it in moderation: :url', ['url' => route('admin.index')]) !!}
 
 --
-Every admin receives this. The reporter stays anonymous.
+{!! __('Every admin receives this. The reporter stays anonymous.') !!}

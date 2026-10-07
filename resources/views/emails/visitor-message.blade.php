@@ -1,18 +1,18 @@
 {{-- plain text, so values print raw: html escaping would turn an apostrophe into &#039; --}}
-{!! $heading !!} from {!! $data['sender_name'] !!}
+{!! __(':heading from :name', ['heading' => __($heading, ['app' => config('app.name')]), 'name' => $data['sender_name']]) !!}
 
-Name: {!! $data['sender_name'] !!}
-Email: {!! $data['sender_email'] !!}
+{!! __('Name: :name', ['name' => $data['sender_name']]) !!}
+{!! __('Email: :email', ['email' => $data['sender_email']]) !!}
 @if ($cvUrl)
-CV: {!! $cvUrl !!}
+{!! __('CV: :url', ['url' => $cvUrl]) !!}
 @endif
 
 {!! $data['message'] !!}
 
 --
 @if ($cvUrl)
-Reply to this email to answer them directly. Your own address stays hidden until you do.
+{!! __('Reply to this email to answer them directly. Your own address stays hidden until you do.') !!}
 @else
-Reply to this email to answer them directly.
+{!! __('Reply to this email to answer them directly.') !!}
 @endif
-Sent through {!! config('app.name') !!}: {!! config('app.url') !!}
+{!! __('Sent through :app: :url', ['app' => config('app.name'), 'url' => config('app.url')]) !!}

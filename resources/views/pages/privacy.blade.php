@@ -3,7 +3,7 @@
     $email = config('vitafolio.contact_email');
     $sections = ['who' => 'Who is responsible', 'what' => 'What we collect', 'why' => 'Why we use it and our legal bases', 'visitors' => 'People who visit a CV', 'sharing' => 'Who we share it with', 'transfers' => 'Transfers outside the UK', 'keep' => 'How long we keep it', 'rights' => 'Your rights', 'security' => 'How we protect it', 'children' => 'Children', 'changes' => 'Changes to this policy', 'contact' => 'Contact and complaints'];
 @endphp
-<x-prose-page title="Privacy policy" intro="What {{ config('app.name') }} collects, why, who sees it and the rights you have over it." updated="7 October 2026">
+<x-prose-page english-only title="Privacy policy" intro="What {{ config('app.name') }} collects, why, who sees it and the rights you have over it." updated="7 October 2026">
     <nav aria-labelledby="privacy-contents" class="not-prose card p-5">
         <h2 id="privacy-contents" class="text-lg">Contents</h2>
         <ol class="mt-2 grid gap-1 text-sm sm:grid-cols-2">
@@ -21,6 +21,7 @@
     <ul>
         <li><strong>Account details:</strong> your name, email address and a password stored only as a secure one-way hash. If you turn on two-factor authentication, its secret and recovery codes are stored encrypted. Passkeys store only a public key; your fingerprint, face or PIN never leaves your device.</li>
         <li><strong>Profile:</strong> your handle, photo, headline, bio, pronouns, location, university, availability and links.</li>
+        <li><strong>Language:</strong> the interface language you pick from the language menu, so the site and its emails use it on every device.</li>
         <li><strong>CVs:</strong> everything you add to a CV, such as its sections, skills, projects, images, videos, uploaded files and LaTeX source.</li>
         <li><strong>Messages and reports:</strong> what you write when you contact us, message a CV owner or report a CV or an endorsement.</li>
         <li><strong>Endorsements you write:</strong> the text, how you know the CV's owner and any role or context you add, linked to your account and the CV. Your name is shown beside it once the owner approves it.</li>

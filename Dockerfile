@@ -19,6 +19,13 @@ RUN npm run build
 # runs on the alpine base below; pinned by digest so a rebuild always carries the same release
 FROM ghcr.io/typst/typst:0.15.1@sha256:032e292249bcd378480cc7c142cfa324b63ef8aadeb88d7e7230320c4c9c422f AS typst
 
+# the simplified chinese pdf font is too large for git, so it is fetched here and checked against
+# its published sha-256 by the same script ci uses
+FROM alpine:3 AS pdf-fonts
+RUN apk add --no-cache curl
+COPY scripts/fetch-pdf-fonts.sh /src/scripts/fetch-pdf-fonts.sh
+RUN mkdir -p /src/resources/pdf/fonts && sh /src/scripts/fetch-pdf-fonts.sh
+
 # php with the extensions the app needs, shared by the dependency stage and the final image
 FROM dunglas/frankenphp:1-php8.4-alpine AS base
 RUN install-php-extensions gd pdo_mysql zip intl bcmath opcache
@@ -42,6 +49,7 @@ WORKDIR /app
 COPY --from=vendor /app ./
 COPY --from=assets /app/public/build ./public/build
 COPY --from=typst /bin/typst /usr/local/bin/typst
+COPY --from=pdf-fonts /src/resources/pdf/fonts/NotoSansSC-Regular.otf /src/resources/pdf/fonts/NotoSansSC-Bold.otf ./resources/pdf/fonts/
 # everything runs as an unprivileged user on an unprivileged port, so nothing needs root. the
 # binary's port-binding capability is removed too: hosts that start containers with no extra
 # privileges, such as render, refuse to run a binary that asks for one

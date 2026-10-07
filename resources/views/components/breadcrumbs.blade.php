@@ -4,12 +4,12 @@
 @php
     $trail = [[__('Home'), route('home')], ...$items];
 @endphp
-<nav aria-label="Breadcrumb" class="text-sm text-muted no-print">
+<nav aria-label="{{ __('Breadcrumb') }}" class="text-sm text-muted no-print">
     <ol class="flex flex-wrap gap-2">
         @foreach ($trail as [$label, $url])
             <li>
                 @if (! $loop->last && $url)
-                    <a href="{{ $url }}">{{ $label }}</a> <span aria-hidden="true">/</span>
+                    <a href="{{ $url }}">{{ $label }}</a> <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">/</span>
                 @else
                     <span aria-current="page">{{ $label }}</span>
                 @endif
