@@ -1,7 +1,8 @@
 <?php
 
 // made-up people for the demo recordings, loaded into the throwaway sqlite database by record.sh.
-// alex morgan gets no cv here because the build clip creates one on screen
+// alex morgan's cv is normally created on screen by the build clip; DEMO_ALEX_CV=1 creates the
+// finished version here instead, so the other clips and the screenshots can be recorded on their own
 
 use App\Models\User;
 use App\Support\Tags;
@@ -48,4 +49,21 @@ foreach ($people as $i => [$name, $handle, $headline, $university, $location, $b
     ]);
     Tags::sync($cv, Tags::parse($skills));
     $cv->forceFill(['view_count' => $views])->save();
+}
+
+if (getenv('DEMO_ALEX_CV')) {
+    $alex = User::where('handle', 'alexmorgan')->firstOrFail();
+    $cv = $alex->cvs()->updateOrCreate(['slug' => 'alex-morgan-embedded-software-roles'], [
+        'title' => 'Embedded software roles',
+        'headline' => 'Electronic engineering student, embedded systems',
+        'key_language' => 'C',
+        'visibility' => 'public',
+        'theme' => 'modern',
+        'accent' => 'teal',
+        'font' => 'sans',
+        'profile' => 'Second-year electronic engineering student who enjoys bringing up new boards, writing firmware and automating hardware tests.',
+        'experience' => "Hardware test intern, Example Robotics (2025-06 to 2025-09)\n- Wrote Python rigs that test 200 motor boards a day\n- Found a power sequencing bug before production\n\nSociety lead, Northbridge Robotics Society (2024-10 to present)\n- Run weekly STM32 workshops for 30 members",
+        'education' => 'BEng Electronic Engineering, Northbridge University (2024-09 to present)',
+    ]);
+    Tags::sync($cv, Tags::parse('C, Python, KiCad, STM32, FreeRTOS, Git, Linux'));
 }
