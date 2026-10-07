@@ -164,6 +164,7 @@
     "Check a CV": "检查简历",
     "Check my CV": "检查我的简历",
     "Check my CV against this job": "用这份工作检查我的简历",
+    "Checked: :name": "已检查：:name",
     "Checking against :title at :company. The advert is filled in below.": "正在对照 :company 的 :title 进行检查。广告已填在下方。",
     "Checklist": "检查清单",
     "Choose a file": "选择文件",
@@ -1154,6 +1155,5 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} 有 1 个问题需要修复|[2,*] 有 :count 个问题需要修复",
     "“:title” has been deleted.": "“:title”已删除。",
     "“:title” is now hidden from everyone except its owner.": "“:title”现已对除所有者以外的所有人隐藏。",
-    "“:title” is visible again.": "“:title”已重新可见。",
-    "Checked: :name": "已检查：:name"
+    "“:title” is visible again.": "“:title”已重新可见。"
 }
