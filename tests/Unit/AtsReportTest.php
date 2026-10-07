@@ -134,4 +134,31 @@ class AtsReportTest extends TestCase
 
         $this->assertSame(10, $report->scores['keywords']);
     }
+
+    public function test_symbols_ligatures_spaced_letters_and_mixed_dates_are_flagged(): void
+    {
+        $text = "S A M T A Y L O R\nsam@example.com \u{E0A6} +44 7700 900123\nExperience\n\u{25BA} Of\u{FB01}ce assistant, Jan 2024 to 03/2025\nEducation\nBSc Physics, 2021\nSkills\nPython, SQL";
+        $formatting = implode(' ', AtsReport::analyse(ResumeText::fromString($text))->formatting);
+
+        $this->assertStringContainsString('garbled', $formatting);
+        $this->assertStringContainsString('ligature', $formatting);
+        $this->assertStringContainsString('letter by letter', $formatting);
+        $this->assertStringContainsString('different styles', $formatting);
+    }
+
+    public function test_uk_personal_details_are_flagged_and_lower_the_layout_score(): void
+    {
+        $report = AtsReport::analyse(ResumeText::fromString(SampleResumes::TEXT."\nDate of birth: 01/02/2005\nMarital status: Single"));
+
+        $this->assertStringContainsString('date of birth, marital status', implode(' ', $report->formatting));
+        $this->assertLessThan(10, $report->scores['layout']);
+    }
+
+    public function test_a_clean_cv_keeps_full_layout_marks_and_no_word_file_advice(): void
+    {
+        $report = AtsReport::analyse(ResumeText::fromString(SampleResumes::TEXT));
+
+        $this->assertSame(10, $report->scores['layout']);
+        $this->assertStringNotContainsString('Word (.docx) version', implode(' ', $report->suggestions));
+    }
 }

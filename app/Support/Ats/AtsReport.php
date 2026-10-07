@@ -10,12 +10,13 @@ namespace App\Support\Ats;
 final class AtsReport
 {
     public const AREAS = [
-        'headings' => ['label' => 'Heading clarity', 'max' => 20],
-        'contact' => ['label' => 'Contact information', 'max' => 20],
+        'headings' => ['label' => 'Heading clarity', 'max' => 15],
+        'contact' => ['label' => 'Contact information', 'max' => 15],
         'skills' => ['label' => 'Skills', 'max' => 15],
         'education' => ['label' => 'Education', 'max' => 15],
         'experience' => ['label' => 'Experience', 'max' => 20],
         'keywords' => ['label' => 'Keywords', 'max' => 10],
+        'layout' => ['label' => 'Readable layout', 'max' => 10],
     ];
 
     // base forms; a line counts when its first word is one of these with or without -s, -d, -ed or -ing
@@ -80,18 +81,21 @@ final class AtsReport
         $score = 0;
         foreach ($core as $key => $label) {
             if (array_key_exists($key, $this->parsed->sections)) {
-                $score += 5;
+                $score += 4;
             } else {
                 $this->missing[] = "A clear {$label} heading";
                 $this->suggestions[] = "Add a heading that says exactly \"{$label}\". Systems look for the standard words, not creative ones.";
             }
         }
         if ($this->parsed->unclearHeadings === []) {
-            $score += 5;
+            $score += 3;
         } else {
             $list = implode(', ', array_map(fn ($h) => "\"{$h}\"", array_slice($this->parsed->unclearHeadings, 0, 4)));
             $this->formatting[] = "Headings a system may not recognise: {$list}.";
             $this->suggestions[] = 'Rename unusual headings to standard ones such as Profile, Education, Experience, Skills or Projects.';
+        }
+        if (! array_key_exists('summary', $this->parsed->sections)) {
+            $this->suggestions[] = 'Open with a short Profile or Personal Statement of three or four lines. It is the UK convention and the first thing a recruiter reads.';
         }
         if (count($this->parsed->headings) > 0) {
             $this->found[] = count($this->parsed->headings).' headings, '.(count($this->parsed->headings) - count($this->parsed->unclearHeadings)).' of them standard.';
@@ -102,7 +106,7 @@ final class AtsReport
     private function scoreContact(): void
     {
         $score = 0;
-        foreach (['name' => [5, 'Name'], 'email' => [8, 'Email address'], 'phone' => [7, 'Phone number']] as $field => [$points, $label]) {
+        foreach (['name' => [4, 'Name'], 'email' => [6, 'Email address'], 'phone' => [5, 'Phone number']] as $field => [$points, $label]) {
             $value = $this->parsed->{$field};
             if ($value !== null) {
                 $score += $points;
@@ -275,34 +279,99 @@ final class AtsReport
     private function checkFormatting(): void
     {
         $s = $this->source->signals;
+        $text = $this->source->text;
+        $problems = 0;
         if (($s['scanned'] ?? false) === true) {
             $this->formatting[] = 'Almost no text could be read. The file is probably a scan or an image, which these systems cannot read at all.';
+            $problems += 3;
         }
         if (($s['tables'] ?? 0) > 0) {
-            $this->formatting[] = 'Uses '.$s['tables'].' table(s). Many systems read tables out of order or skip them.';
+            $this->formatting[] = 'Uses '.$s['tables'].' table(s). Systems such as Workday and iCIMS often skip tables or read them out of order.';
+            $problems++;
         }
         if (($s['columns'] ?? 1) > 1) {
-            $this->formatting[] = 'Uses '.$s['columns'].' columns. Systems often read across columns and mix sections together.';
+            $this->formatting[] = 'Uses '.$s['columns'].' columns. Systems such as Taleo read straight across the page and mix the columns together.';
+            $problems++;
         }
         if (($s['text_boxes'] ?? 0) > 0) {
             $this->formatting[] = 'Uses text boxes, whose contents are often skipped.';
+            $problems++;
         }
         if (($s['images'] ?? 0) > 0) {
-            $this->formatting[] = 'Contains '.$s['images'].' image(s) or icon(s). Any text inside them cannot be read.';
+            $this->formatting[] = 'Contains '.$s['images'].' image(s) or icon(s). Any text inside them cannot be read. UK employers do not expect a photo either.';
+            $problems++;
         }
         if (($s['header_contact'] ?? false) === true) {
             $this->formatting[] = 'Contact details are in the page header, which many systems ignore.';
+            $problems++;
         }
+        // icon fonts and some decorative symbols extract as garbage characters
+        if (preg_match_all('/[\x{E000}-\x{F8FF}\x{FFFD}\x{25BA}\x{2605}\x{2606}\x{27A4}\x{2794}\x{2714}\x{2713}\x{2756}\x{25C6}\x{25C7}\x{2B9E}]/u', $text, $odd) > 0) {
+            $this->formatting[] = 'Contains '.count($odd).' icon or decorative symbol(s) that systems often turn into garbled characters. Use plain round bullets and write contact labels as words.';
+            $problems++;
+        }
+        // ligature glyphs make words such as "financial" unsearchable
+        if (preg_match('/[\x{FB00}-\x{FB06}]/u', $text)) {
+            $this->formatting[] = 'Some letter pairs such as "fi" are stored as single ligature symbols, so searches for words containing them can miss your CV. Turn off ligatures in your design tool or export from a word processor.';
+            $problems++;
+        }
+        // letter spacing done with real spaces reads as single letters: "S A M T A Y L O R"
+        if (preg_match('/(?:\b\p{L}\s){4,}\p{L}\b/u', $text)) {
+            $this->formatting[] = 'Some words are spaced out letter by letter, which systems read as separate letters rather than words.';
+            $problems++;
+        }
+        // problems so far stop a system reading the file; the ones below are about what it says
+        $parsing = $problems;
         if (($s['pages'] ?? 1) > 2) {
             $this->formatting[] = 'Runs to '.$s['pages'].' pages. Two pages is the usual UK limit for students and graduates; a page that holds only a line or two is the easiest to remove.';
+            $problems++;
         }
-        if (preg_match('/(^|\n)\s*I\s/', $this->source->text)) {
+        $styles = $this->dateStyles($text);
+        if (count($styles) > 1) {
+            $this->formatting[] = 'Dates are written in '.count($styles).' different styles ('.implode(', ', $styles).'). Pick one, such as Sep 2024 or 09/2024, then use it everywhere.';
+            $problems++;
+        }
+        if (preg_match('/(^|\n)\s*I\s/', $text)) {
             $this->formatting[] = 'Uses "I" to start sentences. CVs read better without it: "Built a web app", not "I built a web app".';
+        }
+        // UK equality guidance: these invite bias and recruiters do not expect them
+        $personal = [];
+        foreach (['date of birth' => '/\b(date of birth|d\.?o\.?b\.?|born on)\b/i', 'age' => '/\bage\s*:?\s*\d{2}\b|\b\d{2}\s*years old\b/i', 'marital status' => '/\b(marital status|married|single|divorced)\b/i', 'gender' => '/\bgender\s*:/i'] as $label => $pattern) {
+            if (preg_match($pattern, $text)) {
+                $personal[] = $label;
+            }
+        }
+        if ($personal !== []) {
+            $this->formatting[] = 'Includes '.implode(', ', $personal).'. UK CVs leave these out. Employers are advised not to ask for them.';
+            $problems++;
         }
         $layout = ($s['tables'] ?? 0) + ($s['text_boxes'] ?? 0) + ($s['images'] ?? 0) + (($s['columns'] ?? 1) > 1 ? 1 : 0);
         if ($layout > 0) {
             $this->suggestions[] = 'Use a simple single-column layout with plain text headings, no tables, text boxes or images.';
         }
+        if ($this->source->format === 'pdf' && $parsing > 0) {
+            $this->suggestions[] = 'If an application portal fills in your details wrongly, upload a Word (.docx) version instead. Word files parse most reliably.';
+        }
+        $this->scores['layout'] = max(0, 10 - 3 * $problems);
+    }
+
+    /** @return list<string> */
+    private function dateStyles(string $text): array
+    {
+        $patterns = [
+            'Jan 2024' => '/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\.?\s+(19|20)\d{2}\b/',
+            'January 2024' => '/\b(January|February|March|April|June|July|August|September|October|November|December)\s+(19|20)\d{2}\b/',
+            '01/2024' => '/\b(0?[1-9]|1[0-2])\/(19|20)\d{2}\b/',
+            '2024-01' => '/\b(19|20)\d{2}-(0[1-9]|1[0-2])\b/',
+        ];
+        $found = [];
+        foreach ($patterns as $label => $pattern) {
+            if (preg_match($pattern, $text)) {
+                $found[] = $label;
+            }
+        }
+
+        return $found;
     }
 
     private static function lines(int $count): string

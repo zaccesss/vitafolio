@@ -1131,5 +1131,6 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} There is a problem to fix|[2,*] There are :count problems to fix",
     "“:title” has been deleted.": "“:title” has been deleted.",
     "“:title” is now hidden from everyone except its owner.": "“:title” is now hidden from everyone except its owner.",
-    "“:title” is visible again.": "“:title” is visible again."
+    "“:title” is visible again.": "“:title” is visible again.",
+    "This score is guidance based on how common applicant tracking systems read CVs. Each employer sets up its own system differently. Most rank and search applications rather than reject them automatically, so a recruiter will usually still read your CV.": "This score is guidance based on how common applicant tracking systems read CVs. Each employer sets up its own system differently. Most rank and search applications rather than reject them automatically, so a recruiter will usually still read your CV."
 }

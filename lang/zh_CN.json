@@ -1131,5 +1131,6 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} 有 1 个问题需要修复|[2,*] 有 :count 个问题需要修复",
     "“:title” has been deleted.": "“:title”已删除。",
     "“:title” is now hidden from everyone except its owner.": "“:title”现已对除所有者以外的所有人隐藏。",
-    "“:title” is visible again.": "“:title”已重新可见。"
+    "“:title” is visible again.": "“:title”已重新可见。",
+    "This score is guidance based on how common applicant tracking systems read CVs. Each employer sets up its own system differently. Most rank and search applications rather than reject them automatically, so a recruiter will usually still read your CV.": "此得分仅供参考,基于常见求职者追踪系统读取简历的方式。每家雇主对系统的设置各不相同,大多数系统会对申请进行排序和搜索,而不是自动拒绝,因此招聘人员通常仍会阅读你的简历。"
 }
