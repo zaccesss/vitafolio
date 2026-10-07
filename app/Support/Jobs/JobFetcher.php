@@ -21,6 +21,7 @@ class JobFetcher
         'placement' => ['industrial placement', 'placement year'],
         'insight' => ['spring week', 'insight programme'],
         'graduate' => ['graduate scheme', 'graduate'],
+        'apprenticeship' => ['apprenticeship', 'degree apprenticeship'],
         'part-time' => ['part time student'],
     ];
 
@@ -45,7 +46,7 @@ class JobFetcher
                         continue;
                     }
                     foreach ($rows as $row) {
-                        JobListing::updateOrCreate(['source' => $source, 'external_id' => $row['external_id']], $row);
+                        $this->store($source, $row);
                         $stored[$source]++;
                     }
                 }
@@ -53,6 +54,25 @@ class JobFetcher
         }
 
         return $stored;
+    }
+
+    /**
+     * Boards post one advert per city for the same role, so a listing is keyed on its title and
+     * employer and each city is added to the one listing rather than shown as another card.
+     *
+     * @param  array<string, mixed>  $row
+     */
+    private function store(string $source, array $row): void
+    {
+        $row['external_id'] = sha1(mb_strtolower(trim($row['title'])).'|'.mb_strtolower(trim((string) $row['company'])));
+        $existing = JobListing::where('source', $source)->where('external_id', $row['external_id'])->first();
+        if ($existing?->location) {
+            $known = array_map('mb_strtolower', array_map('trim', explode(';', $existing->location)));
+            $row['location'] = filled($row['location']) && ! in_array(mb_strtolower(trim($row['location'])), $known, true)
+                ? Str::limit($existing->location.'; '.$row['location'], 160, '...')
+                : $existing->location;
+        }
+        JobListing::updateOrCreate(['source' => $source, 'external_id' => $row['external_id']], $row);
     }
 
     public function configured(string $source): bool

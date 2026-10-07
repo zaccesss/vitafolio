@@ -16,15 +16,19 @@ class JobController extends Controller
         $q = trim(mb_substr((string) $request->query('q'), 0, 100));
         $where = trim(mb_substr((string) $request->query('where'), 0, 100));
 
-        $jobs = JobListing::query()->open()
-            ->when($kind !== '', fn ($query) => $query->where('kind', $kind))
+        // every filter except the kind of role, so each tab can show how many jobs it holds
+        $filtered = JobListing::query()->open()
             ->when($sector !== '', fn ($query) => $query->where('sector', $sector))
             // the search box looks for a job title or employer only, so an advert's small print never matches
             ->when($q !== '', fn ($query) => $query->where(fn ($inner) => $inner->where('title', 'like', "%{$q}%")->orWhere('company', 'like', "%{$q}%")))
-            ->when($where !== '', fn ($query) => $query->where('location', 'like', "%{$where}%"))
+            ->when($where !== '', fn ($query) => $query->where('location', 'like', "%{$where}%"));
+        $counts = (clone $filtered)->selectRaw('kind, count(*) as total')->groupBy('kind')->pluck('total', 'kind');
+
+        $jobs = (clone $filtered)
+            ->when($kind !== '', fn ($query) => $query->where('kind', $kind))
             ->orderByDesc('posted_at')->orderByDesc('id')
             ->paginate(20)->withQueryString();
 
-        return view('jobs.index', compact('jobs', 'kind', 'sector', 'q', 'where'));
+        return view('jobs.index', compact('jobs', 'counts', 'kind', 'sector', 'q', 'where'));
     }
 }
