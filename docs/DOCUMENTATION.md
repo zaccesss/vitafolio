@@ -408,16 +408,21 @@ one English no longer uses. It also fails when a translation changes a placehold
 
 ### Community translation
 
-`crowdin.yml` maps the English sources to each language's files, so the project can take community
-translations through [Crowdin](https://crowdin.com). Nothing in the build needs Crowdin or an account.
-To switch it on, once:
+`crowdin.yml` maps the English sources to each language's files for the
+[Vitafolio project on Crowdin](https://crowdin.com/project/vitafolio), where anyone can suggest
+translations. Nothing in the build needs Crowdin or an account.
 
-1. Create a free open-source project on Crowdin with English as the source language and the six other
-   languages as targets.
-2. In the project's **Integrations**, connect **GitHub** to `zaccesss/vitafolio`, choose the `main`
-   branch and let it use the repository's `crowdin.yml`.
-3. Crowdin then uploads new English strings when `main` changes and opens pull requests with
-   translations from its own `l10n_main` branch. Each one is reviewed like any other change.
+The `Crowdin sync` workflow (`.github/workflows/crowdin.yml`) does the rest:
+
+1. When the English strings change on `main` (`lang/en.json` or `lang/en/*.php`), it uploads them so
+   translators see the new text straight away.
+2. Every day it downloads finished translations and opens or updates one pull request from the
+   `l10n_crowdin` branch. Each one is reviewed like any other change.
+
+It reads the `CROWDIN_PERSONAL_TOKEN` secret and the `CROWDIN_PROJECT_ID` repository variable; the
+project id and token are never written into `crowdin.yml`. A pull request opened by the workflow's
+own token does not start the CI checks, so before merging one, close and reopen it (or push any
+commit to the branch) to run them.
 
 Crowdin's codes `zh-CN` and `pt-BR` are mapped to Laravel's `zh_CN` and `pt_BR` in `crowdin.yml`.
 
