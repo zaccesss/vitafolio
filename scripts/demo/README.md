@@ -21,8 +21,11 @@ scripts/demo/build-assets.sh      # turn the recordings into the site and README
 
 `record.sh` rebuilds a SQLite database at `storage/app/demo.sqlite`, loads the people in
 [`seed.php`](seed.php), builds the front end and starts the site on port 8123 (`DEMO_PORT` changes it).
-It then installs Playwright's Chromium and runs [`capture.mjs`](capture.mjs). Recordings land in
-`scripts/demo/out`, which git ignores.
+It then installs Playwright's Chromium and runs [`capture.mjs`](capture.mjs) twice: once in the light
+theme with the screenshots, then again on a fresh database for the dark versions of the clips
+(`DEMO_SCHEME=dark`). Recordings land in `scripts/demo/out`, which git ignores. When a single part
+other than `build` is recorded, the seed creates Alex Morgan's finished CV so that part has something
+to show.
 
 > [!NOTE]
 > The browser maps `vitafolio.isaacadjei.me` to the local server, so every address on screen matches
@@ -33,8 +36,8 @@ It then installs Playwright's Chromium and runs [`capture.mjs`](capture.mjs). Re
 
 | Path | What it is |
 | --- | --- |
-| `public/demo/<clip>.webp` | The animated clip shown on the Features page and in the README, 960 pixels wide |
-| `public/demo/<clip>.mp4` | The full-quality video each clip links to |
+| `public/demo/<clip>.webp` | The animated clip shown on the Features page and in the README, 960 pixels wide. Each file here also has a `-dark` copy for the dark theme |
+| `public/demo/<clip>.mp4` | The full-quality video played on each clip's own page at `/features/demo/<clip>` |
 | `public/demo/<clip>-still.webp` | The still frame shown when reduced motion is turned on |
 | `docs/assets/screenshots/<page>-<theme>.webp` | Light and dark screenshots for the README |
 | `docs/assets/demo/originals/` | The untouched recordings (`.webm`) and full-resolution screenshots (`.png`, 2560 by 1600) for reuse elsewhere, such as a portfolio |

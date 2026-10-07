@@ -6,6 +6,8 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Added
 
+- Each demo clip has its own page at `/features/demo/<clip>` with a video player, a Back to Features link, a written description of what happens and links to the other clips. Selecting a clip on the Features page opens it there instead of the bare video file.
+- Dark versions of the demo clips. The Features page, the clip pages and the README show the one that matches the theme in use.
 - A See it in action section on the Features page with the three demo clips, for people new to the site. Each clip shows a still frame when reduced motion is turned on and opens a full-quality video. Signed-out visitors get a See how it works button on the home page that leads there. The new text is in all seven languages.
 - A demo recording kit in `scripts/demo`. One command records the clips and screenshots from a throwaway local copy of the site filled with made-up people. A second turns them into the site and README files. The untouched recordings and full-resolution screenshots are kept in `docs/assets/demo/originals`.
 - A See it in action section in the README: three short captioned clips (building a CV, styling and sharing it and compiling a PDF from LaTeX), each linking to a full-quality video, plus six screenshots that follow GitHub's light or dark theme. The clips show a still frame when reduced motion is turned on.
@@ -80,7 +82,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
-- Translations committed to the repository are no longer replaced with English by the next Crowdin sync. A manual run of the sync workflow can now upload them to Crowdin first.
+- Translations committed to the repository are no longer replaced with English by the next Crowdin sync. A manual run of the sync workflow can now upload them to Crowdin first and approve them, so they come back down.
 - The developer documentation lists all seven LaTeX starter templates instead of four.
 - Arabic and Urdu text in generated PDF, Word and LaTeX files no longer breaks apart. Lines were split on a byte that is part of some Arabic letters.
 - The site went down on 6 October when the free database plan powered the database off for inactivity. The database now runs on TiDB Cloud Starter in Frankfurt, which stays on, with every table and row copied across and checked. The privacy policy names the new host.

@@ -24,11 +24,18 @@ export TURNSTILE_SITE_KEY='' TURNSTILE_SECRET='' SENTRY_LARAVEL_DSN='' INDEXNOW_
 export LATEX_ASSETS_URL=https://zaccesss.github.io/vitafolio-latex/
 export DEMO_PORT=$port
 
+part=${1:-}
+
+# a fresh database for each pass; the build clip creates alex's cv on screen, so any other part
+# starts with the finished cv already there
+reset() {
+  php artisan migrate:fresh --force -q
+  DEMO_ALEX_CV=$1 php artisan tinker --execute="require '$demo/seed.php';"
+}
+
 rm -f "$db"
 touch "$db"
 php artisan config:clear -q
-php artisan migrate --force -q
-php artisan tinker --execute="require '$demo/seed.php';"
 npm run build --silent
 
 php artisan serve --host=127.0.0.1 --port="$port" >/dev/null 2>&1 &
@@ -36,8 +43,16 @@ server=$!
 trap 'kill "$server" 2>/dev/null' EXIT
 until curl -s -o /dev/null "http://127.0.0.1:$port/"; do sleep 1; done
 
-cd "$demo"
-npm ci --silent --no-audit --no-fund
-npx playwright install chromium --no-shell
-node capture.mjs "$@"
+(cd "$demo" && npm ci --silent --no-audit --no-fund && npx playwright install chromium --no-shell)
+
+# light pass: the clips plus the light and dark screenshots
+if [ -z "$part" ] || [ "$part" = build ]; then reset ''; else reset 1; fi
+node "$demo/capture.mjs" $part
+
+# dark pass: the clips again in the dark theme
+case "$part" in
+  shots) ;;
+  ''|build) reset ''; DEMO_SCHEME=dark node "$demo/capture.mjs" $part ;;
+  *) DEMO_SCHEME=dark node "$demo/capture.mjs" "$part" ;;
+esac
 echo "recorded into $demo/out, now run $demo/build-assets.sh"
