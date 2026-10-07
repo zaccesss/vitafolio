@@ -19,3 +19,8 @@ tests
 !CHANGELOG.md
 !docs/DOCUMENTATION.md
 !resources/**/*.md
+
+# README media and the tools that record it, never served by the app
+docs/assets/demo
+docs/assets/screenshots
+scripts/demo

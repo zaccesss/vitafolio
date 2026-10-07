@@ -31,6 +31,9 @@
                         <a class="btn btn-primary" href="{{ route('register') }}">{{ __('Create your CV') }}</a>
                     @endauth
                     <a class="btn btn-secondary" href="#browse">{{ __('Browse CVs') }}</a>
+                    @guest
+                        <a class="btn btn-secondary" href="{{ route('features') }}#demo">{{ __('See how it works') }}</a>
+                    @endguest
                 </div>
                 <ul class="mt-8 grid gap-2 text-sm text-muted sm:grid-cols-2">
                     <li class="flex gap-2"><span aria-hidden="true" class="text-ok">&#10003;</span> {{ __('Public, unlisted or private, per CV') }}</li>

@@ -14,7 +14,7 @@ updates:
         patterns: ["laravel/*"]
 
   - package-ecosystem: "npm"
-    directory: "/"
+    directories: ["/", "/scripts/demo"]
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
