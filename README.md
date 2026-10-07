@@ -22,19 +22,19 @@ video. A still frame shows instead when reduced motion is turned on.
 
 Create a named CV, write each section in plain text and save it. The completeness meter fills in as sections are added.
 
-<a href="docs/assets/demo/build.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/demo/build-still.webp"><img src="docs/assets/demo/build.webp" alt="A new CV called Embedded software roles is created, then its headline, profile, skills, experience and education are typed into the editor and saved" width="960"></picture></a>
+<a href="public/demo/build.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="public/demo/build-still.webp"><img src="public/demo/build.webp" alt="A new CV called Embedded software roles is created, then its headline, profile, skills, experience and education are typed into the editor and saved" width="960"></picture></a>
 
 ### Style and share it
 
 Choose a layout, accent colour and font, decide who can see the CV, then share one link that always shows the latest version.
 
-<a href="docs/assets/demo/share.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/demo/share-still.webp"><img src="docs/assets/demo/share.webp" alt="The Look and privacy tab is set to the Modern layout with a teal accent and public visibility, then the published CV page with its QR code and the Browse CVs directory are shown" width="960"></picture></a>
+<a href="public/demo/share.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="public/demo/share-still.webp"><img src="public/demo/share.webp" alt="The Look and privacy tab is set to the Modern layout with a teal accent and public visibility, then the published CV page with its QR code and the Browse CVs directory are shown" width="960"></picture></a>
 
 ### Compile a PDF from LaTeX
 
 Start from a template and compile it in the browser. Nothing leaves the device until the PDF is saved to the CV.
 
-<a href="docs/assets/demo/compile.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/demo/compile-still.webp"><img src="docs/assets/demo/compile.webp" alt="The LaTeX editor compiles the classic template in the browser, the PDF appears in the preview pane and is then saved to the CV" width="960"></picture></a>
+<a href="public/demo/compile.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="public/demo/compile-still.webp"><img src="public/demo/compile.webp" alt="The LaTeX editor compiles the classic template in the browser, the PDF appears in the preview pane and is then saved to the CV" width="960"></picture></a>
 
 ### Screenshots
 

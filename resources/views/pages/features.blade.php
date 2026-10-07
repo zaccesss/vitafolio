@@ -11,6 +11,11 @@
         [__('Built for everyone'), __('Readable in light and dark mode, usable with a keyboard or screen reader, with a plain theme for applicant tracking systems.')],
         [__('In your language'), __('Use the site in English, Spanish, French, Brazilian Portuguese, Simplified Chinese, Arabic or Urdu, with Arabic and Urdu laid out right to left. Your CV is always shown as you wrote it.')],
     ];
+    $demos = [
+        ['build', __('Build a CV'), __('Create a named CV, write each section in plain text and save it.'), __('A new CV is created, then its headline, profile, skills, experience and education are typed into the editor and saved.')],
+        ['share', __('Style and share it'), __('Pick a layout, colour and font, choose who can see it, then share one link.'), __('A CV is given the Modern layout, a teal accent and public visibility, then its published page with a QR code and the directory are shown.')],
+        ['compile', __('Compile a PDF from LaTeX'), __('Start from a template and compile it in your browser, then save the PDF to your CV.'), __('The LaTeX editor compiles a template in the browser, the PDF appears in the preview and is saved to the CV.')],
+    ];
     $steps = [
         [__('Create your account'), __('Sign up with your email or with Google, GitHub or Microsoft. Your first CV is ready straight away.')],
         [__('Build or upload'), __('Fill in your sections, add projects and pick a theme. Or upload the file you already have.')],
@@ -33,6 +38,30 @@
                 </li>
             @endforeach
         </ul>
+
+        {{-- animated images rather than video: they play without scripts under the strict content security
+             policy, and the reduced motion source swaps each one for a still frame --}}
+        <section id="demo" aria-labelledby="demo-title" class="mt-20 scroll-mt-24">
+            <h2 id="demo-title" class="text-3xl">{{ __('See it in action') }}</h2>
+            <p class="mt-2 max-w-2xl text-muted">{{ __('Short clips recorded with made-up people. Select a clip to watch it at full size.') }}</p>
+            <ul class="mt-8 grid gap-5 lg:grid-cols-3">
+                @foreach ($demos as [$clip, $title, $text, $alt])
+                    <li class="card overflow-hidden">
+                        <a href="{{ asset('demo/'.$clip.'.mp4') }}" class="block">
+                            <picture>
+                                <source media="(prefers-reduced-motion: reduce)" srcset="{{ asset('demo/'.$clip.'-still.webp') }}">
+                                <img src="{{ asset('demo/'.$clip.'.webp') }}" alt="{{ $alt }}" width="960" height="600" loading="lazy" decoding="async" class="aspect-[8/5] w-full border-b border-line bg-page object-cover">
+                            </picture>
+                            <span class="sr-only">{{ __('Watch :title at full size', ['title' => $title]) }}</span>
+                        </a>
+                        <div class="p-6">
+                            <h3 class="text-xl">{{ $title }}</h3>
+                            <p class="mt-2 text-muted">{{ $text }}</p>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+        </section>
 
         <section aria-labelledby="how-title" class="mt-20">
             <h2 id="how-title" class="text-3xl">{{ __('How it works') }}</h2>
