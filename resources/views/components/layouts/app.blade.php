@@ -63,6 +63,7 @@
         $mainLinks = array_filter([
             ['home', __('Browse CVs'), ['home']],
             Route::has('features') ? ['features', __('Features'), ['features']] : null,
+            Route::has('jobs') ? ['jobs', __('Jobs'), ['jobs']] : null,
             Route::has('help') ? ['help', __('Help'), ['help', 'help.*']] : null,
         ]);
         $menuLinks = $user ? array_filter([

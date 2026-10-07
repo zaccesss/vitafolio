@@ -23,6 +23,9 @@ class Tidy extends Command
                 ->where('last_activity', '<', now()->subMinutes((int) config('session.lifetime'))->getTimestamp())->delete(),
             'expired cache rows' => DB::table('cache')->where('expiration', '<', time())->delete()
                 + DB::table('cache_locks')->where('expiration', '<', time())->delete(),
+            // a listing is dropped once it closes or, without a closing date, a month after posting
+            'old job listings' => DB::table('job_listings')
+                ->where(fn ($q) => $q->where('closes_at', '<', now())->orWhere('posted_at', '<', now()->subDays(30))->orWhere(fn ($q) => $q->whereNull('posted_at')->where('updated_at', '<', now()->subDays(30))))->delete(),
             'expired reset tokens' => DB::table('password_reset_tokens')
                 ->where('created_at', '<', now()->subMinutes((int) config('auth.passwords.users.expire', 60)))->delete(),
         ];

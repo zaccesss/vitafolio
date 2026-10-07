@@ -39,6 +39,16 @@ return [
         'tenant' => env('MICROSOFT_TENANT', 'common'),
     ],
 
+    // job listings for students and graduates; either source can be left unset
+    'adzuna' => [
+        'app_id' => env('ADZUNA_APP_ID'),
+        'app_key' => env('ADZUNA_APP_KEY'),
+    ],
+
+    'reed' => [
+        'key' => env('REED_API_KEY'),
+    ],
+
     'resend' => [
         'key' => env('RESEND_API_KEY'),
     ],

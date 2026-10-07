@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cv;
+use App\Models\JobListing;
 use App\Support\Ats\AtsReport;
 use App\Support\Ats\ResumeText;
 use App\Support\Ats\UnreadableResume;
@@ -20,9 +21,14 @@ class CvCheckController extends Controller
 {
     public function show(Request $request): View
     {
+        // "check my CV against this job" opens the page with that job's advert already filled in
+        $job = $request->integer('job') ? JobListing::query()->open()->find($request->integer('job')) : null;
+
         return view('check', [
             'cvs' => $request->user()->cvs()->orderBy('title')->get(['id', 'title']),
             'report' => null,
+            'advert' => $job ? trim($job->title."\n".$job->description) : null,
+            'job' => $job,
         ]);
     }
 
@@ -53,6 +59,8 @@ class CvCheckController extends Controller
         return view('check', [
             'cvs' => $request->user()->cvs()->orderBy('title')->get(['id', 'title']),
             'report' => $report->toArray(),
+            'advert' => null,
+            'job' => null,
         ]);
     }
 
