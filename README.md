@@ -13,6 +13,39 @@ for research, one for a part-time job. Each CV can be public, unlisted or privat
 in the editor or uploaded as a PDF or Word file. It can also be written in LaTeX and compiled in the
 browser.
 
+## See it in action
+
+Short clips of the interface, recorded with made-up demo data. Each clip links to a full-quality
+video. A still frame shows instead when reduced motion is turned on.
+
+### Build a CV
+
+Create a named CV, write each section in plain text and save it. The completeness meter fills in as sections are added.
+
+<a href="docs/assets/demo/build.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/demo/build-still.webp"><img src="docs/assets/demo/build.webp" alt="A new CV called Embedded software roles is created, then its headline, profile, skills, experience and education are typed into the editor and saved" width="960"></picture></a>
+
+### Style and share it
+
+Choose a layout, accent colour and font, decide who can see the CV, then share one link that always shows the latest version.
+
+<a href="docs/assets/demo/share.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/demo/share-still.webp"><img src="docs/assets/demo/share.webp" alt="The Look and privacy tab is set to the Modern layout with a teal accent and public visibility, then the published CV page with its QR code and the Browse CVs directory are shown" width="960"></picture></a>
+
+### Compile a PDF from LaTeX
+
+Start from a template and compile it in the browser. Nothing leaves the device until the PDF is saved to the CV.
+
+<a href="docs/assets/demo/compile.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/demo/compile-still.webp"><img src="docs/assets/demo/compile.webp" alt="The LaTeX editor compiles the classic template in the browser, the PDF appears in the preview pane and is then saved to the CV" width="960"></picture></a>
+
+### Screenshots
+
+Each screenshot follows the light or dark theme GitHub is showing.
+
+| Finding and sharing | Building and editing |
+| --- | --- |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/directory-dark.webp"><img src="docs/assets/screenshots/directory-light.webp" alt="The Browse CVs directory with search, filters and public CVs" width="480"></picture><br>Browse CVs | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/editor-dark.webp"><img src="docs/assets/screenshots/editor-light.webp" alt="The CV editor's Content tab with the completeness meter" width="480"></picture><br>The editor |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/public-cv-dark.webp"><img src="docs/assets/screenshots/public-cv-light.webp" alt="A public CV page with share and download buttons and a QR code" width="480"></picture><br>A public CV | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/look-and-privacy-dark.webp"><img src="docs/assets/screenshots/look-and-privacy-light.webp" alt="The Look and privacy tab with visibility, layout, accent colour and font choices" width="480"></picture><br>Look and privacy |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/dashboard-dark.webp"><img src="docs/assets/screenshots/dashboard-light.webp" alt="The My CVs dashboard listing a CV with its views, skills and file" width="480"></picture><br>My CVs | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/latex-compiled-dark.webp"><img src="docs/assets/screenshots/latex-compiled-light.webp" alt="The LaTeX editor with source on the left and the compiled PDF on the right" width="480"></picture><br>LaTeX editor |
+
 ## Features
 
 | Area | What it does |
