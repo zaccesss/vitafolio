@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Http;
 /** cloudflare turnstile check; skipped when no keys are configured, such as in local development */
 class Turnstile implements ValidationRule
 {
+    // implicit so the check still runs when the field is left out of the request entirely; otherwise Laravel skips
+    // the rule for a missing field and the form could be posted without any challenge
+    public bool $implicit = true;
+
     public static function enabled(): bool
     {
         return filled(config('vitafolio.turnstile.site_key')) && filled(config('vitafolio.turnstile.secret'));

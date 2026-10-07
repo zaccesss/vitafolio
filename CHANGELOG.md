@@ -46,6 +46,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Security
 
+- The security check on public forms is enforced in every case. The contact forms and CV reports now always require it when it is switched on.
 - `shell-quote` 1.12 under `concurrently` for a critical command injection advisory in `quote()`. `concurrently` pins 1.9.0, so a scoped override lifts it. It only runs the local development scripts.
 - `katex` 0.18 under Mermaid for a prototype pollution advisory and `postcss-selector-parser` 7 under the Typography plugin for a CPU exhaustion advisory. Neither parent has a release that allows the fixed version yet, so scoped overrides lift them. The built CSS is byte for byte the same as before.
 - A sign-in with Google, GitHub or LinkedIn that joins an existing account which never verified its email now removes every sign-in method, two-factor setup and session that account had first. Before, someone who registered an address they did not own kept a way in after the real owner arrived.
