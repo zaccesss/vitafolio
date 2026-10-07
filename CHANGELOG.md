@@ -6,6 +6,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Changed
 
+- Check a CV follows how the main tracking systems behave. A new Readable layout area (10 points) covers tables, columns, text boxes, images, contact details in the page header, scans, icon and decorative symbols that turn into garbled text, ligatures, letters spaced one by one, more than two pages, mixed date styles and UK personal details such as date of birth. It suggests a Profile when there is none and a Word file when a PDF has parsing problems. The page explains that the score is guidance and that most systems rank rather than reject.
 - Crowdin's daily pull request merges itself once a check confirms no translation is removed or turned back into English. Translations committed here are uploaded on every push to main. The Crowdin branch is pushed by the automation account so its checks start without manual approval.
 - The home page says Free for everyone, as plain text rather than a badge. The footer credit reads By isaacadjei.me.
 - A CV's visibility shows as an icon beside its word instead of a rounded badge: a closed padlock for Private, an open padlock for Public and a link for Unlisted. It appears on the dashboard, the analytics table, the profile and the CV editor.

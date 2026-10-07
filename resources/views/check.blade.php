@@ -32,6 +32,7 @@
                     <h2 id="result-title" class="text-2xl">{{ __('Score: :score out of 100', ['score' => $report['score']['total']]) }}</h2>
                     <p class="mt-1 text-lg font-semibold">{{ $report['score']['grade'] }}</p>
                     <x-english-only class="mt-3" />
+                    <p class="mt-3 text-sm text-muted">{{ __('This score is guidance based on how common applicant tracking systems read CVs. Each employer sets up its own system differently. Most rank and search applications rather than reject them automatically, so a recruiter will usually still read your CV.') }}</p>
                     <table class="mt-4 w-full max-w-xl text-sm">
                         <caption class="sr-only">{{ __('Score by area') }}</caption>
                         <thead><tr class="border-b border-line text-start"><th scope="col" class="py-2 text-start">{{ __('Area') }}</th><th scope="col" class="py-2 text-end">{{ __('Score') }}</th></tr></thead>

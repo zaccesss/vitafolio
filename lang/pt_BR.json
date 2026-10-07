@@ -1131,5 +1131,6 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Há um problema para corrigir|[2,*] Há :count problemas para corrigir",
     "“:title” has been deleted.": "“:title” foi excluído.",
     "“:title” is now hidden from everyone except its owner.": "“:title” agora está oculto para todos, exceto para o dono.",
-    "“:title” is visible again.": "“:title” está visível novamente."
+    "“:title” is visible again.": "“:title” está visível novamente.",
+    "This score is guidance based on how common applicant tracking systems read CVs. Each employer sets up its own system differently. Most rank and search applications rather than reject them automatically, so a recruiter will usually still read your CV.": "Esta pontuação é uma orientação baseada em como os sistemas de triagem de candidatos mais comuns leem currículos. Cada empresa configura o seu sistema de forma diferente, e a maioria classifica e pesquisa candidaturas em vez de rejeitá-las automaticamente, então normalmente um recrutador ainda lerá seu currículo."
 }
