@@ -1,7 +1,9 @@
-# community translation through crowdin's github integration. english is the source; crowdin opens
-# pull requests with new translations from its own l10n branch. no token or account details live here:
-# the integration is connected once from the crowdin project, see "Community translation" in
+# community translation through crowdin. english is the source. the crowdin sync workflow uploads new
+# english strings and opens a pull request with new translations from the l10n_crowdin branch. the
+# project id and token come from the environment, never this file; see "Community translation" in
 # docs/DOCUMENTATION.md. the build never needs crowdin
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
 preserve_hierarchy: true
 commit_message: 'chore: update %language% translations'
 append_commit_message: false
