@@ -433,7 +433,6 @@
     "Inter (clean sans serif)": "Inter (sans empattement, épurée)",
     "Internship": "Stage",
     "Internships": "Stages",
-    "Internships, placement years, graduate roles and part-time jobs in the UK, gathered daily from job boards. Applications happen on the board each job comes from.": "Stages, années en entreprise, postes de jeunes diplômés et emplois à temps partiel au Royaume-Uni, rassemblés chaque jour depuis des sites d’emploi. La candidature se fait sur le site d’origine de chaque offre.",
     "Invalid credential format.": "Format d’identifiant invalide.",
     "Is it free?": "Est-ce gratuit ?",
     "Is the site up? Check the status page and its history of incidents.": "Le site fonctionne-t-il ? Consultez la page d’état et l’historique des incidents.",
@@ -1155,5 +1154,8 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Il y a un problème à corriger|[2,*] Il y a :count problèmes à corriger",
     "“:title” has been deleted.": "« :title » a été supprimé.",
     "“:title” is now hidden from everyone except its owner.": "« :title » est désormais masqué pour tous, sauf pour son propriétaire.",
-    "“:title” is visible again.": "« :title » est de nouveau visible."
+    "“:title” is visible again.": "« :title » est de nouveau visible.",
+    "From the employer's own careers site": "Depuis le site carrières de l'employeur",
+    "Internships, placement years, spring weeks, graduate roles and part-time jobs for the :from to :to recruitment cycle, gathered daily from employers' own careers sites and job boards. Each one links to the page where you apply.": "Stages, années de stage en entreprise, spring weeks, postes pour jeunes diplômés et emplois à temps partiel du cycle de recrutement :from à :to, rassemblés chaque jour depuis les sites carrières des employeurs et les sites d'emploi. Chacun renvoie à la page où postuler.",
+    "Spring weeks and insight days": "Spring weeks et journées découverte"
 }

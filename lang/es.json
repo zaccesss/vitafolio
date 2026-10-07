@@ -433,7 +433,6 @@
     "Inter (clean sans serif)": "Inter (sans serif limpia)",
     "Internship": "Prácticas",
     "Internships": "Prácticas",
-    "Internships, placement years, graduate roles and part-time jobs in the UK, gathered daily from job boards. Applications happen on the board each job comes from.": "Prácticas, años de prácticas en empresa, puestos para recién titulados y empleos a tiempo parcial en el Reino Unido, recopilados a diario de portales de empleo. La candidatura se hace en el portal de cada oferta.",
     "Invalid credential format.": "Formato de credencial no válido.",
     "Is it free?": "¿Es gratis?",
     "Is the site up? Check the status page and its history of incidents.": "¿Funciona el sitio? Consulta la página de estado y su historial de incidencias.",
@@ -1155,5 +1154,8 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Hay un problema que corregir|[2,*] Hay :count problemas que corregir",
     "“:title” has been deleted.": "Se ha eliminado “:title”.",
     "“:title” is now hidden from everyone except its owner.": "“:title” ahora está oculto para todos excepto para su propietario.",
-    "“:title” is visible again.": "“:title” vuelve a estar visible."
+    "“:title” is visible again.": "“:title” vuelve a estar visible.",
+    "From the employer's own careers site": "Del sitio de empleo de la propia empresa",
+    "Internships, placement years, spring weeks, graduate roles and part-time jobs for the :from to :to recruitment cycle, gathered daily from employers' own careers sites and job boards. Each one links to the page where you apply.": "Prácticas, años de prácticas en empresa, spring weeks, puestos para recién graduados y trabajos a tiempo parcial del ciclo de selección :from a :to, recopilados a diario de los sitios de empleo de las propias empresas y de portales de empleo. Cada uno enlaza con la página donde se presenta la solicitud.",
+    "Spring weeks and insight days": "Spring weeks y jornadas de introducción"
 }

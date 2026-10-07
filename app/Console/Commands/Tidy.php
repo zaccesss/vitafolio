@@ -25,7 +25,9 @@ class Tidy extends Command
                 + DB::table('cache_locks')->where('expiration', '<', time())->delete(),
             // a listing is dropped once it closes or, without a closing date, a month after posting
             'old job listings' => DB::table('job_listings')
-                ->where(fn ($q) => $q->where('closes_at', '<', now())->orWhere('posted_at', '<', now()->subDays(30))->orWhere(fn ($q) => $q->whereNull('posted_at')->where('updated_at', '<', now()->subDays(30))))->delete(),
+                ->where(fn ($q) => $q->where('closes_at', '<', now())->orWhere(fn ($q) => $q->where('source', '!=', 'employer')->where('posted_at', '<', now()->subDays(30)))->orWhere(fn ($q) => $q->whereNull('posted_at')->where('updated_at', '<', now()->subDays(30))))->delete(),
+            // the employer feed resends every open listing daily, so one it has not sent for three days has closed
+            'unlisted employer jobs' => DB::table('job_listings')->where('source', 'employer')->where('last_seen_at', '<', now()->subDays(3))->delete(),
             'expired reset tokens' => DB::table('password_reset_tokens')
                 ->where('created_at', '<', now()->subMinutes((int) config('auth.passwords.users.expire', 60)))->delete(),
         ];

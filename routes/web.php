@@ -14,6 +14,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DirectoryController;
 use App\Http\Controllers\EndorsementController;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobFeedController;
 use App\Http\Controllers\LatexController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\OgImageController;
@@ -50,6 +51,7 @@ Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->middleware('throttle:20,1')->name('social.callback');
 
 Route::post('/cron', CronController::class)->middleware('throttle:6,1')->name('cron');
+Route::post('/jobs/feed', JobFeedController::class)->middleware('throttle:6,1')->name('jobs.feed');
 
 Route::view('/contact', 'pages.contact')->name('contact.show');
 Route::view('/support', 'pages.support')->name('support');

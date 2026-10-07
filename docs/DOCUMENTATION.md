@@ -450,7 +450,9 @@ Copy `.env.example` to `.env`. Laravel's own settings are documented there; thes
 | `LATEX_ASSETS_URL` | Where the LaTeX engine files are hosted |
 | `GOOGLE_*`, `GITHUB_*`, `MICROSOFT_*` | Sign-in providers, each a client id and secret |
 | `CRON_TOKEN` | Shared secret for the nightly tidy-up and job fetch |
-| `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `REED_API_KEY` | Job listings on the Jobs page; either board can be left unset |
+| `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `REED_API_KEY` | Job listings on the Jobs page; either board can be left unset. Adzuna's terms allow republishing with its label beside each listing. Reed publishes no API terms, so its key is set only once Reed has agreed in writing |
+| `JOBS_FEED_TOKEN` | Shared secret for `POST /jobs/feed`, which receives listings from employers' own hiring systems; without it the address does not exist |
+| `JOBS_CYCLE_FROM`, `JOBS_CYCLE_TO` | The recruitment cycle the Jobs page lists, 2026 to 2027 by default |
 | `SENTRY_LARAVEL_DSN` | Error tracking |
 | `INDEXNOW_KEY` | Search engine change notifications |
 | `STORAGE_ALLOWANCE_MB` | Storage per account, 100 by default |
@@ -517,6 +519,7 @@ To deploy on a container host such as Render:
 | OAuth client secrets | Each provider's console, then the host | Create a new secret, update the host, delete the old one |
 | `TURNSTILE_SECRET` | Cloudflare, then the host | Rotate the widget secret, update the host |
 | `CRON_TOKEN` | The host and the repository secret | Generate a new value and set it in both places |
+| `JOBS_FEED_TOKEN` | The host and the sender of the employer feed | Generate a new value and set it in both places |
 | `SENTRY_LARAVEL_DSN`, `INDEXNOW_KEY` | The host | Replace at any time; nothing else depends on them |
 
 The LaTeX engine files come from the [texlyre-busytex](https://github.com/TeXlyre/texlyre-busytex)
@@ -528,6 +531,7 @@ release. Host them anywhere that serves static files with CORS allowed, such as 
 | Task | How |
 | --- | --- |
 | Nightly tidy-up | `POST /cron` with `Authorization: Bearer <CRON_TOKEN>` runs `vitafolio:tidy`, which clears released handles, view stats older than 13 months, expired sessions, cache rows and reset tokens. The [nightly workflow](../.github/workflows/nightly-tidy.yml) calls it |
+| Employer job feed | `POST /jobs/feed` with `Authorization: Bearer <JOBS_FEED_TOKEN>` and `{"jobs": [{"title", "company", "url", "location", "board", "deadline", "opened", "description"}]}`, up to 1,000 at a time. Each listing is classified again from its title by `App\Support\Jobs\RoleType`, which matches whole words only, leaves out staff, senior and apprenticeship roles and rejects any year outside the cycle or a spring or summer season that has ended. Links must use https and a passed deadline is refused. The reply counts what was stored and why the rest were skipped. The description is kept only to fill in Check a CV and is never shown. A listing the feed has not sent for three days is removed by the tidy-up |
 | Uptime | `/up` answers 200 when the app boots and the database answers a query, for an uptime monitor. Checking it every few minutes also stops a free host from putting the app to sleep |
 | Errors | Sent to Sentry when `SENTRY_LARAVEL_DSN` is set, without personal data. Content security policy breaks are reported there too when `CSP_REPORT_URI` is set |
 | Maintenance mode | From a shell on the host: `php artisan down --retry=120 --secret=<word>` shows the maintenance page to everyone except visitors who first open `/<word>`. `php artisan up` ends it. The cache driver with the database store means it applies to every copy of the app and survives a redeploy |
