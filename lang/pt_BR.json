@@ -337,7 +337,6 @@
     "Forgotten your password?": "Esqueceu sua senha?",
     "Four themes and seven accents": "Quatro temas e sete cores de destaque",
     "Free and quick to set up. You can keep several CVs and choose who sees each one.": "Gratuito e rápido de configurar. Você pode manter vários currículos e escolher quem vê cada um.",
-    "Free for students, graduates and everyone in between": "Gratuito para estudantes, recém-formados e todo mundo entre uma coisa e outra",
     "Freelance or part time": "Freelance ou meio período",
     "Frequently asked questions": "Perguntas frequentes",
     "from :name": "de :name",
@@ -458,7 +457,6 @@
     "Looking for": "Procurando",
     "Looking for: :availability": "Procurando: :availability",
     "Lost your phone? Use a recovery code": "Perdeu seu celular? Use um código de recuperação",
-    "Made by :site.": "Feito por :site.",
     "Main": "Principal",
     "Main language or tool": "Linguagem ou ferramenta principal",
     "Main language: :language": "Linguagem principal: :language",
@@ -1104,5 +1102,11 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Há um problema para corrigir|[2,*] Há :count problemas para corrigir",
     "“:title” has been deleted.": "“:title” foi excluído.",
     "“:title” is now hidden from everyone except its owner.": "“:title” agora está oculto para todos, exceto para o dono.",
-    "“:title” is visible again.": "“:title” está visível novamente."
+    "“:title” is visible again.": "“:title” está visível novamente.",
+    "Free for everyone.": "Gratuito para todos.",
+    "By :site.": "Por :site.",
+    "Part-time or student job": "Trabalho de meio período ou para estudantes",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "O modelo está na caixa abaixo. Substitua tudo o que está entre [colchetes] e salve. Nada muda até você clicar em Salvar.",
+    "Saving will replace the letter you already have.": "Salvar substituirá a carta que você já tem.",
+    "Keep my current letter": "Manter minha carta atual"
 }

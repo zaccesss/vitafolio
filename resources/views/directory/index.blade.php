@@ -21,7 +21,7 @@
     @unless ($filtering || $cvs->currentPage() > 1)
         <section class="container-page grid items-center gap-10 py-14 lg:grid-cols-2 lg:py-20" aria-labelledby="hero-title">
             <div>
-                <p class="badge mb-5">{{ __('Free for students, graduates and everyone in between') }}</p>
+                <p class="mb-5 text-sm font-semibold text-muted">{{ __('Free for everyone.') }}</p>
                 <h1 id="hero-title" class="text-4xl leading-tight sm:text-5xl">{{ __('Every version of your CV, in one place.') }}</h1>
                 <p class="mt-5 max-w-xl text-lg text-muted">{{ __('Keep a CV for every kind of role, upload the ones you already have and choose exactly who sees each one. Share it with a single link, a QR code or a polished PDF.') }}</p>
                 <div class="mt-8 flex flex-wrap gap-3">

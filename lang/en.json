@@ -337,7 +337,6 @@
     "Forgotten your password?": "Forgotten your password?",
     "Four themes and seven accents": "Four themes and seven accents",
     "Free and quick to set up. You can keep several CVs and choose who sees each one.": "Free and quick to set up. You can keep several CVs and choose who sees each one.",
-    "Free for students, graduates and everyone in between": "Free for students, graduates and everyone in between",
     "Freelance or part time": "Freelance or part time",
     "Frequently asked questions": "Frequently asked questions",
     "from :name": "from :name",
@@ -458,7 +457,6 @@
     "Looking for": "Looking for",
     "Looking for: :availability": "Looking for: :availability",
     "Lost your phone? Use a recovery code": "Lost your phone? Use a recovery code",
-    "Made by :site.": "Made by :site.",
     "Main": "Main",
     "Main language or tool": "Main language or tool",
     "Main language: :language": "Main language: :language",
@@ -1104,5 +1102,11 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} There is a problem to fix|[2,*] There are :count problems to fix",
     "“:title” has been deleted.": "“:title” has been deleted.",
     "“:title” is now hidden from everyone except its owner.": "“:title” is now hidden from everyone except its owner.",
-    "“:title” is visible again.": "“:title” is visible again."
+    "“:title” is visible again.": "“:title” is visible again.",
+    "Free for everyone.": "Free for everyone.",
+    "By :site.": "By :site.",
+    "Part-time or student job": "Part-time or student job",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.",
+    "Saving will replace the letter you already have.": "Saving will replace the letter you already have.",
+    "Keep my current letter": "Keep my current letter"
 }

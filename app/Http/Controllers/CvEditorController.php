@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cv;
 use App\Support\JsonResume;
+use App\Support\LetterTemplates;
 use App\Support\Locales;
 use App\Support\Tags;
 use Illuminate\Http\JsonResponse;
@@ -42,7 +43,18 @@ class CvEditorController extends Controller
             $cv->load('endorsements.endorser');
         }
 
-        return view('cv.edit', ['cv' => $cv, 'tab' => $tab, 'user' => $request->user()]);
+        // a chosen template fills the letter box for this page view only; nothing is saved until the
+        // owner presses Save, so their current letter is safe if they change their mind
+        $template = $tab === 'letter' && LetterTemplates::exists($request->query('template'))
+            ? $request->query('template') : null;
+
+        return view('cv.edit', [
+            'cv' => $cv,
+            'tab' => $tab,
+            'user' => $request->user(),
+            'template' => $template,
+            'templateBody' => $template ? LetterTemplates::body($template, $cv->user->name) : null,
+        ]);
     }
 
     public function updateDetails(Request $request, Cv $cv): RedirectResponse

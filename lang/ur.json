@@ -337,7 +337,6 @@
     "Forgotten your password?": "پاس ورڈ بھول گئے؟",
     "Four themes and seven accents": "چار تھیمز اور سات نمایاں رنگ",
     "Free and quick to set up. You can keep several CVs and choose who sees each one.": "مفت اور جلد سیٹ اپ۔ آپ کئی سی ویز رکھ سکتے ہیں اور ہر ایک کے لیے طے کر سکتے ہیں کہ اسے کون دیکھے۔",
-    "Free for students, graduates and everyone in between": "طلبہ، گریجویٹس اور ہر کسی کے لیے مفت",
     "Freelance or part time": "فری لانس یا جز وقتی",
     "Frequently asked questions": "اکثر پوچھے جانے والے سوالات",
     "from :name": ":name کی طرف سے",
@@ -458,7 +457,6 @@
     "Looking for": "تلاش ہے",
     "Looking for: :availability": "تلاش ہے: :availability",
     "Lost your phone? Use a recovery code": "فون گم ہو گیا؟ بازیابی کوڈ استعمال کریں",
-    "Made by :site.": ":site کی تیار کردہ۔",
     "Main": "مرکزی",
     "Main language or tool": "مرکزی زبان یا ٹول",
     "Main language: :language": "مرکزی زبان: :language",
@@ -1104,5 +1102,11 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} ایک مسئلہ درست کرنا ہے|[2,*] :count مسائل درست کرنے ہیں",
     "“:title” has been deleted.": "“:title” حذف کر دی گئی ہے۔",
     "“:title” is now hidden from everyone except its owner.": "“:title” اب اس کے مالک کے علاوہ سب سے پوشیدہ ہے۔",
-    "“:title” is visible again.": "“:title” دوبارہ نظر آ رہی ہے۔"
+    "“:title” is visible again.": "“:title” دوبارہ نظر آ رہی ہے۔",
+    "Free for everyone.": "سب کے لیے مفت۔",
+    "By :site.": ":site کی جانب سے۔",
+    "Part-time or student job": "جز وقتی یا طالب علم کی ملازمت",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "سانچہ نیچے والے خانے میں ہے۔ [مربع قوسین] میں موجود ہر چیز بدلیں، پھر محفوظ کریں۔ محفوظ کریں دبانے تک کچھ نہیں بدلے گا۔",
+    "Saving will replace the letter you already have.": "محفوظ کرنے سے آپ کا موجودہ خط بدل جائے گا۔",
+    "Keep my current letter": "میرا موجودہ خط رکھیں"
 }

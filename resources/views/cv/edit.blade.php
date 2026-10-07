@@ -78,11 +78,26 @@
                     <section class="card p-6" aria-labelledby="letter-title">
                         <h2 id="letter-title" class="text-xl">{{ __('Cover letter') }}</h2>
                         <p class="mt-1 text-muted">{{ __('An optional letter to send with this CV. It uses the same theme and privacy setting as the CV. It opens from the CV\'s own page. Leave it empty and nobody sees a letter at all.') }}</p>
+                        <nav class="mt-5" aria-labelledby="letter-templates-title">
+                            <h3 id="letter-templates-title" class="text-base font-semibold">{{ __('Start from a template') }}</h3>
+                            <ul class="mt-2 flex flex-wrap gap-2">
+                                @foreach (\App\Support\LetterTemplates::KINDS as $kind => $label)
+                                    <li><a class="btn btn-secondary btn-sm" href="{{ route('cvs.edit', [$cv, 'letter']) }}?template={{ $kind }}" @if($template === $kind) aria-current="true" @endif>{{ __($label) }}</a></li>
+                                @endforeach
+                            </ul>
+                            <x-english-only class="mt-3" />
+                            @if ($template)
+                                <p class="alert alert-info mt-3">{{ __('The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.') }}</p>
+                                @if ($cv->hasCoverLetter())
+                                    <p class="alert alert-info mt-3">{{ __('Saving will replace the letter you already have.') }} <a href="{{ route('cvs.edit', [$cv, 'letter']) }}">{{ __('Keep my current letter') }}</a></p>
+                                @endif
+                            @endif
+                        </nav>
                         <form method="POST" action="{{ route('cvs.letter', $cv) }}" class="mt-5 grid gap-5">
                             @csrf @method('PUT')
                             <x-field name="letter_to" :label="__('Who it is for')" :value="$cv->letter_to" maxlength="160"
                                      :hint="__('Shown above the letter, for example: Hiring team, Graduate software engineer at Acme.')" />
-                            <x-field name="cover_letter" :label="__('Letter')" type="textarea" :value="$cv->cover_letter" rows="14" maxlength="6000" counter
+                            <x-field name="cover_letter" :label="__('Letter')" type="textarea" :value="$templateBody ?? $cv->cover_letter" rows="14" maxlength="6000" counter
                                      :hint="__('Plain paragraphs. Leave a blank line between paragraphs.')" />
                             <div class="flex flex-wrap gap-3">
                                 <button type="submit" class="btn btn-primary">{{ __('Save cover letter') }}</button>

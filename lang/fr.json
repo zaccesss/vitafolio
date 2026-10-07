@@ -337,7 +337,6 @@
     "Forgotten your password?": "Mot de passe oublié ?",
     "Four themes and seven accents": "Quatre thèmes et sept couleurs d’accent",
     "Free and quick to set up. You can keep several CVs and choose who sees each one.": "Gratuit et rapide à configurer. Vous pouvez conserver plusieurs CV et choisir qui voit chacun d’eux.",
-    "Free for students, graduates and everyone in between": "Gratuit pour les étudiants, les jeunes diplômés et tous les autres",
     "Freelance or part time": "Freelance ou temps partiel",
     "Frequently asked questions": "Questions fréquentes",
     "from :name": "de :name",
@@ -458,7 +457,6 @@
     "Looking for": "Recherche",
     "Looking for: :availability": "Recherche : :availability",
     "Lost your phone? Use a recovery code": "Téléphone perdu ? Utilisez un code de récupération",
-    "Made by :site.": "Réalisé par :site.",
     "Main": "Principal",
     "Main language or tool": "Langage ou outil principal",
     "Main language: :language": "Langage principal : :language",
@@ -1104,5 +1102,11 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Il y a un problème à corriger|[2,*] Il y a :count problèmes à corriger",
     "“:title” has been deleted.": "« :title » a été supprimé.",
     "“:title” is now hidden from everyone except its owner.": "« :title » est désormais masqué pour tous, sauf pour son propriétaire.",
-    "“:title” is visible again.": "« :title » est de nouveau visible."
+    "“:title” is visible again.": "« :title » est de nouveau visible.",
+    "Free for everyone.": "Gratuit pour tout le monde.",
+    "By :site.": "Par :site.",
+    "Part-time or student job": "Emploi à temps partiel ou étudiant",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "Le modèle se trouve dans la zone ci-dessous. Remplacez tout ce qui est entre [crochets], puis enregistrez. Rien ne change tant que vous n’avez pas cliqué sur Enregistrer.",
+    "Saving will replace the letter you already have.": "L’enregistrement remplacera la lettre que vous avez déjà.",
+    "Keep my current letter": "Garder ma lettre actuelle"
 }

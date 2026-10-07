@@ -337,7 +337,6 @@
     "Forgotten your password?": "忘记密码？",
     "Four themes and seven accents": "四种主题，七种强调色",
     "Free and quick to set up. You can keep several CVs and choose who sees each one.": "免费且设置快捷。您可以保留多份简历，并选择每份简历的可见范围。",
-    "Free for students, graduates and everyone in between": "免费面向学生、毕业生以及介于两者之间的每一个人",
     "Freelance or part time": "自由职业或兼职",
     "Frequently asked questions": "常见问题",
     "from :name": "来自 :name",
@@ -458,7 +457,6 @@
     "Looking for": "求职意向",
     "Looking for: :availability": "求职意向：:availability",
     "Lost your phone? Use a recovery code": "手机丢失？请使用恢复代码",
-    "Made by :site.": "由 :site 制作。",
     "Main": "主要内容",
     "Main language or tool": "主要语言或工具",
     "Main language: :language": "主要语言：:language",
@@ -1104,5 +1102,11 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} 有 1 个问题需要修复|[2,*] 有 :count 个问题需要修复",
     "“:title” has been deleted.": "“:title”已删除。",
     "“:title” is now hidden from everyone except its owner.": "“:title”现已对除所有者以外的所有人隐藏。",
-    "“:title” is visible again.": "“:title”已重新可见。"
+    "“:title” is visible again.": "“:title”已重新可见。",
+    "Free for everyone.": "对所有人免费。",
+    "By :site.": "由 :site 制作。",
+    "Part-time or student job": "兼职或学生工作",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "模板在下面的文本框中。替换所有[方括号]中的内容,然后保存。在你点击保存之前不会有任何更改。",
+    "Saving will replace the letter you already have.": "保存后将替换你现有的求职信。",
+    "Keep my current letter": "保留我当前的求职信"
 }

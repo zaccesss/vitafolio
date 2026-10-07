@@ -337,7 +337,6 @@
     "Forgotten your password?": "¿Has olvidado tu contraseña?",
     "Four themes and seven accents": "Cuatro temas y siete colores de acento",
     "Free and quick to set up. You can keep several CVs and choose who sees each one.": "Gratis y rápido de configurar. Puedes tener varios CV y elegir quién ve cada uno.",
-    "Free for students, graduates and everyone in between": "Gratis para estudiantes, recién titulados y todos los demás",
     "Freelance or part time": "Autónomo o a tiempo parcial",
     "Frequently asked questions": "Preguntas frecuentes",
     "from :name": "de :name",
@@ -458,7 +457,6 @@
     "Looking for": "Busco",
     "Looking for: :availability": "Busco: :availability",
     "Lost your phone? Use a recovery code": "¿Has perdido el teléfono? Usa un código de recuperación",
-    "Made by :site.": "Creado por :site.",
     "Main": "Principal",
     "Main language or tool": "Lenguaje o herramienta principal",
     "Main language: :language": "Lenguaje principal: :language",
@@ -1104,5 +1102,11 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Hay un problema que corregir|[2,*] Hay :count problemas que corregir",
     "“:title” has been deleted.": "Se ha eliminado “:title”.",
     "“:title” is now hidden from everyone except its owner.": "“:title” ahora está oculto para todos excepto para su propietario.",
-    "“:title” is visible again.": "“:title” vuelve a estar visible."
+    "“:title” is visible again.": "“:title” vuelve a estar visible.",
+    "Free for everyone.": "Gratis para todos.",
+    "By :site.": "Por :site.",
+    "Part-time or student job": "Trabajo a tiempo parcial o para estudiantes",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "La plantilla está en el cuadro de abajo. Sustituye todo lo que va entre [corchetes] y guarda. No cambia nada hasta que pulses Guardar.",
+    "Saving will replace the letter you already have.": "Al guardar se sustituirá la carta que ya tienes.",
+    "Keep my current letter": "Conservar mi carta actual"
 }

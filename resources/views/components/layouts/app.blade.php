@@ -214,7 +214,7 @@
                 <p>
                     <a href="{{ route('copyright') }}">&copy; {{ date('Y') }} {{ config('vitafolio.owner.name') }}</a>.
                     @if (config('vitafolio.owner.url'))
-                        {!! __('Made by :site.', ['site' => '<a href="'.e(config('vitafolio.owner.url')).'" rel="noopener" dir="ltr">'.e(preg_replace('#^https?://(www\.)?#', '', rtrim(config('vitafolio.owner.url'), '/'))).'</a>']) !!}
+                        {!! __('By :site.', ['site' => '<a href="'.e(config('vitafolio.owner.url')).'" rel="noopener" dir="ltr">'.e(preg_replace('#^https?://(www\.)?#', '', rtrim(config('vitafolio.owner.url'), '/'))).'</a>']) !!}
                     @endif
                 </p>
                 <x-language-menu placement="footer" />
