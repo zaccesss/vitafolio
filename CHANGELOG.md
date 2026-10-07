@@ -80,6 +80,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- Translations committed to the repository are no longer replaced with English by the next Crowdin sync. A manual run of the sync workflow can now upload them to Crowdin first.
 - The developer documentation lists all seven LaTeX starter templates instead of four.
 - Arabic and Urdu text in generated PDF, Word and LaTeX files no longer breaks apart. Lines were split on a byte that is part of some Arabic letters.
 - The site went down on 6 October when the free database plan powered the database off for inactivity. The database now runs on TiDB Cloud Starter in Frankfurt, which stays on, with every table and row copied across and checked. The privacy policy names the new host.
