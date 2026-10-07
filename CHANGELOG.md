@@ -43,6 +43,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Changed
 
+- Crowdin translation pull requests are opened by the project's automation account instead of the built-in Actions token, so they run CI on their own.
 - Pint no longer checks the `lang/` folder. Its files are now exported by Crowdin in Crowdin's own formatting, so translation pull requests no longer fail the style check over quote style.
 - Generated CV and cover letter PDFs are tagged PDF/UA-1 files, so screen readers read them as well as the web page. Each one declares British English as its language and carries its own title. Headings become bookmarks. Paragraphs, bulleted lists, the links table and every link carry structure tags in reading order. The photo has alt text. The PDFs are now made by Typst, which refuses to write a file that breaks the standard. mPDF stays only as a fallback for a machine without Typst.
 - The privacy policy, help guides, features page and documentation list Google, GitHub and Microsoft as the sign-in options. LinkedIn sign-in is not offered.
