@@ -25,6 +25,8 @@ class SectorTest extends TestCase
             ['Management Consulting Analyst', 'business'],
             ['Research Scientist Placement', 'science'],
             ['Summer Internship', 'other'],
+            ['Digital Project Management Industrial Placement', 'business'],
+            ['Year in Industry - Applied and Theoretical Scientist', 'science'],
         ];
     }
 
@@ -34,9 +36,11 @@ class SectorTest extends TestCase
         $this->assertSame($sector, Sector::guess($title), $title);
     }
 
-    public function test_an_adzuna_category_wins_unless_it_is_too_general(): void
+    public function test_an_adzuna_category_only_fills_a_gap(): void
     {
-        $this->assertSame('law', Sector::fromAdzuna('legal-jobs', 'Graduate Analyst'));
+        $this->assertSame('law', Sector::fromAdzuna('legal-jobs', 'Graduate Trainee'));
+        // a title that names its field beats the board's own category
+        $this->assertSame('science', Sector::fromAdzuna('it-jobs', 'Year in Industry - Applied and Theoretical Scientist'));
         $this->assertSame('finance', Sector::fromAdzuna('graduate-jobs', 'Graduate Audit Associate'));
     }
 }

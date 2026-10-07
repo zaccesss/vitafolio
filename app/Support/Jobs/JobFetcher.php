@@ -64,7 +64,7 @@ class JobFetcher
      */
     private function store(string $source, array $row): void
     {
-        $row['external_id'] = sha1(mb_strtolower(trim($row['title'])).'|'.mb_strtolower(trim((string) $row['company'])));
+        $row['external_id'] = sha1(mb_strtolower(trim($row['title'])).'|'.self::employerKey((string) $row['company']));
         $existing = JobListing::where('source', $source)->where('external_id', $row['external_id'])->first();
         if ($existing?->location) {
             $known = array_map('mb_strtolower', array_map('trim', explode(';', $existing->location)));
@@ -172,9 +172,19 @@ class JobFetcher
         return Str::limit($text, $limit, '...');
     }
 
+    /** "Safran" and "SAFRAN UK Ltd" are one employer */
+    public static function employerKey(string $company): string
+    {
+        $name = preg_replace('/[^a-z0-9 ]+/', ' ', mb_strtolower($company));
+        $name = preg_replace('/\b(uk|u k|ltd|limited|plc|llp|group|holdings|inc|co|company|the)\b/', ' ', $name);
+
+        return trim(preg_replace('/\s+/', ' ', $name));
+    }
+
+    /** a figure this small is a daily or hourly rate, which the boards do not label, so it is left out */
     private function money(mixed $value): ?int
     {
-        return is_numeric($value) && $value > 0 ? (int) round((float) $value) : null;
+        return is_numeric($value) && $value >= 5000 ? (int) round((float) $value) : null;
     }
 
     /** reed writes dates as dd/mm/yyyy */
