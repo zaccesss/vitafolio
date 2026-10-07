@@ -16,13 +16,13 @@
         $user->pronouns,
         $user->location,
         $user->university,
-        $cv->key_language ? 'Main language: '.$cv->key_language : null,
-        $user->availability !== 'none' ? 'Looking for: '.(config('vitafolio.availability')[$user->availability] ?? '') : null,
+        $cv->key_language ? $cv->label('Main language: :language', ['language' => $cv->key_language]) : null,
+        $user->availability !== 'none' ? $cv->label('Looking for: :availability', ['availability' => $cv->label(config('vitafolio.availability')[$user->availability] ?? '')]) : null,
         $cv->show_email ? $user->email : null,
     ]);
 @endphp
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="{{ \App\Support\Locales::html($cv->documentLocale()) }}" dir="{{ \App\Support\Locales::dir($cv->documentLocale()) }}">
 <head>
 <meta charset="utf-8">
 <style>
@@ -51,7 +51,7 @@
 </style>
 </head>
 <body>
-<htmlpagefooter name="footer"><div class="footer">{{ $user->name }} &middot; {{ $letter ? route('cv.letter', $cv) : route('cv.show', $cv) }} &middot; page {PAGENO} of {nbpg}</div></htmlpagefooter>
+<htmlpagefooter name="footer"><div class="footer">{{ $user->name }} &middot; {{ $letter ? route('cv.letter', $cv) : route('cv.show', $cv) }} &middot; {{ $cv->label('page :current of :total', ['current' => '{PAGENO}', 'total' => '{nbpg}']) }}</div></htmlpagefooter>
 <sethtmlpagefooter name="footer" value="on" />
 
 <table class="header" cellspacing="0" cellpadding="0">
@@ -69,22 +69,22 @@
 @unless ($band)<div class="rule"></div>@endunless
 
 @if ($letter)
-    <h2>Cover letter</h2>
+    <h2>{{ $cv->label('Cover letter') }}</h2>
     @if (filled($cv->letter_to))<p class="muted">{{ $cv->letter_to }}</p>@endif
     <div>{!! nl2br(e($cv->cover_letter)) !!}</div>
 @else
 @foreach ($cv->orderedSections() as $section)
     @if ($section === 'profile' && filled($cv->profile))
-        <h2>Profile</h2>
+        <h2>{{ $cv->label('Profile') }}</h2>
         <div>{!! nl2br(e($cv->profile)) !!}</div>
     @elseif ($section === 'experience' && filled($cv->experience))
-        <h2>Experience</h2>
+        <h2>{{ $cv->label('Experience') }}</h2>
         <div>{!! nl2br(e($cv->experience)) !!}</div>
     @elseif ($section === 'education' && filled($cv->education))
-        <h2>Education</h2>
+        <h2>{{ $cv->label('Education') }}</h2>
         <div>{!! nl2br(e($cv->education)) !!}</div>
     @elseif ($section === 'projects' && $cv->projects->isNotEmpty())
-        <h2>Projects</h2>
+        <h2>{{ $cv->label('Projects') }}</h2>
         @foreach ($cv->projects as $project)
             <div class="project">
                 <span class="project-title">{{ $project->title }}</span>
@@ -94,10 +94,10 @@
             </div>
         @endforeach
     @elseif ($section === 'skills' && $cv->tags->isNotEmpty())
-        <h2>Skills</h2>
+        <h2>{{ $cv->label('Skills') }}</h2>
         <p class="skills">{{ $cv->tags->pluck('name')->implode('  ·  ') }}</p>
     @elseif ($section === 'links' && $links !== [])
-        <h2>Links</h2>
+        <h2>{{ $cv->label('Links') }}</h2>
         <table cellspacing="0" cellpadding="0">
             @foreach ($links as $link)
                 <tr>

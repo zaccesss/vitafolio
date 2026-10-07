@@ -8,6 +8,7 @@ use App\Models\Endorsement;
 use App\Models\Report;
 use App\Models\User;
 use App\Rules\Turnstile;
+use App\Support\Locales;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -20,7 +21,7 @@ class ReportController extends Controller
         abort_unless($cv->isVisibleTo($request->user()), 404);
         $this->record($request, $cv, null);
 
-        return redirect()->route('cv.show', $cv)->with('status', 'Thanks for reporting this. A moderator will review it.');
+        return redirect()->route('cv.show', $cv)->with('status', __('Thanks for reporting this. A moderator will review it.'));
     }
 
     /** one endorsement on a cv; visitors see only shown ones. the owner can also report one still waiting */
@@ -31,7 +32,7 @@ class ReportController extends Controller
         $this->record($request, $cv, $endorsement);
 
         return ($isOwner ? redirect()->route('cvs.edit', [$cv, 'endorsements']) : redirect()->to(route('cv.show', $cv).'#endorsements'))
-            ->with('status', 'Thanks for reporting this endorsement. A moderator will review it.');
+            ->with('status', __('Thanks for reporting this endorsement. A moderator will review it.'));
     }
 
     private function record(Request $request, Cv $cv, ?Endorsement $endorsement): void
@@ -52,7 +53,7 @@ class ReportController extends Controller
         // sent after the response, so a slow mail service never holds up the visitor
         if ($report->wasRecentlyCreated) {
             $admins = User::where('role', 'admin')->pluck('email');
-            defer(fn () => $admins->each(fn (string $email) => rescue(fn () => Mail::to($email)->send(new ReportReceived($report)))));
+            defer(fn () => $admins->each(fn (string $email) => rescue(fn () => Mail::to($email)->locale(Locales::DEFAULT)->send(new ReportReceived($report)))));
         }
     }
 }

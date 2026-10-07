@@ -14,7 +14,7 @@ class ReportReceived extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'A CV was reported on '.config('app.name'));
+        return new Envelope(subject: __('A CV was reported on :app', ['app' => config('app.name')]));
     }
 
     public function content(): Content

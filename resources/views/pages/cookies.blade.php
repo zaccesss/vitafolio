@@ -1,4 +1,4 @@
-<x-prose-page title="Cookie policy" intro="Vitafolio only uses cookies that are strictly necessary, so there is no cookie banner." updated="4 October 2026">
+<x-prose-page english-only title="Cookie policy" intro="Vitafolio only uses cookies that are strictly necessary, so there is no cookie banner." updated="7 October 2026">
     <h2>Cookies Vitafolio sets</h2>
     <div class="not-prose overflow-x-auto">
         <table class="w-full text-left text-sm">
@@ -7,6 +7,7 @@
                 <tr class="border-b border-line"><td class="py-2 pr-4 font-mono">{{ \Illuminate\Support\Str::slug(config('app.name'), '_') }}_session</td><td class="py-2 pr-4">Keeps you signed in and remembers what you were doing. Encrypted.</td><td class="py-2">Until you close the browser or two hours of inactivity</td></tr>
                 <tr class="border-b border-line"><td class="py-2 pr-4 font-mono">XSRF-TOKEN</td><td class="py-2 pr-4">Protects forms against cross-site request forgery.</td><td class="py-2">Same as the session</td></tr>
                 <tr class="border-b border-line"><td class="py-2 pr-4 font-mono">remember_web_…</td><td class="py-2 pr-4">Keeps you signed in on this device. Only set if you tick "Keep me signed in".</td><td class="py-2">Up to 5 years or until you sign out</td></tr>
+                <tr class="border-b border-line"><td class="py-2 pr-4 font-mono">locale</td><td class="py-2 pr-4">Remembers the language you picked from the language menu. Encrypted. Only set when you pick one.</td><td class="py-2">One year</td></tr>
             </tbody>
         </table>
     </div>

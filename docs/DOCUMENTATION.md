@@ -16,6 +16,7 @@ safe and how to run your own copy.
 - [Security](#security)
 - [Privacy](#privacy)
 - [Search and sharing](#search-and-sharing)
+- [Languages](#languages)
 - [Configuration](#configuration)
 - [Local development](#local-development)
 - [Deployment](#deployment)
@@ -55,7 +56,7 @@ Each CV has seven tabs:
 | Endorsements | Endorsements other people wrote about this CV, to approve, hide or delete |
 | Projects | Up to twelve projects with a link, a description and an image or short video |
 | File and LaTeX | Upload a PDF or Word file. The LaTeX editor writes and compiles one instead |
-| Look and privacy | Title, address, theme, accent colour, font, whether to show your email and who can see the CV |
+| Look and privacy | Title, address, theme, accent colour, font, document language, whether to show your email and who can see the CV |
 | Import and export | Import a JSON Resume file, export this CV as JSON Resume, duplicate it or delete it |
 
 Themes are Classic, Modern, Minimal and Plain. Plain is designed to be read easily by screen readers
@@ -112,7 +113,7 @@ copies, download a generated PDF and open any attached file. When the link is po
 or in a chat, a preview card shows your photo, name, headline and top skills.
 
 Generated PDFs, for the CV and its cover letter, are tagged PDF/UA-1 files, so screen readers read
-them the same way as the web page. Each one declares its language (British English) and its title, which
+them the same way as the web page. Each one declares its language (the CV's document language) and its title, which
 viewers show instead of the file name. The name, section headings and project titles are real headings,
 which also become the PDF's bookmarks. Paragraphs, bulleted lists, the links table and every link carry
 their own structure tags in reading order. The photo has alt text, while the page footer is marked as
@@ -133,6 +134,19 @@ signed-in devices and your data, where you can download everything as JSON or de
 scans for the last 7, 30 or 90 days, with the previous period for comparison, views per CV, where
 visitors came from and the busiest day. Every chart has a table with the same numbers. Each visitor
 counts once a day, using a code that changes daily. Your own visits never count.
+
+### Languages
+
+The site is available in English, Spanish, French, Brazilian Portuguese, Simplified Chinese, Arabic and
+Urdu. A first visit follows the language the browser asks for. The language menu in the header and the
+footer changes it, naming each language in its own script. The choice is remembered in a cookie and,
+once signed in, on the account, so it follows you to other devices and sets the language of your emails.
+Arabic and Urdu pages read right to left.
+
+Each CV also has a **document language** under **Look and privacy**. It sets the language of the CV's
+fixed labels, such as its section headings, on its page and in its PDF and Word files, whatever language
+a visitor reads the site in. A new CV starts in the language you are using the site in. What you write
+on a CV is never translated.
 
 ### Help and documentation
 
@@ -194,7 +208,7 @@ erDiagram
 | Table | Notes |
 | --- | --- |
 | `users` | Profile fields live here: handle, headline, bio, links, university, availability, photo and visibility. `role` is `member` or `admin`. `has_password` is false for accounts made through a sign-in provider until a password is set |
-| `cvs` | Title, address (`slug`), content sections, saved section order, LaTeX source, theme, accent, font and visibility. `letter_to` and `cover_letter` hold the optional cover letter. `hidden_at` is set by moderators |
+| `cvs` | Title, address (`slug`), content sections, saved section order, LaTeX source, theme, accent, font, document `language` and visibility. `letter_to` and `cover_letter` hold the optional cover letter. `hidden_at` is set by moderators |
 | `cv_documents` | One file per CV. `storage` says whether the bytes are on Cloudinary (`public_id`) or in the `data` column |
 | `projects` | Up to twelve per CV, each with optional media on Cloudinary, its size and a description for people who cannot see it |
 | `tags` and `cv_tag` | Skills, with spelling variants such as "JS" and "JavaScript" folded into one tag |
@@ -345,6 +359,67 @@ Report a vulnerability through the [security policy](../SECURITY.md). Never open
 - **QR codes** point at each CV for printed copies.
 - **`/.well-known/security.txt`** gives the security contact, with an expiry that renews itself.
 
+## Languages
+
+### How it works
+
+| Piece | Where |
+| --- | --- |
+| The language list | `app/Support/Locales.php`: each code with its name in its own script, its HTML language tag and its reading direction |
+| Choosing the language | `app/Http/Middleware/SetLocale.php`: the account's saved choice, then the `locale` cookie, then the browser's `Accept-Language` header, then English |
+| The language menu | `resources/views/components/language-menu.blade.php`, posting to `/language` |
+| Interface strings | `lang/en.json` (the source) and one `lang/{code}.json` per language, keyed by the English text |
+| Framework messages | `lang/{code}/validation.php`, `auth.php`, `passwords.php` and `pagination.php` |
+| Strings in the browser scripts | `resources/js/i18n.js` reads them from a JSON data block on each page, listed in `Locales::SCRIPT_STRINGS` |
+| A CV's document language | The `language` column on `cvs`, used for the CV's labels on its page and in its PDF and Word files |
+| PDF fonts | `resources/pdf/fonts`: Noto Naskh Arabic and Noto Nastaliq Urdu in the repository, Noto Sans SC fetched by `scripts/fetch-pdf-fonts.sh` |
+
+The `<html>` element carries the page's `lang` and `dir`, so Arabic and Urdu pages read right to left.
+Layout uses logical properties such as `ms-`, `pe-` and `text-start`, which mirror on their own. Code,
+web addresses and email addresses stay left to right. Text people write keeps its own direction through
+`dir="auto"`. Arabic and Urdu pages load Noto Naskh Arabic or Noto Nastaliq Urdu, self-hosted like the
+other fonts. Chinese pages use the system's own Chinese fonts, which every current system includes.
+
+Legal pages (privacy, terms, cookies, copyright and the accessibility statement) and this documentation
+stay in English. Readers in other languages see a short note saying the English version applies.
+
+### Adding or changing a string
+
+1. Write the English text in the view or class with `__('...')`, `trans_choice('...')` for plurals or
+   `t('...')` in a browser script (and add it to `Locales::SCRIPT_STRINGS`).
+2. Run `php artisan vitafolio:translations`. It rewrites `lang/en.json` from the code and lists how
+   many strings each language is missing.
+3. Add the translation to each `lang/{code}.json`. Keep every `:placeholder` and HTML tag exactly as
+   in the English.
+
+`LocalisationTest` fails when `lang/en.json` is out of date, when any language is missing a key or has
+one English no longer uses. It also fails when a translation changes a placeholder, a tag or a plural form.
+
+### Adding a language
+
+1. Add the code to `Locales::ALL` with its name in its own script, its HTML language tag and `ltr` or
+   `rtl`. Teach `Locales::match()` which browser tags map to it.
+2. Copy `lang/en.json` to `lang/{code}.json` and `lang/en/` to `lang/{code}/`, then translate them.
+3. If the script needs its own font on the web, add a `:lang()` rule in `resources/css/app.css`. For
+   PDFs, add the font to `resources/pdf/fonts` and to `PdfCv::scriptFonts()`.
+4. Add a `languages_mapping` entry to `crowdin.yml` if Crowdin's code differs from Laravel's.
+5. Run the tests. The language is picked up by every check automatically.
+
+### Community translation
+
+`crowdin.yml` maps the English sources to each language's files, so the project can take community
+translations through [Crowdin](https://crowdin.com). Nothing in the build needs Crowdin or an account.
+To switch it on, once:
+
+1. Create a free open-source project on Crowdin with English as the source language and the six other
+   languages as targets.
+2. In the project's **Integrations**, connect **GitHub** to `zaccesss/vitafolio`, choose the `main`
+   branch and let it use the repository's `crowdin.yml`.
+3. Crowdin then uploads new English strings when `main` changes and opens pull requests with
+   translations from its own `l10n_main` branch. Each one is reviewed like any other change.
+
+Crowdin's codes `zh-CN` and `pt-BR` are mapped to Laravel's `zh_CN` and `pt_BR` in `crowdin.yml`.
+
 ## Configuration
 
 Copy `.env.example` to `.env`. Laravel's own settings are documented there; these are Vitafolio's.
@@ -381,6 +456,9 @@ The [README](../README.md#running-it-locally) has the quick start. A few more de
   written to `storage/logs/laravel.log`.
 - The service worker only registers in a production build, so development never serves stale files.
 - `scripts/brand-assets.sh` needs `rsvg-convert` (from librsvg) and Python 3.
+- Generated PDFs in Simplified Chinese need the Noto Sans SC font, which is too large to keep in git.
+  `sh scripts/fetch-pdf-fonts.sh` downloads it into `resources/pdf/fonts` and checks its SHA-256. The
+  Docker build and CI run the same script. The Arabic and Urdu fonts are already in that folder.
 - Generated PDFs need [Typst](https://typst.app) 0.15 or later on the path (`brew install typst` on
   macOS). Without it, CV and letter PDFs still download, made by mPDF without structure tags. The
   tagged PDF tests are then skipped. veraPDF (`brew install verapdf`) checks a file against PDF/UA-1 with
@@ -493,6 +571,10 @@ image and a Gitleaks scan for committed secrets.
 | Cloudinary for files, the database for photos | Files can be large and must stay private; photos are tiny and shown on every card |
 | LaTeX compiled in the browser | No server needs a 4 GB TeX installation. The source also stays private until saved |
 | Typst for generated PDFs | It writes tagged PDF/UA-1 files and refuses to write one that breaks the standard. It is a single static binary of about 55 MB that renders a CV in a fraction of a second using about 25 MB of memory, so it suits a free host. mPDF cannot write structure tags. A headless browser would need several hundred megabytes of image and memory |
+| Interface strings keyed by their English text | `lang/en.json` is written from the code by `php artisan vitafolio:translations`, so a new string can never be missing from what translators see. The English text also reads naturally in the views |
+| The language stays out of the address | Every page keeps one address. The language comes from a saved choice, a cookie or the browser. Responses say `Vary: Accept-Language`. Existing links and search results are unchanged |
+| A CV keeps its own document language | A CV, its PDF and its Word file read the same to every visitor and match each other, instead of changing with whoever opens them |
+| Noto fonts embedded in generated PDFs | DejaVu has no Chinese and only basic Arabic. Typst embeds only the characters a PDF uses, so the files stay small |
 | FrankenPHP on Alpine | A single small process, with far fewer known vulnerabilities than a Debian Apache image |
 | Microsoft never joins accounts by email | Some tenants let users set unverified addresses, which would allow account takeover |
 | A scheduler outside the app | Free hosting has no scheduled jobs, so a nightly call with a shared secret does the tidy-up. An external scheduler makes the call on time; the workflow's own schedule is the backup |

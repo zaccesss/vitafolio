@@ -33,7 +33,7 @@ class Latex
     {
         $out = [];
         $inList = false;
-        foreach (preg_split('/\R/', trim((string) $text)) ?: [] as $line) {
+        foreach (preg_split('/\R/u', trim((string) $text)) ?: [] as $line) {
             $line = trim($line);
             if (str_starts_with($line, '- ')) {
                 if (! $inList) {

@@ -29,7 +29,7 @@ class AccountController extends Controller
         $request->validateWithBag('setPassword', ['password' => ['required', 'string', Password::default(), 'confirmed']]);
         $request->user()->forceFill(['password' => Hash::make($request->input('password')), 'has_password' => true])->save();
 
-        return redirect()->route('settings.security')->with('status', 'Password set. You can now sign in with your email address and this password too.');
+        return redirect()->route('settings.security')->with('status', __('Password set. You can now sign in with your email address and this password too.'));
     }
 
     /** lands back on the passkeys section once the password has been confirmed or after one was added */
@@ -65,7 +65,7 @@ class AccountController extends Controller
         abort_if($id === $request->session()->getId(), 404);
         DB::table('sessions')->where('user_id', $request->user()->id)->where('id', $id)->delete();
 
-        return redirect()->route('settings.sessions')->with('status', 'That device has been signed out.');
+        return redirect()->route('settings.sessions')->with('status', __('That device has been signed out.'));
     }
 
     /** active sessions with the browser description made readable, newest first */
@@ -76,10 +76,15 @@ class AccountController extends Controller
             ->map(function ($row) {
                 $ua = (string) $row->user_agent;
                 $browser = collect(['Edg/' => 'Edge', 'OPR/' => 'Opera', 'Firefox/' => 'Firefox', 'Chrome/' => 'Chrome', 'Safari/' => 'Safari'])
-                    ->first(fn ($name, $needle) => str_contains($ua, $needle), 'A browser');
+                    ->first(fn ($name, $needle) => str_contains($ua, $needle));
                 $os = collect(['iPhone' => 'iPhone', 'iPad' => 'iPad', 'Android' => 'Android', 'Mac OS' => 'macOS', 'Windows' => 'Windows', 'Linux' => 'Linux'])
-                    ->first(fn ($name, $needle) => str_contains($ua, $needle), 'an unknown device');
-                $row->device = $browser.' on '.$os;
+                    ->first(fn ($name, $needle) => str_contains($ua, $needle));
+                $row->device = match (true) {
+                    $browser && $os => __(':browser on :system', ['browser' => $browser, 'system' => $os]),
+                    (bool) $browser => __(':browser on an unknown device', ['browser' => $browser]),
+                    (bool) $os => __('A browser on :system', ['system' => $os]),
+                    default => __('A browser on an unknown device'),
+                };
                 $row->last_active = Carbon::createFromTimestamp($row->last_activity);
 
                 return $row;
@@ -118,7 +123,7 @@ class AccountController extends Controller
     /** removes the account, every cv, file, picture, view record and endorsement written or received through the cascades */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validate(['confirm' => ['required', 'in:DELETE']], ['confirm.in' => 'Type DELETE in capitals to confirm.']);
+        $request->validate(['confirm' => ['required', 'in:DELETE']], ['confirm.in' => __('Type DELETE in capitals to confirm.')]);
 
         $user = $request->user();
         Auth::logout();
@@ -126,6 +131,6 @@ class AccountController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home')->with('status', 'Your account and all your CVs have been permanently deleted.');
+        return redirect()->route('home')->with('status', __('Your account and all your CVs have been permanently deleted.'));
     }
 }

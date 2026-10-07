@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { t } from '../i18n.js';
 
 const props = defineProps({
     input: { type: String, required: true },
@@ -71,12 +72,12 @@ function onFile() {
 function onLoad(event) {
     natural.value = { w: event.target.naturalWidth, h: event.target.naturalHeight };
     centre();
-    status.value = 'Photo loaded. Drag it, use the arrow keys or the zoom slider to frame it.';
+    status.value = t('Photo loaded. Drag it, use the arrow keys or the zoom slider to frame it.');
 }
 
 function onError() {
     src.value = '';
-    status.value = 'That photo cannot be previewed here. It will still be cropped to the centre when you upload it.';
+    status.value = t('That photo cannot be previewed here. It will still be cropped to the centre when you upload it.');
 }
 
 function onPointerDown(event) {
@@ -127,23 +128,23 @@ onBeforeUnmount(() => {
                 class="relative shrink-0 cursor-grab touch-none overflow-hidden size-56 rounded-full bg-raised ring-2 ring-line-strong select-none focus-visible:outline-3 focus-visible:outline-offset-2"
                 tabindex="0"
                 role="group"
-                aria-label="Photo framing. Use the arrow keys to move the photo, plus and minus to zoom."
+                :aria-label="t('Photo framing. Use the arrow keys to move the photo, plus and minus to zoom.')"
                 @pointerdown="onPointerDown"
                 @pointermove="onPointerMove"
                 @pointerup="onPointerUp"
                 @pointercancel="onPointerUp"
                 @keydown="onKey"
             >
-                <img :src="src" alt="" draggable="false" class="absolute top-0 left-0 max-w-none" :style="imageStyle" @load="onLoad" @error="onError" />
+                <img :src="src" alt="" draggable="false" class="absolute top-0 left-0 max-w-none" dir="ltr" :style="imageStyle" @load="onLoad" @error="onError" />
             </div>
             <div class="grid min-w-48 flex-1 gap-3">
-                <label class="field-label" for="avatar-zoom">Zoom</label>
+                <label class="field-label" for="avatar-zoom">{{ t('Zoom') }}</label>
                 <input id="avatar-zoom" type="range" min="1" max="4" step="0.05" :value="zoom" class="w-full accent-brand"
                     @input="setZoom($event.target.value)" />
                 <div>
-                    <button type="button" class="btn btn-sm btn-secondary" @click="centre">Reset framing</button>
+                    <button type="button" class="btn btn-sm btn-secondary" @click="centre">{{ t('Reset framing') }}</button>
                 </div>
-                <p class="text-sm text-muted">The circle shows how the photo appears on your profile and CVs.</p>
+                <p class="text-sm text-muted">{{ t('The circle shows how the photo appears on your profile and CVs.') }}</p>
             </div>
         </div>
         <template v-if="crop">

@@ -20,7 +20,7 @@
 @endphp
 <div {{ $attributes->only('class')->merge(['class' => 'field']) }} @if($counter) x-data="counter" @endif>
     <label for="{{ $id }}" class="field-label">
-        {{ $label }}@if ($required)<span class="ml-0.5 text-bad" aria-hidden="true">*</span><span class="sr-only"> (required)</span>@else <span class="text-sm font-normal text-muted">(optional)</span>@endif
+        {{ $label }}@if ($required)<span class="ms-0.5 text-bad" aria-hidden="true">*</span><span class="sr-only"> {{ __('(required)') }}</span>@else <span class="text-sm font-normal text-muted">{{ __('(optional)') }}</span>@endif
     </label>
 
     @if ($type === 'textarea')
@@ -45,5 +45,5 @@
     {{-- hints sit under the box, so boxes side by side line up whether or not each has a hint --}}
     @if ($hint)<p id="{{ $id }}-hint" class="field-hint">{{ $hint }}</p>@endif
     @if ($counter)<p id="{{ $id }}-count" class="mt-1 text-sm text-muted" aria-live="polite" x-text="text"></p>@endif
-    @if ($error)<p id="{{ $id }}-error" class="field-error"><span class="sr-only">Error: </span>{{ $error }}</p>@endif
+    @if ($error)<p id="{{ $id }}-error" class="field-error"><span class="sr-only">{{ __('Error:') }} </span>{{ $error }}</p>@endif
 </div>

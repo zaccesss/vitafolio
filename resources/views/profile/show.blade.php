@@ -1,4 +1,4 @@
-<x-layouts.app :title="$user->name" :description="$user->headline ?: 'The profile of '.$user->name.' on '.config('app.name')"
+<x-layouts.app :title="$user->name" :description="$user->headline ?: __('The profile of :name on :app', ['name' => $user->name, 'app' => config('app.name')])"
     :canonical="route('profile.show', $user->handle)" :noindex="$user->profile_visibility !== 'public' || ! $user->hasVerifiedEmail()" type="profile">
     <x-slot:head>
         {{-- structured data so search engines understand the page; a data block, never executed --}}
@@ -22,8 +22,8 @@
     <div class="container-page max-w-4xl py-10">
         @if ($isOwner)
             <div class="alert alert-info mb-6 flex flex-wrap items-center justify-between gap-3">
-                <p>This is your profile as others see it. It is <strong>{{ $user->profile_visibility }}</strong>.</p>
-                <a class="btn btn-sm btn-secondary" href="{{ route('profile.edit') }}">Edit profile</a>
+                <p>{!! __('This is your profile as others see it. It is :visibility.', ['visibility' => '<strong>'.e(__(ucfirst($user->profile_visibility))).'</strong>']) !!}</p>
+                <a class="btn btn-sm btn-secondary" href="{{ route('profile.edit') }}">{{ __('Edit profile') }}</a>
             </div>
         @endif
 
@@ -31,24 +31,24 @@
             <x-avatar :user="$user" size="lg" />
             <div>
                 <h1 class="text-4xl">{{ $user->name }}</h1>
-                <p class="mt-1 text-muted">&#64;{{ $user->handle }}@if ($user->pronouns) · {{ $user->pronouns }}@endif</p>
+                <p class="mt-1 text-muted"><span dir="ltr">&#64;{{ $user->handle }}</span>@if ($user->pronouns) · {{ $user->pronouns }}@endif</p>
                 @if ($user->headline)<p class="mt-2 text-lg">{{ $user->headline }}</p>@endif
                 <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted">
                     @if ($user->location)<li>{{ $user->location }}</li>@endif
                     @if ($user->university)<li>{{ $user->university }}</li>@endif
-                    @if ($user->availability !== 'none')<li><span class="badge">{{ config('vitafolio.availability')[$user->availability] }}</span></li>@endif
+                    @if ($user->availability !== 'none')<li><span class="badge">{{ __(config('vitafolio.availability')[$user->availability]) }}</span></li>@endif
                 </ul>
             </div>
         </header>
 
         @if ($user->bio)
-            <section class="mt-8 max-w-2xl" aria-label="About">
-                <p class="whitespace-pre-line text-lg">{{ $user->bio }}</p>
+            <section class="mt-8 max-w-2xl" aria-label="{{ __('About') }}">
+                <p class="whitespace-pre-line text-lg" dir="auto">{{ $user->bio }}</p>
             </section>
         @endif
 
         @if ($links !== [])
-            <ul class="mt-6 flex flex-wrap gap-3" aria-label="Links">
+            <ul class="mt-6 flex flex-wrap gap-3" aria-label="{{ __('Links') }}">
                 @foreach ($links as $link)
                     <li><a class="btn btn-sm btn-secondary" href="{{ $link['url'] }}" rel="noopener noreferrer nofollow ugc me"><x-link-icon :kind="$link['icon']" />{{ $link['label'] }}</a></li>
                 @endforeach
@@ -56,9 +56,9 @@
         @endif
 
         <section class="mt-12" aria-labelledby="cvs-title">
-            <h2 id="cvs-title" class="text-2xl">{{ $isOwner ? 'Your CVs' : 'CVs' }}</h2>
+            <h2 id="cvs-title" class="text-2xl">{{ $isOwner ? __('Your CVs') : __('CVs') }}</h2>
             @if ($cvs->isEmpty())
-                <p class="mt-3 text-muted">{{ $isOwner ? 'You have no CVs yet.' : 'No public CVs yet.' }}</p>
+                <p class="mt-3 text-muted">{{ $isOwner ? __('You have no CVs yet.') : __('No public CVs yet.') }}</p>
             @else
                 <ul class="mt-5 grid gap-5 sm:grid-cols-2">
                     @foreach ($cvs as $cv)
@@ -68,8 +68,8 @@
                                     <a href="{{ route('cv.show', $cv) }}" class="text-ink no-underline after:absolute after:inset-0 after:content-[''] hover:underline">{{ $cv->title }}</a>
                                 </h3>
                                 @if ($cv->displayHeadline())<p class="text-sm text-muted">{{ $cv->displayHeadline() }}</p>@endif
-                                @if ($isOwner)<p><span class="badge">{{ ucfirst($cv->visibility) }}</span></p>@endif
-                                <p class="mt-auto text-sm text-muted">Updated {{ $cv->updated_at->diffForHumans() }}</p>
+                                @if ($isOwner)<p><span class="badge">{{ __(ucfirst($cv->visibility)) }}</span></p>@endif
+                                <p class="mt-auto text-sm text-muted">{{ __('Updated :time', ['time' => $cv->updated_at->diffForHumans()]) }}</p>
                             </article>
                         </li>
                     @endforeach

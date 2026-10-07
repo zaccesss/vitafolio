@@ -26,6 +26,7 @@ browser.
 | Directory | Public CVs listed with search, skill tags, availability and university filters |
 | Sign-in | Email and password, passkeys, two-factor authentication, plus Google, GitHub and Microsoft |
 | Safety | Ownership checks on every change, reports with a moderation queue, suspensions and a strict content security policy |
+| Languages | The interface in English, Spanish, French, Brazilian Portuguese, Simplified Chinese, Arabic and Urdu, picked from the browser and a language menu, with right-to-left layouts for Arabic and Urdu. Each CV has its own document language for its labels, PDF and Word file |
 | Accessibility | WCAG 2.2 AA colours in light and dark themes, full keyboard use, reduced motion and a plain CV layout |
 
 ## The name

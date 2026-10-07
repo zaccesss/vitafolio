@@ -3,7 +3,7 @@
     $owner = config('vitafolio.owner.name');
     $sections = ['about' => 'About these terms', 'eligibility' => 'Who can use it', 'account' => 'Your account', 'content' => 'Your content', 'rules' => 'What is not allowed', 'moderation' => 'Reports and moderation', 'service' => 'The service', 'liability' => 'Liability', 'ending' => 'Ending your use', 'changes' => 'Changes', 'law' => 'Law and disputes', 'contact' => 'Contact'];
 @endphp
-<x-prose-page title="Terms of use" intro="The agreement between you and {{ $site }}, in plain English." updated="5 October 2026">
+<x-prose-page english-only title="Terms of use" intro="The agreement between you and {{ $site }}, in plain English." updated="5 October 2026">
     <nav aria-labelledby="terms-contents" class="not-prose card p-5">
         <h2 id="terms-contents" class="text-lg">Contents</h2>
         <ol class="mt-2 grid gap-1 text-sm sm:grid-cols-2">

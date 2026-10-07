@@ -14,7 +14,7 @@
     $styles = [['stroke-brand', '', 'fill-brand'], ['stroke-brass', '6 5', 'fill-brass']];
     $labelEvery = max(1, (int) ceil(count($days) / 7));
     $totals = array_map('array_sum', $datasets);
-    $summary = $title.': '.collect($totals)->map(fn ($t, $label) => $label.' '.$t)->implode(', ').' over '.count($days).' days.';
+    $summary = __(':title: :totals over :days days.', ['title' => $title, 'totals' => collect($totals)->map(fn ($t, $label) => $label.' '.$t)->implode(', '), 'days' => count($days)]);
 @endphp
 <figure {{ $attributes->merge(['class' => 'card p-5']) }} aria-labelledby="{{ $id }}-title">
     <figcaption id="{{ $id }}-title" class="text-lg font-semibold">{{ $title }}</figcaption>
@@ -26,14 +26,14 @@
             </li>
         @endforeach
     </ul>
-    <svg viewBox="0 0 {{ $w }} {{ $h }}" class="mt-3 h-auto w-full" role="img" aria-label="{{ $summary }} The table below has every value.">
+    <svg viewBox="0 0 {{ $w }} {{ $h }}" class="mt-3 h-auto w-full" role="img" aria-label="{{ $summary }} {{ __('The table below has every value.') }}">
         @for ($t = 0; $t <= 4; $t++)
             <line x1="{{ $left }}" x2="{{ $w - $right }}" y1="{{ $y($t * $step) }}" y2="{{ $y($t * $step) }}" class="stroke-line" stroke-width="1" />
             <text x="{{ $left - 8 }}" y="{{ $y($t * $step) + 4 }}" text-anchor="end" class="fill-muted text-[11px]">{{ $t * $step }}</text>
         @endfor
         @foreach ($days as $i => $day)
             @if ($i % $labelEvery === 0 || $i === count($days) - 1)
-                <text x="{{ $x($i) }}" y="{{ $h - 8 }}" text-anchor="middle" class="fill-muted text-[11px]">{{ \Illuminate\Support\Carbon::parse($day)->format('j M') }}</text>
+                <text x="{{ $x($i) }}" y="{{ $h - 8 }}" text-anchor="middle" class="fill-muted text-[11px]">{{ \Illuminate\Support\Carbon::parse($day)->translatedFormat('j M') }}</text>
             @endif
         @endforeach
         @foreach (array_values($datasets) as $i => $series)
@@ -48,14 +48,14 @@
         @endforeach
     </svg>
     <details class="mt-3">
-        <summary class="cursor-pointer text-sm font-semibold">Show as a table</summary>
+        <summary class="cursor-pointer text-sm font-semibold">{{ __('Show as a table') }}</summary>
         <div class="mt-2 max-h-72 overflow-auto">
-            <table class="w-full text-left text-sm">
-                <caption class="sr-only">{{ $title }} by day</caption>
-                <thead class="border-b border-line text-muted"><tr><th scope="col" class="py-1.5">Day</th>@foreach (array_keys($datasets) as $label)<th scope="col" class="py-1.5 text-right">{{ $label }}</th>@endforeach</tr></thead>
+            <table class="w-full text-start text-sm">
+                <caption class="sr-only">{{ __(':title by day', ['title' => $title]) }}</caption>
+                <thead class="border-b border-line text-muted"><tr><th scope="col" class="py-1.5">{{ __('Day') }}</th>@foreach (array_keys($datasets) as $label)<th scope="col" class="py-1.5 text-end">{{ $label }}</th>@endforeach</tr></thead>
                 <tbody>
                     @foreach (array_reverse($days) as $day)
-                        <tr class="border-b border-line"><th scope="row" class="py-1.5 font-normal">{{ \Illuminate\Support\Carbon::parse($day)->format('D j F') }}</th>@foreach ($datasets as $series)<td class="py-1.5 text-right">{{ $series[$day] }}</td>@endforeach</tr>
+                        <tr class="border-b border-line"><th scope="row" class="py-1.5 font-normal">{{ \Illuminate\Support\Carbon::parse($day)->translatedFormat('D j F') }}</th>@foreach ($datasets as $series)<td class="py-1.5 text-end">{{ $series[$day] }}</td>@endforeach</tr>
                     @endforeach
                 </tbody>
             </table>

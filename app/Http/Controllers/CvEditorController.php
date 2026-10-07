@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cv;
 use App\Support\JsonResume;
+use App\Support\Locales;
 use App\Support\Tags;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -29,7 +30,7 @@ class CvEditorController extends Controller
             'visibility' => 'private',
         ]);
 
-        return redirect()->route('cvs.edit', $cv)->with('status', 'New CV created. It stays private until you change who can see it.');
+        return redirect()->route('cvs.edit', $cv)->with('status', __('New CV created. It stays private until you change who can see it.'));
     }
 
     public function edit(Request $request, Cv $cv, string $tab = 'details'): View
@@ -60,7 +61,7 @@ class CvEditorController extends Controller
         Tags::sync($cv, Tags::parse($data['skills'] ?? ''));
         $cv->touch();
 
-        return redirect()->route('cvs.edit', [$cv, 'details'])->with('status', 'Your CV has been saved.');
+        return redirect()->route('cvs.edit', [$cv, 'details'])->with('status', __('Your CV has been saved.'));
     }
 
     /** the letter is stored on the cv itself, so it follows the cv's theme and visibility */
@@ -74,7 +75,7 @@ class CvEditorController extends Controller
         $cv->update($data);
 
         return redirect()->route('cvs.edit', [$cv, 'letter'])
-            ->with('status', filled($data['cover_letter'] ?? null) ? 'Your cover letter has been saved.' : 'This CV has no cover letter now.');
+            ->with('status', filled($data['cover_letter'] ?? null) ? __('Your cover letter has been saved.') : __('This CV has no cover letter now.'));
     }
 
     /** the order chosen by dragging sections in the editor; unknown names are ignored */
@@ -89,7 +90,7 @@ class CvEditorController extends Controller
 
         return $request->expectsJson()
             ? response()->json(['saved' => true])
-            : redirect()->route('cvs.edit', [$cv, 'details'])->with('status', 'Section order saved.');
+            : redirect()->route('cvs.edit', [$cv, 'details'])->with('status', __('Section order saved.'));
     }
 
     /** makes a private or unlisted cv public in one step, from the dashboard or the editor */
@@ -98,7 +99,7 @@ class CvEditorController extends Controller
         Gate::authorize('manage', $cv);
         $cv->forceFill(['visibility' => 'public'])->save();
 
-        return back()->with('status', $cv->title.' is now public and listed in Browse CVs.');
+        return back()->with('status', __(':title is now public and listed in Browse CVs.', ['title' => $cv->title]));
     }
 
     public function updateSettings(Request $request, Cv $cv): RedirectResponse
@@ -112,14 +113,15 @@ class CvEditorController extends Controller
             'accent' => ['required', Rule::in(array_keys(config('vitafolio.accents')))],
             'font' => ['required', Rule::in(array_keys(config('vitafolio.fonts')))],
             'show_email' => ['nullable', 'boolean'],
+            'language' => ['sometimes', 'required', Rule::in(array_keys(Locales::ALL))],
         ], [
-            'slug.regex' => 'Use lowercase letters, numbers and single hyphens only.',
-            'slug.unique' => 'That address is already taken. Try adding a word.',
+            'slug.regex' => __('Use lowercase letters, numbers and single hyphens only.'),
+            'slug.unique' => __('That address is already taken. Try adding a word.'),
         ]);
         $data['show_email'] = $request->boolean('show_email');
         $cv->update($data);
 
-        return redirect()->route('cvs.edit', [$cv, 'settings'])->with('status', 'Settings saved.');
+        return redirect()->route('cvs.edit', [$cv, 'settings'])->with('status', __('Settings saved.'));
     }
 
     public function import(Request $request, Cv $cv): RedirectResponse
@@ -132,7 +134,7 @@ class CvEditorController extends Controller
         $raw = $request->hasFile('resume') ? (string) file_get_contents($request->file('resume')->getRealPath()) : (string) $request->input('resume_text');
         $data = json_decode($raw, true, 32);
         if (! is_array($data) || (! isset($data['basics']) && ! isset($data['work']))) {
-            throw ValidationException::withMessages(['resume' => 'That does not look like a JSON Resume file.']);
+            throw ValidationException::withMessages(['resume' => __('That does not look like a JSON Resume file.')]);
         }
 
         $fields = JsonResume::import($data);
@@ -146,7 +148,7 @@ class CvEditorController extends Controller
             ->filter(fn ($v, $k) => filled($v) && blank($user->{$k}))->all())->save();
 
         return redirect()->route('cvs.edit', [$cv, 'details'])
-            ->with('status', 'Imported '.count($fields).' sections. Check everything below before you share this CV.');
+            ->with('status', trans_choice('{1} Imported 1 section. Check everything below before you share this CV.|[2,*] Imported :count sections. Check everything below before you share this CV.', count($fields)));
     }
 
     public function exportJson(Cv $cv): JsonResponse
@@ -178,16 +180,16 @@ class CvEditorController extends Controller
             return $copy;
         });
 
-        return redirect()->route('cvs.edit', $copy)->with('status', 'Copy created. It stays private until you change its visibility.');
+        return redirect()->route('cvs.edit', $copy)->with('status', __('Copy created. It stays private until you change its visibility.'));
     }
 
     public function destroy(Request $request, Cv $cv): RedirectResponse
     {
         Gate::authorize('manage', $cv);
-        $request->validate(['confirm_title' => ['required', Rule::in([$cv->title])]], ['confirm_title.in' => 'Type the CV name exactly to confirm.']);
+        $request->validate(['confirm_title' => ['required', Rule::in([$cv->title])]], ['confirm_title.in' => __('Type the CV name exactly to confirm.')]);
         $title = $cv->title;
         $cv->delete();
 
-        return redirect()->route('dashboard')->with('status', '"'.$title.'" has been deleted.');
+        return redirect()->route('dashboard')->with('status', __('“:title” has been deleted.', ['title' => $title]));
     }
 }
