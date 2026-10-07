@@ -6,10 +6,12 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Changed
 
+- The home page says Free for everyone, as plain text rather than a badge. The footer credit reads By isaacadjei.me.
 - A CV's visibility shows as an icon beside its word instead of a rounded badge: a closed padlock for Private, an open padlock for Public and a link for Unlisted. It appears on the dashboard, the analytics table, the profile and the CV editor.
 
 ### Added
 
+- The cover letter tab has templates for an internship, a placement year, a graduate role and a part-time or student job. Choosing one fills the box with a structure to complete, signed with the owner's name; nothing is saved until they press Save. An existing letter gets a warning and a way back.
 - Each demo clip has its own page at `/features/demo/<clip>` with a video player, a Back to Features link, a written description of what happens and links to the other clips. Selecting a clip on the Features page opens it there instead of the bare video file.
 - Dark versions of the demo clips. The Features page, the clip pages and the README show the one that matches the theme in use.
 - A See it in action section on the Features page with the three demo clips, for people new to the site. Each clip shows a still frame when reduced motion is turned on and opens a full-quality video. Signed-out visitors get a See how it works button on the home page that leads there. The new text is in all seven languages.

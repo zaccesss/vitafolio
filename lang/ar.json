@@ -337,7 +337,6 @@
     "Forgotten your password?": "نسيت كلمة المرور؟",
     "Four themes and seven accents": "أربع سمات وسبعة ألوان تمييز",
     "Free and quick to set up. You can keep several CVs and choose who sees each one.": "مجاني وسريع الإعداد. يمكنك الاحتفاظ بعدة سير ذاتية واختيار من يرى كل واحدة منها.",
-    "Free for students, graduates and everyone in between": "مجاني للطلاب والخريجين وكل من بينهما",
     "Freelance or part time": "عمل حر أو بدوام جزئي",
     "Frequently asked questions": "الأسئلة الشائعة",
     "from :name": "من :name",
@@ -458,7 +457,6 @@
     "Looking for": "أبحث عن",
     "Looking for: :availability": "أبحث عن: :availability",
     "Lost your phone? Use a recovery code": "فقدت هاتفك؟ استخدم رمز استرداد",
-    "Made by :site.": "من صنع :site.",
     "Main": "الرئيسي",
     "Main language or tool": "اللغة أو الأداة الرئيسية",
     "Main language: :language": "اللغة الرئيسية: :language",
@@ -1104,5 +1102,11 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} توجد مشكلة واحدة يجب إصلاحها|[2,*] عدد المشكلات التي يجب إصلاحها: :count",
     "“:title” has been deleted.": "تم حذف “:title”.",
     "“:title” is now hidden from everyone except its owner.": "أصبحت “:title” الآن مخفية عن الجميع باستثناء صاحبها.",
-    "“:title” is visible again.": "أصبحت “:title” مرئية مرة أخرى."
+    "“:title” is visible again.": "أصبحت “:title” مرئية مرة أخرى.",
+    "Free for everyone.": "مجاني للجميع.",
+    "By :site.": "بواسطة :site.",
+    "Part-time or student job": "عمل بدوام جزئي أو للطلاب",
+    "The template is in the box below. Replace everything in [square brackets], then save. Nothing changes until you press Save.": "القالب في المربع أدناه. استبدل كل ما بين [الأقواس المربعة] ثم احفظ. لا يتغير شيء حتى تضغط حفظ.",
+    "Saving will replace the letter you already have.": "سيؤدي الحفظ إلى استبدال الرسالة الحالية.",
+    "Keep my current letter": "الإبقاء على رسالتي الحالية"
 }
