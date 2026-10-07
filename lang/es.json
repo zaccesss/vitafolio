@@ -360,6 +360,7 @@
     "from :provider": "de :provider",
     "From :source": "De :source",
     "From people who know the work of :name. :name approves each one before it shows.": "De personas que conocen el trabajo de :name. :name aprueba cada una antes de que se muestre.",
+    "From the employer's own careers site": "Del sitio de empleo de la propia empresa",
     "Full name": "Nombre completo",
     "Get in touch about your account, report a problem or suggest an idea.": "Ponte en contacto sobre tu cuenta, informa de un problema o sugiere una idea.",
     "Getting started": "Primeros pasos",
@@ -433,6 +434,7 @@
     "Inter (clean sans serif)": "Inter (sans serif limpia)",
     "Internship": "Prácticas",
     "Internships": "Prácticas",
+    "Internships, placement years, spring weeks, graduate roles and part-time jobs for the :from to :to recruitment cycle, gathered daily from employers' own careers sites and job boards. Each one links to the page where you apply.": "Prácticas, años de prácticas en empresa, spring weeks, puestos para recién graduados y trabajos a tiempo parcial del ciclo de selección :from a :to, recopilados a diario de los sitios de empleo de las propias empresas y de portales de empleo. Cada uno enlaza con la página donde se presenta la solicitud.",
     "Invalid credential format.": "Formato de credencial no válido.",
     "Is it free?": "¿Es gratis?",
     "Is the site up? Check the status page and its history of incidents.": "¿Funciona el sitio? Consulta la página de estado y su historial de incidencias.",
@@ -862,6 +864,7 @@
     "Source code": "Código fuente",
     "Source Serif (classic serif)": "Source Serif (serif clásica)",
     "Spam or advertising": "Spam o publicidad",
+    "Spring weeks and insight days": "Spring weeks y jornadas de introducción",
     "Start from a template": "Empezar con una plantilla",
     "Start from a template and compile it in your browser, then save the PDF to your CV.": "Empieza desde una plantilla, compílala en tu navegador y guarda el PDF en tu CV.",
     "Start in LaTeX": "Empezar en LaTeX",
@@ -1154,8 +1157,5 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Hay un problema que corregir|[2,*] Hay :count problemas que corregir",
     "“:title” has been deleted.": "Se ha eliminado “:title”.",
     "“:title” is now hidden from everyone except its owner.": "“:title” ahora está oculto para todos excepto para su propietario.",
-    "“:title” is visible again.": "“:title” vuelve a estar visible.",
-    "From the employer's own careers site": "Del sitio de empleo de la propia empresa",
-    "Internships, placement years, spring weeks, graduate roles and part-time jobs for the :from to :to recruitment cycle, gathered daily from employers' own careers sites and job boards. Each one links to the page where you apply.": "Prácticas, años de prácticas en empresa, spring weeks, puestos para recién graduados y trabajos a tiempo parcial del ciclo de selección :from a :to, recopilados a diario de los sitios de empleo de las propias empresas y de portales de empleo. Cada uno enlaza con la página donde se presenta la solicitud.",
-    "Spring weeks and insight days": "Spring weeks y jornadas de introducción"
+    "“:title” is visible again.": "“:title” vuelve a estar visible."
 }

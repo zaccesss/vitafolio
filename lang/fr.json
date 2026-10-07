@@ -360,6 +360,7 @@
     "from :provider": "depuis :provider",
     "From :source": "De :source",
     "From people who know the work of :name. :name approves each one before it shows.": "Rédigées par des personnes qui connaissent le travail de :name. :name approuve chacune avant qu’elle apparaisse.",
+    "From the employer's own careers site": "Depuis le site carrières de l'employeur",
     "Full name": "Nom complet",
     "Get in touch about your account, report a problem or suggest an idea.": "Contactez-nous au sujet de votre compte, pour signaler un problème ou proposer une idée.",
     "Getting started": "Premiers pas",
@@ -433,6 +434,7 @@
     "Inter (clean sans serif)": "Inter (sans empattement, épurée)",
     "Internship": "Stage",
     "Internships": "Stages",
+    "Internships, placement years, spring weeks, graduate roles and part-time jobs for the :from to :to recruitment cycle, gathered daily from employers' own careers sites and job boards. Each one links to the page where you apply.": "Stages, années de stage en entreprise, spring weeks, postes pour jeunes diplômés et emplois à temps partiel du cycle de recrutement :from à :to, rassemblés chaque jour depuis les sites carrières des employeurs et les sites d'emploi. Chacun renvoie à la page où postuler.",
     "Invalid credential format.": "Format d’identifiant invalide.",
     "Is it free?": "Est-ce gratuit ?",
     "Is the site up? Check the status page and its history of incidents.": "Le site fonctionne-t-il ? Consultez la page d’état et l’historique des incidents.",
@@ -862,6 +864,7 @@
     "Source code": "Code source",
     "Source Serif (classic serif)": "Source Serif (à empattements, classique)",
     "Spam or advertising": "Spam ou publicité",
+    "Spring weeks and insight days": "Spring weeks et journées découverte",
     "Start from a template": "Partir d’un modèle",
     "Start from a template and compile it in your browser, then save the PDF to your CV.": "Partez d’un modèle, compilez-le dans votre navigateur, puis enregistrez le PDF dans votre CV.",
     "Start in LaTeX": "Commencer en LaTeX",
@@ -1154,8 +1157,5 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Il y a un problème à corriger|[2,*] Il y a :count problèmes à corriger",
     "“:title” has been deleted.": "« :title » a été supprimé.",
     "“:title” is now hidden from everyone except its owner.": "« :title » est désormais masqué pour tous, sauf pour son propriétaire.",
-    "“:title” is visible again.": "« :title » est de nouveau visible.",
-    "From the employer's own careers site": "Depuis le site carrières de l'employeur",
-    "Internships, placement years, spring weeks, graduate roles and part-time jobs for the :from to :to recruitment cycle, gathered daily from employers' own careers sites and job boards. Each one links to the page where you apply.": "Stages, années de stage en entreprise, spring weeks, postes pour jeunes diplômés et emplois à temps partiel du cycle de recrutement :from à :to, rassemblés chaque jour depuis les sites carrières des employeurs et les sites d'emploi. Chacun renvoie à la page où postuler.",
-    "Spring weeks and insight days": "Spring weeks et journées découverte"
+    "“:title” is visible again.": "« :title » est de nouveau visible."
 }
