@@ -164,6 +164,7 @@
     "Check a CV": "سی وی چیک کریں",
     "Check my CV": "میری سی وی چیک کریں",
     "Check my CV against this job": "اس ملازمت کے لیے میری سی وی چیک کریں",
+    "Checked: :name": "جانچا گیا: :name",
     "Checking against :title at :company. The advert is filled in below.": ":company میں :title کے لیے چیک ہو رہا ہے۔ اشتہار نیچے بھرا ہوا ہے۔",
     "Checklist": "چیک لسٹ",
     "Choose a file": "فائل منتخب کریں",
@@ -1154,6 +1155,5 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} ایک مسئلہ درست کرنا ہے|[2,*] :count مسائل درست کرنے ہیں",
     "“:title” has been deleted.": "“:title” حذف کر دی گئی ہے۔",
     "“:title” is now hidden from everyone except its owner.": "“:title” اب اس کے مالک کے علاوہ سب سے پوشیدہ ہے۔",
-    "“:title” is visible again.": "“:title” دوبارہ نظر آ رہی ہے۔",
-    "Checked: :name": "جانچا گیا: :name"
+    "“:title” is visible again.": "“:title” دوبارہ نظر آ رہی ہے۔"
 }

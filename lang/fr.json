@@ -164,6 +164,7 @@
     "Check a CV": "Vérifier un CV",
     "Check my CV": "Vérifier mon CV",
     "Check my CV against this job": "Vérifier mon CV pour cette offre",
+    "Checked: :name": "Vérifié : :name",
     "Checking against :title at :company. The advert is filled in below.": "Vérification pour :title chez :company. L’offre est remplie ci-dessous.",
     "Checklist": "Liste de contrôle",
     "Choose a file": "Choisir un fichier",
@@ -1154,6 +1155,5 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Il y a un problème à corriger|[2,*] Il y a :count problèmes à corriger",
     "“:title” has been deleted.": "« :title » a été supprimé.",
     "“:title” is now hidden from everyone except its owner.": "« :title » est désormais masqué pour tous, sauf pour son propriétaire.",
-    "“:title” is visible again.": "« :title » est de nouveau visible.",
-    "Checked: :name": "Vérifié : :name"
+    "“:title” is visible again.": "« :title » est de nouveau visible."
 }
