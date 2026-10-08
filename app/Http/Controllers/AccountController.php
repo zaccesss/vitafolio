@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SupportTicket;
 use App\Models\User;
 use App\Support\JsonResume;
 use Illuminate\Http\JsonResponse;
@@ -108,6 +109,11 @@ class AccountController extends Controller
             'signed_in_devices' => self::sessionsFor($user)->map(fn ($s) => ['device' => $s->device, 'ip_address' => $s->ip_address, 'last_active' => $s->last_active]),
             'reports_made' => [],
             // what this account wrote about other people's cvs; the other person's own details stay out
+            'support_tickets' => SupportTicket::where('user_id', $user->id)->with('messages')->get()->map(fn ($t) => [
+                'reference' => $t->reference(), 'subject' => $t->subject, 'category' => $t->category, 'status' => $t->status,
+                'opened' => $t->created_at?->toIso8601String(),
+                'messages' => $t->messages->map(fn ($m) => ['from' => $m->from_staff ? 'support' : 'you', 'sent' => $m->created_at?->toIso8601String(), 'text' => $m->body])->all(),
+            ])->all(),
             'endorsements_written' => $user->endorsementsWritten->map(fn ($e) => ['cv_address' => $e->cv ? route('cv.show', $e->cv) : null] + $e->exportFields()),
             'cvs' => $user->cvs->map(fn ($cv) => [
                 'resume' => JsonResume::export($cv->setRelation('user', $user)),

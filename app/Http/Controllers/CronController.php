@@ -18,6 +18,10 @@ class CronController extends Controller
         abort_if($token === '', 404);
         abort_unless(hash_equals($token, (string) $request->bearerToken()), 403);
 
+        // the job fetch reads two boards over the network, which can outlast the minute a normal request
+        // is allowed; the nightly call is the one request that may run for up to five minutes
+        set_time_limit(300);
+
         Artisan::call('vitafolio:tidy');
         $output = trim(Artisan::output());
         Artisan::call('vitafolio:fetch-jobs');

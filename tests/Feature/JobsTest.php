@@ -6,6 +6,7 @@ use App\Models\JobListing;
 use App\Models\User;
 use App\Support\Jobs\JobFetcher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -65,6 +66,20 @@ class JobsTest extends TestCase
         $this->assertSame('Leeds; Nottingham', JobListing::where('title', 'Aquatic Ecologist Graduate')->value('location'));
         $this->assertSame('safran', JobFetcher::employerKey('SAFRAN UK Ltd'));
         $this->assertSame(JobFetcher::employerKey('Safran'), JobFetcher::employerKey('SAFRAN UK'));
+    }
+
+    public function test_a_full_fetch_reads_and_saves_in_a_handful_of_queries(): void
+    {
+        config(['services.adzuna.app_id' => 'id', 'services.adzuna.app_key' => 'key']);
+        $ad = fn ($n) => ['id' => "q{$n}", 'title' => "Graduate Engineer {$n}", 'company' => ['display_name' => "Firm {$n}"], 'location' => ['display_name' => 'Leeds'], 'redirect_url' => "https://www.adzuna.co.uk/jobs/land/ad/q{$n}"];
+        Http::fake(['api.adzuna.com/*' => Http::response(['results' => array_map($ad, range(1, 50))])]);
+        DB::enableQueryLog();
+
+        $this->artisan('vitafolio:fetch-jobs')->assertSuccessful();
+
+        // dozens of searches and a thousand results, saved without a query per listing
+        $this->assertLessThan(20, count(DB::getQueryLog()));
+        $this->assertSame(50, JobListing::where('source', 'adzuna')->count());
     }
 
     public function test_a_failing_board_never_stops_the_other(): void
