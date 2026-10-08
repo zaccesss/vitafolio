@@ -6,6 +6,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Changed
 
+- Demo clips and screenshots now cover the whole site apart from admin. New clips show creating an account, the photo with its crop tool, the handle and connected accounts, Check a CV, Jobs with My applications and a support ticket. Building, sharing and compiling a CV are recorded again from the current interface. Each Help guide shows the clip that matches it. The README adds the new clips and screenshots of sign-up, connected accounts, Check a CV, Jobs, My applications and a support ticket.
 - More jobs: each Adzuna search reads up to three pages and new searches cover vacation schemes, year in industry, training contracts and graduate roles in engineering, accounting, nursing, teaching, marketing, science and software. An employer's own listing replaces a board's copy of the same role, since it links straight to the job with the full advert. Civil, highways and structural roles sit under Engineering rather than Software.
 - Job fields are read from the title first; a board's own category only fills a gap, since boards file many roles under IT. Project management roles sit under Business. Employer names are matched without case or endings such as UK, Ltd and Group, so "Safran" and "SAFRAN UK" are one listing. Salary figures under £5,000, which are unlabelled day or hourly rates, are no longer shown.
 - A tidier Jobs page: the search comes first, kinds of role are underlined tabs with how many jobs each holds, a result count shows and each card is compact with a two-line preview. A role a board posts once per city is one listing with its cities combined. Titles naming a year range such as 2027-28 count by the year they start. Electrical engineering roles sit under Engineering. The footer no longer links the source code. On Check a CV, a job board's advert is marked as a preview with a link to open the full advert.
@@ -105,6 +106,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- The photo crop tool shows the chosen photo again. The tool moved to Settings, Photo, but the content security policy still allowed a local preview only on the old profile page, so the framing circle never appeared and every photo was cropped to the centre.
 - The nightly job fetch no longer emails an error for every Adzuna search that is briefly refused. A failed search is tried twice more after a short pause, four searches run at a time instead of eight and one alert is raised only when more than a quarter of searches fail, naming which ones and why.
 - The nightly job fetch no longer stops at the one-minute limit for a web request. Adzuna searches run eight at a time and listings are saved in batches of 200 after two up-front reads instead of three queries each. The nightly call may run for up to five minutes. Every workflow job also has a time limit.
 - The job advert box on Check a CV said optional twice.

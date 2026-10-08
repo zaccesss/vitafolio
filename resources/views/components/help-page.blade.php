@@ -1,4 +1,4 @@
-@props(['slug'])
+@props(['slug', 'demo' => null])
 @php
     [$title, $summary] = array_map('__', \App\Support\HelpTopics::ALL[$slug]);
     $slugs = array_keys(\App\Support\HelpTopics::ALL);
@@ -21,6 +21,16 @@
             <article data-reading class="prose prose-lg max-w-3xl prose-headings:font-semibold prose-headings:text-ink prose-p:text-ink prose-li:text-ink prose-a:text-link prose-strong:text-ink dark:prose-invert">
                 <h1>{{ $title }}</h1>
                 <p class="lead !text-muted">{{ $summary }}</p>
+                @if ($demo)
+                    @php($clip = \App\Support\Demos::all()[$demo])
+                    <figure class="not-prose card my-8 overflow-hidden">
+                        <a href="{{ route('features.demo', $demo) }}" class="block">
+                            <x-demo-clip :clip="$demo" :alt="$clip['alt']" />
+                            <span class="sr-only">{{ __('Watch :title at full size', ['title' => $clip['title']]) }}</span>
+                        </a>
+                        <figcaption class="p-4 text-sm text-muted">{{ $clip['text'] }} <a href="{{ route('features.demo', $demo) }}">{{ __('Watch :title at full size', ['title' => $clip['title']]) }}</a></figcaption>
+                    </figure>
+                @endif
                 {{ $slot }}
                 <nav aria-label="{{ __('More help') }}" class="not-prose mt-12 flex flex-wrap justify-between gap-3 border-t border-line pt-6">
                     @if ($previous)<a class="btn btn-secondary" href="{{ route('help.topic', $previous) }}"><span aria-hidden="true" class="inline-block rtl:-scale-x-100">&larr;</span> {{ __(\App\Support\HelpTopics::ALL[$previous][0]) }}</a>@else<span></span>@endif

@@ -43,8 +43,8 @@ class SecurityHeaders
                 "script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com".($latex ? " 'wasm-unsafe-eval'".rtrim($latexAssets) : ''),
                 'worker-src '.($latex ? "'self' blob:" : "'self'"),
                 "style-src 'self'".($nonce ? " 'nonce-{$nonce}'" : ''),
-                // the photo cropper previews the chosen file before it is uploaded
-                "img-src 'self' data: https://res.cloudinary.com".($request->routeIs('profile.edit') ? ' blob:' : ''),
+                // the photo cropper on settings, photo previews the chosen file before it is uploaded
+                "img-src 'self' data: https://res.cloudinary.com".($request->routeIs('settings.photo') ? ' blob:' : ''),
                 "media-src 'self' https://res.cloudinary.com",
                 "font-src 'self'",
                 "connect-src 'self' https://cloudflareinsights.com".rtrim($latexAssets),

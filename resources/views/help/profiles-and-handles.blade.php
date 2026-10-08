@@ -1,4 +1,4 @@
-<x-help-page slug="profiles-and-handles">
+<x-help-page slug="profiles-and-handles" demo="profile">
     <h2>{{ __('Your profile') }}</h2>
     <p>{!! __('Your profile page lists your public CVs alongside your photo, headline, bio and links. Find it by opening the account menu in the top corner and choosing <strong>View your public profile</strong>.') !!}</p>
 

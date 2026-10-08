@@ -19,6 +19,12 @@ Short clips of the interface, recorded with made-up demo data. Each clip follows
 theme GitHub is showing, shows a still frame when reduced motion is turned on and links to a
 full-quality video.
 
+### Create an account
+
+Sign up with an email address or with Google, Microsoft or GitHub, then confirm the email address from the link that arrives.
+
+<a href="public/demo/signup.mp4"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="public/demo/signup-dark-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="public/demo/signup-still.webp"><source media="(prefers-color-scheme: dark)" srcset="public/demo/signup-dark.webp"><img src="public/demo/signup.webp" alt="The sign-up form is filled in, the Google, GitHub and Microsoft buttons are shown, the account is created, the email address is confirmed and the dashboard opens with a first CV ready" width="960"></picture></a>
+
 ### Build a CV
 
 Create a named CV, write each section in plain text and save it. The completeness meter fills in as sections are added.
@@ -37,6 +43,30 @@ Start from a template and compile it in the browser. Nothing leaves the device u
 
 <a href="public/demo/compile.mp4"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="public/demo/compile-dark-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="public/demo/compile-still.webp"><source media="(prefers-color-scheme: dark)" srcset="public/demo/compile-dark.webp"><img src="public/demo/compile.webp" alt="The LaTeX editor compiles the classic template in the browser, the PDF appears in the preview pane and is then saved to the CV" width="960"></picture></a>
 
+### Photo, handle and sign-ins
+
+Upload a photo and frame it in the circle, choose the handle in the profile address and connect the sites used to sign in.
+
+<a href="public/demo/profile.mp4"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="public/demo/profile-dark-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="public/demo/profile-still.webp"><source media="(prefers-color-scheme: dark)" srcset="public/demo/profile-dark.webp"><img src="public/demo/profile.webp" alt="A photo is chosen, zoomed and dragged into the circle, then uploaded. The handle changes to alex-morgan and Connected accounts shows Google and GitHub connected with Microsoft ready to connect" width="960"></picture></a>
+
+### Check a CV
+
+See a CV the way an applicant tracking system reads it, with a score out of 100, what is missing and the keywords a job advert asks for.
+
+<a href="public/demo/check.mp4"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="public/demo/check-dark-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="public/demo/check-still.webp"><source media="(prefers-color-scheme: dark)" srcset="public/demo/check-dark.webp"><img src="public/demo/check.webp" alt="A Vitafolio CV is chosen and a job advert is pasted in. The report shows the overall score, the score for each area, suggestions and which advert keywords the CV has and lacks" width="960"></picture></a>
+
+### Find and track jobs
+
+Filter student roles by kind, field and location, save one in a click and track every application, including roles found elsewhere.
+
+<a href="public/demo/jobs.mp4"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="public/demo/jobs-dark-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="public/demo/jobs-still.webp"><source media="(prefers-color-scheme: dark)" srcset="public/demo/jobs-dark.webp"><img src="public/demo/jobs.webp" alt="The Jobs page is filtered to hardware internships and a role is saved. On My applications its status changes to Applied and a role found elsewhere is added by hand" width="960"></picture></a>
+
+### Get help
+
+Open a support ticket with or without an account, then follow the conversation until it is sorted.
+
+<a href="public/demo/support.mp4"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="public/demo/support-dark-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="public/demo/support-still.webp"><source media="(prefers-color-scheme: dark)" srcset="public/demo/support-dark.webp"><img src="public/demo/support.webp" alt="A support ticket about the order of CV sections is opened and given a reference. The tickets list and an earlier conversation with a reply from the support team are then shown" width="960"></picture></a>
+
 ### Screenshots
 
 Each screenshot follows the light or dark theme GitHub is showing.
@@ -46,6 +76,9 @@ Each screenshot follows the light or dark theme GitHub is showing.
 | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/directory-dark.webp"><img src="docs/assets/screenshots/directory-light.webp" alt="The Browse CVs directory with search, filters and public CVs" width="480"></picture><br>Browse CVs | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/editor-dark.webp"><img src="docs/assets/screenshots/editor-light.webp" alt="The CV editor's Content tab with the completeness meter" width="480"></picture><br>The editor |
 | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/public-cv-dark.webp"><img src="docs/assets/screenshots/public-cv-light.webp" alt="A public CV page with share and download buttons and a QR code" width="480"></picture><br>A public CV | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/look-and-privacy-dark.webp"><img src="docs/assets/screenshots/look-and-privacy-light.webp" alt="The Look and privacy tab with visibility, layout, accent colour and font choices" width="480"></picture><br>Look and privacy |
 | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/dashboard-dark.webp"><img src="docs/assets/screenshots/dashboard-light.webp" alt="The My CVs dashboard listing a CV with its views, skills and file" width="480"></picture><br>My CVs | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/latex-compiled-dark.webp"><img src="docs/assets/screenshots/latex-compiled-light.webp" alt="The LaTeX editor with source on the left and the compiled PDF on the right" width="480"></picture><br>LaTeX editor |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/signup-dark.webp"><img src="docs/assets/screenshots/signup-light.webp" alt="The sign-up form with Google, GitHub and Microsoft buttons" width="480"></picture><br>Sign up | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/connected-dark.webp"><img src="docs/assets/screenshots/connected-light.webp" alt="Connected accounts with Google and GitHub connected and Microsoft ready to connect" width="480"></picture><br>Connected accounts |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/check-dark.webp"><img src="docs/assets/screenshots/check-light.webp" alt="A Check a CV report with the score, the area scores and advert keywords" width="480"></picture><br>Check a CV | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/jobs-dark.webp"><img src="docs/assets/screenshots/jobs-light.webp" alt="The Jobs page with search, field and location filters and tabs for each kind of role" width="480"></picture><br>Jobs |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/applications-dark.webp"><img src="docs/assets/screenshots/applications-light.webp" alt="My applications with status tabs and tracked roles" width="480"></picture><br>My applications | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/support-dark.webp"><img src="docs/assets/screenshots/support-light.webp" alt="A support ticket conversation with a reply from the support team" width="480"></picture><br>A support ticket |
 
 ## Features
 

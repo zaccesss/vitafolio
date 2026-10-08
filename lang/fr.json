@@ -1327,5 +1327,18 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} Il y a un problème à corriger|[2,*] Il y a :count problèmes à corriger",
     "“:title” has been deleted.": "« :title » a été supprimé.",
     "“:title” is now hidden from everyone except its owner.": "« :title » est désormais masqué pour tous, sauf pour son propriétaire.",
-    "“:title” is visible again.": "« :title » est de nouveau visible."
+    "“:title” is visible again.": "« :title » est de nouveau visible.",
+    "A photo is chosen, zoomed and dragged into the circle, then uploaded. The handle changes to alex-morgan and Connected accounts shows Google and GitHub connected with Microsoft ready to connect.": "Une photo est choisie, agrandie et déplacée dans le cercle, puis importée. L'identifiant devient alex-morgan et Comptes connectés montre Google et GitHub connectés, Microsoft prêt à être connecté.",
+    "A support ticket about the order of CV sections is opened and given a reference. The tickets list and an earlier conversation with a reply from the support team are then shown.": "Une demande d'assistance sur l'ordre des sections du CV est ouverte et reçoit une référence. La liste des demandes et une conversation précédente avec une réponse de l'équipe d'assistance sont ensuite affichées.",
+    "A Vitafolio CV is chosen and a job advert is pasted in. The report shows the overall score, the score for each area, suggestions and which advert keywords the CV has and lacks.": "Un CV Vitafolio est choisi et une annonce est collée. Le rapport montre la note globale, la note de chaque domaine, des suggestions et les mots-clés de l'annonce que le CV contient ou non.",
+    "Find and track jobs": "Trouver et suivre des offres",
+    "Get help": "Obtenir de l'aide",
+    "Open a support ticket and follow the conversation until it is sorted.": "Ouvrez une demande d'assistance et suivez la conversation jusqu'à ce que ce soit réglé.",
+    "Photo, handle and sign-ins": "Photo, identifiant et connexions",
+    "Search student roles by kind, field and place, save one and track every application.": "Cherchez des postes pour étudiants par type, domaine et lieu, enregistrez-en un et suivez chaque candidature.",
+    "See how a tracking system reads your CV, with a score, gaps and fixes for a job advert.": "Voyez comment un logiciel de suivi lit votre CV, avec une note, les manques et des corrections pour une annonce.",
+    "Sign up with an email address or with Google, Microsoft or GitHub, then confirm your email.": "Inscrivez-vous avec une adresse e-mail ou avec Google, Microsoft ou GitHub, puis confirmez votre e-mail.",
+    "The Jobs page is filtered to hardware internships and a role is saved. On My applications its status changes to Applied and a role found elsewhere is added by hand.": "La page Offres est filtrée sur les stages en électronique et un poste est enregistré. Dans Mes candidatures, son statut passe à Envoyée et un poste trouvé ailleurs est ajouté à la main.",
+    "The sign-up form is filled in, the Google, GitHub and Microsoft buttons are shown, the account is created, the email address is confirmed and the dashboard opens with a first CV ready.": "Le formulaire d'inscription est rempli, les boutons Google, GitHub et Microsoft sont affichés, le compte est créé, l'adresse e-mail est confirmée et le tableau de bord s'ouvre avec un premier CV prêt.",
+    "Upload and frame a photo, choose your handle and connect the sites you sign in with.": "Importez et cadrez une photo, choisissez votre identifiant et connectez les sites avec lesquels vous vous connectez."
 }

@@ -1,4 +1,4 @@
-<x-help-page slug="getting-started">
+<x-help-page slug="getting-started" demo="signup">
     <h2>{{ __('Create your account') }}</h2>
     <ol>
         <li>{!! __('Select <strong>Create your CV</strong> at the top of any page.') !!}</li>

@@ -14,8 +14,8 @@ database.
 ## Recording
 
 ```sh
-scripts/demo/record.sh            # everything: three clips, then the screenshots
-scripts/demo/record.sh share      # one part only: build, share, compile or shots
+scripts/demo/record.sh            # everything: eight clips, then the screenshots
+scripts/demo/record.sh share      # one part only: a clip name or shots
 scripts/demo/build-assets.sh      # turn the recordings into the site and README files
 ```
 
@@ -25,12 +25,17 @@ It then installs Playwright's Chromium and runs [`capture.mjs`](capture.mjs) twi
 theme with the screenshots, then again on a fresh database for the dark versions of the clips
 (`DEMO_SCHEME=dark`). Recordings land in `scripts/demo/out`, which git ignores. When a single part
 other than `build` is recorded, the seed creates Alex Morgan's finished CV so that part has something
-to show.
+to show. The seed also adds made-up employers and job listings on `example.com`, two tracked
+applications, connected Google and GitHub accounts and an earlier support ticket with a reply. The
+photo clip uses an illustrated avatar drawn by the capture script.
 
 > [!NOTE]
 > The browser maps `vitafolio.isaacadjei.me` to the local server, so every address on screen matches
 > the real site even though the recording is local. Sign-up checks, error reporting, search
-> engine pings and media uploads are switched off for the run.
+> engine pings and media uploads are switched off for the run. The sign-in providers get placeholder
+> keys so their buttons show, but no clip completes a real Google, Microsoft or GitHub sign-in. The
+> sign-up clip confirms its email address from the message the local mailer writes to
+> `storage/logs/laravel.log`.
 
 ## What it produces
 
@@ -42,8 +47,9 @@ to show.
 | `docs/assets/screenshots/<page>-<theme>.webp` | Light and dark screenshots for the README |
 | `docs/assets/demo/originals/` | The untouched recordings (`.webm`) and full-resolution screenshots (`.png`, 2560 by 1600) for reuse elsewhere, such as a portfolio |
 
-The clips are `build`, `share` and `compile`. The pages are `directory`, `dashboard`, `editor`,
-`look-and-privacy`, `public-cv`, `latex` and `latex-compiled`, each in `light` and `dark`.
+The clips are `signup`, `build`, `share`, `compile`, `profile`, `check`, `jobs` and `support`. The pages
+are `directory`, `dashboard`, `editor`, `look-and-privacy`, `public-cv`, `latex`, `latex-compiled`,
+`jobs`, `applications`, `connected`, `check`, `support` and `signup`, each in `light` and `dark`.
 
 ## Changing a clip
 
