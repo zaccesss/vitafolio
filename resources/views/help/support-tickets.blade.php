@@ -1,4 +1,4 @@
-<x-help-page slug="support-tickets">
+<x-help-page slug="support-tickets" demo="support">
     <h2>{{ __('Opening a ticket') }}</h2>
     <p>{!! __('Go to <strong>Support</strong> in the footer and choose <strong>Open a support ticket</strong>. Pick what it is about, add a subject and describe the problem. You do not need an account: without one, give your name and email address.') !!}</p>
     <ul>

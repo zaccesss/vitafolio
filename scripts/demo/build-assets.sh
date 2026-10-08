@@ -26,12 +26,16 @@ clip() {
   cp "$in" "$originals/"
   rm -rf "$tmp"
 }
-clip build 19
-clip share 10
-clip compile 13
-clip build-dark 19
-clip share-dark 10
-clip compile-dark 13
+for theme in '' -dark; do
+  clip "build$theme" 19
+  clip "share$theme" 10
+  clip "compile$theme" 13
+  clip "signup$theme" 14
+  clip "profile$theme" 11
+  clip "check$theme" 8
+  clip "jobs$theme" 11
+  clip "support$theme" 13
+done
 
 for png in "$src"/shots/*.png; do
   [ -f "$png" ] || continue

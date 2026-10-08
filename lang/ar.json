@@ -1327,5 +1327,18 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} توجد مشكلة واحدة يجب إصلاحها|[2,*] عدد المشكلات التي يجب إصلاحها: :count",
     "“:title” has been deleted.": "تم حذف “:title”.",
     "“:title” is now hidden from everyone except its owner.": "أصبحت “:title” الآن مخفية عن الجميع باستثناء صاحبها.",
-    "“:title” is visible again.": "أصبحت “:title” مرئية مرة أخرى."
+    "“:title” is visible again.": "أصبحت “:title” مرئية مرة أخرى.",
+    "A photo is chosen, zoomed and dragged into the circle, then uploaded. The handle changes to alex-morgan and Connected accounts shows Google and GitHub connected with Microsoft ready to connect.": "تُختار صورة وتُكبَّر وتُسحب داخل الدائرة ثم تُرفع. يتغير اسم المستخدم إلى alex-morgan وتعرض الحسابات المتصلة Google وGitHub متصلين مع Microsoft جاهزة للاتصال.",
+    "A support ticket about the order of CV sections is opened and given a reference. The tickets list and an earlier conversation with a reply from the support team are then shown.": "تُفتح تذكرة دعم حول ترتيب أقسام السيرة الذاتية وتحصل على رقم مرجعي. ثم تظهر قائمة التذاكر ومحادثة سابقة فيها رد من فريق الدعم.",
+    "A Vitafolio CV is chosen and a job advert is pasted in. The report shows the overall score, the score for each area, suggestions and which advert keywords the CV has and lacks.": "تُختار سيرة ذاتية من Vitafolio ويُلصق إعلان وظيفة. يعرض التقرير الدرجة الإجمالية ودرجة كل مجال والاقتراحات والكلمات المفتاحية الموجودة في السيرة والناقصة منها.",
+    "Find and track jobs": "ابحث عن الوظائف وتابعها",
+    "Get help": "احصل على المساعدة",
+    "Open a support ticket and follow the conversation until it is sorted.": "افتح تذكرة دعم وتابع المحادثة حتى تُحل المشكلة.",
+    "Photo, handle and sign-ins": "الصورة واسم المستخدم وتسجيلات الدخول",
+    "Search student roles by kind, field and place, save one and track every application.": "ابحث عن وظائف الطلاب حسب النوع والمجال والمكان، واحفظ واحدة وتابع كل طلب.",
+    "See how a tracking system reads your CV, with a score, gaps and fixes for a job advert.": "شاهد كيف يقرأ نظام التتبع سيرتك الذاتية، مع درجة وما ينقصها وإصلاحات لإعلان وظيفة.",
+    "Sign up with an email address or with Google, Microsoft or GitHub, then confirm your email.": "سجّل ببريد إلكتروني أو بحساب Google أو Microsoft أو GitHub، ثم أكّد بريدك.",
+    "The Jobs page is filtered to hardware internships and a role is saved. On My applications its status changes to Applied and a role found elsewhere is added by hand.": "تُصفّى صفحة الوظائف على التدريب في مجال الأجهزة وتُحفظ وظيفة. في طلباتي تتغير حالتها إلى تم التقديم وتُضاف يدويًا وظيفة وُجدت في مكان آخر.",
+    "The sign-up form is filled in, the Google, GitHub and Microsoft buttons are shown, the account is created, the email address is confirmed and the dashboard opens with a first CV ready.": "يُملأ نموذج التسجيل وتظهر أزرار Google وGitHub وMicrosoft ويُنشأ الحساب ويُؤكَّد البريد الإلكتروني ثم تُفتح لوحة التحكم مع أول سيرة ذاتية جاهزة.",
+    "Upload and frame a photo, choose your handle and connect the sites you sign in with.": "ارفع صورة واضبطها، واختر اسم المستخدم، واربط المواقع التي تسجّل الدخول بها."
 }

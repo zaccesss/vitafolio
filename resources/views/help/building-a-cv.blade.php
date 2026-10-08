@@ -1,4 +1,4 @@
-<x-help-page slug="building-a-cv">
+<x-help-page slug="building-a-cv" demo="build">
     <h2>{{ __('Sections') }}</h2>
     <p>{{ __('The Content tab holds a headline for this CV, your main language, a profile summary, experience, education and skills. Leave any section empty and it is left out of the CV.') }}</p>
     <p>{!! __('A CV can use its own headline. That lets one CV say <em>Embedded software engineer</em> while another says <em>Research assistant</em>, without changing your profile.') !!}</p>

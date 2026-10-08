@@ -1,4 +1,4 @@
-<x-help-page slug="checking-a-cv">
+<x-help-page slug="checking-a-cv" demo="check">
     <h2>{{ __('What it does') }}</h2>
     <p>{!! __('<strong>Check a CV</strong> reads a CV the way an applicant tracking system does, then scores how well the system can read it, out of 100. It covers the headings, contact details, skills, education, experience, keywords and a readable layout. It also lists what it found, what it could not find and what to fix.') !!}</p>
     <p>{{ __('The score is guidance. Most employers use these systems to rank and search applications rather than reject them automatically, so a person usually still reads your CV.') }}</p>

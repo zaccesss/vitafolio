@@ -4,8 +4,12 @@
 // alex morgan's cv is normally created on screen by the build clip; DEMO_ALEX_CV=1 creates the
 // finished version here instead, so the other clips and the screenshots can be recorded on their own
 
+use App\Models\Application;
+use App\Models\JobListing;
+use App\Models\SupportTicket;
 use App\Models\User;
 use App\Support\Tags;
+use Illuminate\Support\Str;
 
 $availability = ['placement', 'internship', 'graduate', 'freelance'];
 $people = [
@@ -66,4 +70,57 @@ if (getenv('DEMO_ALEX_CV')) {
         'education' => 'BEng Electronic Engineering, Northbridge University (2024-09 to present)',
     ]);
     Tags::sync($cv, Tags::parse('C, Python, KiCad, STM32, FreeRTOS, Git, Linux'));
+}
+
+// made-up employers and listings for the jobs and applications clips. every address is on example.com,
+// so nothing on screen points at a real company or advert
+$alex = User::where('handle', 'alexmorgan')->firstOrFail();
+$jobs = [
+    ['internship', 'hardware', 'Embedded Firmware Intern', 'Kestrel Semiconductors', 'Cambridge', 'Summer 2027 internship writing C firmware for low-power radio chips. You will use STM32 boards, FreeRTOS, Git and Python test rigs alongside our silicon team.'],
+    ['placement', 'hardware', 'Electronics Placement Year 2027', 'Northwind Robotics', 'Bristol', 'A 12 month placement designing and testing motor control boards. Skills: KiCad, C, oscilloscopes, Python and Linux.'],
+    ['placement', 'software', 'Software Engineering Placement', 'Harbour Analytics', 'Leeds', 'Year in industry building data pipelines in Python and SQL with code review and continuous integration.'],
+    ['internship', 'data', 'Data Science Summer Intern', 'Brightline Energy', 'London', 'Ten week internship forecasting energy demand with Python, pandas and scikit-learn.'],
+    ['graduate', 'engineering', 'Graduate Electrical Engineer', 'Meridian Rail', 'Birmingham; Derby; York', 'Graduate scheme for September 2027 across signalling and power projects.'],
+    ['insight', 'finance', 'Technology Spring Week', 'Fairhaven Bank', 'London', 'A week in April 2027 meeting engineering teams across the bank.'],
+    ['apprenticeship', 'software', 'Degree Apprentice Software Developer', 'Calder Systems', 'Manchester', 'A four year degree apprenticeship building web services in Java and TypeScript.'],
+    ['part-time', 'retail', 'Student Ambassador', 'Northbridge University', 'Northbridge', 'Part-time term-time role leading campus tours and open days.'],
+    ['internship', 'law', 'Summer Vacation Scheme', 'Ashworth Legal', 'London', 'Two week vacation scheme in summer 2027 across commercial and technology law.'],
+    ['graduate', 'health', 'Graduate Clinical Scientist', 'Westmoor Health Trust', 'Sheffield', 'Training post in medical physics and clinical engineering.'],
+    ['placement', 'business', 'Consulting Placement Year', 'Larkspur Consulting', 'Edinburgh', 'Placement year supporting digital transformation projects for public sector clients.'],
+    ['internship', 'creative', 'Marketing and Content Intern', 'Fernway Studios', 'Glasgow', 'Summer internship producing video and social content.'],
+];
+foreach ($jobs as $i => [$kind, $sector, $title, $company, $location, $description]) {
+    $slug = Str::slug($company.' '.$title);
+    JobListing::updateOrCreate(['source' => 'employer', 'external_id' => $slug], [
+        'board' => 'Careers site', 'kind' => $kind, 'sector' => $sector, 'title' => $title, 'company' => $company,
+        'location' => $location, 'salary_min' => $kind === 'part-time' ? null : 21000 + 1500 * $i, 'salary_max' => $kind === 'part-time' ? null : 25000 + 1500 * $i,
+        'description' => $description, 'url' => "https://example.com/careers/{$slug}",
+        'posted_at' => now()->subHours(6 * $i), 'closes_at' => now()->addDays(20 + 4 * $i), 'last_seen_at' => now(),
+    ]);
+}
+
+// two roles already on alex's tracker, so the applications page has a story before the clip adds more
+$tracked = JobListing::where('title', 'Software Engineering Placement')->first();
+Application::updateOrCreate(['user_id' => $alex->id, 'job_listing_id' => $tracked->id], [
+    'title' => $tracked->title, 'company' => $tracked->company, 'location' => $tracked->location, 'url' => $tracked->url,
+    'kind' => $tracked->kind, 'status' => 'interview', 'applied_on' => now()->subDays(12)->toDateString(), 'deadline' => null,
+    'notes' => 'Technical interview booked for next Tuesday.',
+]);
+Application::updateOrCreate(['user_id' => $alex->id, 'title' => 'Hardware Test Placement', 'company' => 'Example Avionics'], [
+    'location' => 'Southampton', 'url' => 'https://example.com/careers/hardware-test-placement', 'status' => 'applied',
+    'applied_on' => now()->subDays(5)->toDateString(), 'deadline' => now()->addDays(9)->toDateString(), 'notes' => 'Found at the university careers fair.',
+]);
+
+// google and github already connected, microsoft left to connect, as a real account would look
+$alex->socialAccounts()->updateOrCreate(['provider' => 'google'], ['provider_id' => 'demo-google-1', 'email' => 'alexmorgan@example.com']);
+$alex->socialAccounts()->updateOrCreate(['provider' => 'github'], ['provider_id' => 'demo-github-1', 'email' => 'alexmorgan@example.com']);
+
+// an earlier ticket with a reply from the support team, so the conversation view has both sides
+$ticket = SupportTicket::firstOrCreate(['user_id' => $alex->id, 'subject' => 'Adding a second email address'], [
+    'name' => $alex->name, 'email' => $alex->email, 'category' => 'account', 'status' => 'waiting',
+    'token_hash' => hash('sha256', Str::random(40)), 'last_activity_at' => now()->subDay(),
+]);
+if ($ticket->wasRecentlyCreated) {
+    $ticket->messages()->create(['user_id' => $alex->id, 'from_staff' => false, 'body' => 'Can I add my university email as well as my personal one?']);
+    $ticket->messages()->create(['user_id' => null, 'from_staff' => true, 'body' => "Each account has one email address, but you can change it under **Settings, Name and email**.\n\nYou can also connect Google or Microsoft to sign in with your university account."]);
 }

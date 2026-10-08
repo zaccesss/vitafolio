@@ -1,4 +1,4 @@
-<x-help-page slug="jobs">
+<x-help-page slug="jobs" demo="jobs">
     <h2>{{ __('Finding jobs') }}</h2>
     <p>{{ __('The Jobs page lists internships, placement years, spring weeks, graduate roles, apprenticeships and part-time jobs in the UK for the current recruitment cycle. They are gathered every night from job boards and from employers\' own careers sites.') }}</p>
     <ul>

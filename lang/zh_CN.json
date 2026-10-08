@@ -1327,5 +1327,18 @@
     "{1} There is a problem to fix|[2,*] There are :count problems to fix": "{1} 有 1 个问题需要修复|[2,*] 有 :count 个问题需要修复",
     "“:title” has been deleted.": "“:title”已删除。",
     "“:title” is now hidden from everyone except its owner.": "“:title”现已对除所有者以外的所有人隐藏。",
-    "“:title” is visible again.": "“:title”已重新可见。"
+    "“:title” is visible again.": "“:title”已重新可见。",
+    "A photo is chosen, zoomed and dragged into the circle, then uploaded. The handle changes to alex-morgan and Connected accounts shows Google and GitHub connected with Microsoft ready to connect.": "选择一张照片，放大并拖入圆框后上传。用户名改为 alex-morgan，“已关联账户”显示 Google 和 GitHub 已关联，Microsoft 可随时关联。",
+    "A support ticket about the order of CV sections is opened and given a reference. The tickets list and an earlier conversation with a reply from the support team are then shown.": "提交一个关于简历版块顺序的支持工单并获得编号。随后显示工单列表以及一段之前与支持团队的对话。",
+    "A Vitafolio CV is chosen and a job advert is pasted in. The report shows the overall score, the score for each area, suggestions and which advert keywords the CV has and lacks.": "选择一份 Vitafolio 简历并粘贴一则招聘广告。报告显示总分、各项得分、建议以及简历包含和缺少的广告关键词。",
+    "Find and track jobs": "查找并跟踪职位",
+    "Get help": "获取帮助",
+    "Open a support ticket and follow the conversation until it is sorted.": "提交支持工单并跟进对话，直到问题解决。",
+    "Photo, handle and sign-ins": "照片、用户名和登录方式",
+    "Search student roles by kind, field and place, save one and track every application.": "按类型、领域和地点搜索学生职位，保存职位并跟踪每份申请。",
+    "See how a tracking system reads your CV, with a score, gaps and fixes for a job advert.": "查看招聘系统如何读取你的简历，获得分数、缺失内容以及针对招聘广告的修改建议。",
+    "Sign up with an email address or with Google, Microsoft or GitHub, then confirm your email.": "使用电子邮件地址或 Google、Microsoft、GitHub 注册，然后确认你的邮箱。",
+    "The Jobs page is filtered to hardware internships and a role is saved. On My applications its status changes to Applied and a role found elsewhere is added by hand.": "职位页面筛选出硬件实习并保存一个职位。在“我的申请”中，其状态改为“已申请”，并手动添加一个在其他地方找到的职位。",
+    "The sign-up form is filled in, the Google, GitHub and Microsoft buttons are shown, the account is created, the email address is confirmed and the dashboard opens with a first CV ready.": "填写注册表单，显示 Google、GitHub 和 Microsoft 按钮，创建账户，确认邮箱地址，然后打开带有第一份简历的控制面板。",
+    "Upload and frame a photo, choose your handle and connect the sites you sign in with.": "上传并调整照片，选择用户名，并关联你用来登录的网站。"
 }

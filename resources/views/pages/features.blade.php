@@ -38,9 +38,6 @@
             @endforeach
         </ul>
 
-        {{-- animated images rather than video: they play without scripts under the strict content security
-             policy. The reduced motion source swaps each for a still frame and the theme picks the light or
-             dark recording --}}
         <section id="demo" aria-labelledby="demo-title" class="mt-20 scroll-mt-24">
             <h2 id="demo-title" class="text-3xl">{{ __('See it in action') }}</h2>
             <p class="mt-2 max-w-2xl text-muted">{{ __('Short clips recorded with made-up people. Select a clip to watch it at full size.') }}</p>
@@ -48,12 +45,7 @@
                 @foreach (\App\Support\Demos::all() as $clip => $demo)
                     <li class="card overflow-hidden">
                         <a href="{{ route('features.demo', $clip) }}" class="block">
-                            @foreach (['' => 'dark:hidden', '-dark' => 'hidden dark:block'] as $suffix => $visibility)
-                                <picture class="{{ $visibility }}">
-                                    <source media="(prefers-reduced-motion: reduce)" srcset="{{ asset('demo/'.$clip.$suffix.'-still.webp') }}">
-                                    <img src="{{ asset('demo/'.$clip.$suffix.'.webp') }}" alt="{{ $demo['alt'] }}" width="960" height="600" loading="lazy" decoding="async" class="aspect-[8/5] w-full border-b border-line bg-page object-cover">
-                                </picture>
-                            @endforeach
+                            <x-demo-clip :clip="$clip" :alt="$demo['alt']" />
                             <span class="sr-only">{{ __('Watch :title at full size', ['title' => $demo['title']]) }}</span>
                         </a>
                         <div class="p-6">

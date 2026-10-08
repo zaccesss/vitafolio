@@ -1,4 +1,4 @@
-<x-help-page slug="files-and-latex">
+<x-help-page slug="files-and-latex" demo="compile">
     <h2>{{ __('Uploading a file') }}</h2>
     <p>{!! __('Attach a PDF or Word (.docx) file of up to 5 MB to any CV under <strong>File and LaTeX</strong>. Files are checked by their contents rather than their names, so a renamed file is refused. Visitors open PDFs in the browser and download Word files.') !!}</p>
     <p>{{ __('Each account has 100 MB of storage for CV files and project media. A meter on the page shows how much you have used. Profile photos and text do not count towards it.') }}</p>

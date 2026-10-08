@@ -54,12 +54,12 @@ async function signIn() {
   }
   session = await c.storageState(); await c.close();
 }
-async function ctx(video, scheme = 'light') {
-  if (!session) await signIn();
-  const c = await b.newContext({ viewport: VP, colorScheme: scheme, storageState: session, deviceScaleFactor: video ? 1 : 2, ...(video ? { recordVideo: { dir: `${OUT}video/raw-${video}`, size: VP } } : {}) });
+async function ctx(video, scheme = 'light', signedIn = true) {
+  if (signedIn && !session) await signIn();
+  const c = await b.newContext({ viewport: VP, colorScheme: scheme, ...(signedIn ? { storageState: session } : {}), deviceScaleFactor: video ? 1 : 2, ...(video ? { recordVideo: { dir: `${OUT}video/raw-${video}`, size: VP } } : {}) });
   await c.addInitScript(overlay);
   const p = await c.newPage();
-  await p.goto(B + '/dashboard');
+  await p.goto(B + (signedIn ? '/dashboard' : '/'));
   return { c, p };
 }
 async function finish(c, video) {
@@ -67,6 +67,13 @@ async function finish(c, video) {
   if (v) { fs.renameSync(await v.path(), `${OUT}video/${video}${SUFFIX}.webm`); fs.rmSync(`${OUT}video/raw-${video}`, { recursive: true, force: true }); }
 }
 const SLUG = 'alex-morgan-embedded-software-roles';
+
+// an illustrated avatar for the photo clip, drawn in the browser so no picture of a real person is used
+if (!fs.existsSync(`${OUT}avatar.png`)) {
+  const a = await b.newPage({ viewport: { width: 800, height: 800 } });
+  await a.setContent(`<body style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14b8a6"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient></defs><rect width="800" height="800" fill="url(#g)"/><circle cx="400" cy="330" r="150" fill="#fde7d4"/><path d="M250 270q20-150 150-150t150 150q-60-60-150-60t-150 60z" fill="#2b1d16"/><path d="M130 800q20-250 270-250t270 250z" fill="#f8fafc"/><circle cx="345" cy="330" r="14" fill="#2b1d16"/><circle cx="455" cy="330" r="14" fill="#2b1d16"/><path d="M350 400q50 40 100 0" stroke="#2b1d16" stroke-width="12" fill="none" stroke-linecap="round"/></svg></body>`);
+  await a.screenshot({ path: `${OUT}avatar.png` }); await a.close();
+}
 
 // clip 1: build a cv
 if (!only || only === 'build') {
@@ -124,6 +131,118 @@ if (!only || only === 'compile') {
   await finish(c, 'compile');
 }
 
+// clip 4: create an account, then confirm the email from the message the local mailer writes to the log
+if (!only || only === 'signup') {
+  const LOG = new URL('../../storage/logs/laravel.log', import.meta.url).pathname;
+  const start = fs.existsSync(LOG) ? fs.statSync(LOG).size : 0;
+  const { c, p } = await ctx('signup', SCHEME, false);
+  await p.goto(B + '/register');
+  await caption(p, 'Create a free account in under a minute'); await pause(p, 1200);
+  await type(p, p.locator('[name=name]'), 'Jordan Lee');
+  await type(p, p.locator('[name=email]'), 'jordanlee@example.com');
+  await type(p, p.locator('[name=password]'), PASSWORD + '-Jordan7', 20);
+  await type(p, p.locator('[name=password_confirmation]'), PASSWORD + '-Jordan7', 20);
+  await click(p, p.locator('input[name=terms]'));
+  await caption(p, 'Or sign up with Google, Microsoft or GitHub');
+  await point(p, p.locator('main a[href*="/auth/"]').first()); await pause(p, 1400);
+  await caption(p, 'Create the account');
+  await click(p, p.locator('main button[type=submit]')); await p.waitForLoadState('networkidle');
+  await caption(p, 'Confirm your email address'); await pause(p, 2000);
+  // the log mailer writes quoted-printable text, so soft line breaks and encoded equals signs are undone first
+  let link;
+  for (let i = 0; i < 40 && !link; i++) {
+    const text = fs.readFileSync(LOG, 'utf8').slice(start).replace(/=\r?\n/g, '').replaceAll('=3D', '=').replaceAll('&amp;', '&');
+    link = text.match(/http:\/\/vitafolio\.isaacadjei\.me\/email\/verify\/[^\s"'<>)]+/)?.[0];
+    if (!link) await p.waitForTimeout(250);
+  }
+  if (!link) throw new Error('no verification link in storage/logs/laravel.log');
+  await p.goto(link); await p.waitForLoadState('networkidle');
+  await caption(p, 'You are in, with a first CV ready to fill in'); await pause(p, 2600);
+  await finish(c, 'signup');
+}
+
+// clip 5: photo, handle and connected accounts
+if (!only || only === 'profile') {
+  const { c, p } = await ctx('profile', SCHEME);
+  await p.goto(B + '/settings/photo');
+  await caption(p, 'Add a photo and frame it'); await pause(p, 1000);
+  await point(p, p.locator('#f-avatar')); await p.setInputFiles('#f-avatar', `${OUT}avatar.png`);
+  const frame = p.locator('[aria-label^="Photo framing"]'); await frame.waitFor();
+  await pause(p, 600);
+  const zoom = p.locator('#avatar-zoom'); await point(p, zoom); await zoom.fill('1.4'); await pause(p, 500);
+  await point(p, frame); const fb = await frame.boundingBox();
+  await p.mouse.down(); await p.mouse.move(fb.x + fb.width / 2 + 18, fb.y + fb.height / 2 + 12, { steps: 20 }); await p.mouse.up(); await pause(p, 600);
+  await click(p, p.locator('button:has-text("Upload photo")')); await p.waitForLoadState('networkidle'); await pause(p, 1400);
+  await p.goto(B + '/settings/handle');
+  await caption(p, 'Choose the handle in your profile address'); await pause(p, 900);
+  await type(p, p.locator('[name=handle]'), 'alex-morgan', 60);
+  await click(p, p.locator('button:has-text("Change handle")')); await p.waitForLoadState('networkidle'); await pause(p, 1400);
+  await p.goto(B + '/settings/connected');
+  await caption(p, 'Connect Google, Microsoft or GitHub to sign in with one click'); await pause(p, 1000);
+  await point(p, p.locator('a.btn:has-text("Connect")').first()); await pause(p, 2600);
+  await finish(c, 'profile');
+}
+
+// clip 6: check a cv against a job advert
+if (!only || only === 'check') {
+  const { c, p } = await ctx('check', SCHEME);
+  await p.goto(B + '/check');
+  await caption(p, 'Check a CV the way tracking systems read it'); await pause(p, 1200);
+  const pick = p.locator('#f-cv'); await point(p, pick); await pick.selectOption({ index: 0 }); await pause(p, 500);
+  await caption(p, 'Paste a job advert to compare keywords');
+  await click(p, p.locator('[name=job_advert]'));
+  await p.locator('[name=job_advert]').fill('Embedded Firmware Intern at Kestrel Semiconductors. Summer 2027 internship writing C firmware for low-power radio chips. You will use STM32 boards, FreeRTOS, Git, Python test rigs, CI pipelines and Bluetooth Low Energy alongside our silicon team.');
+  await pause(p, 600);
+  await click(p, p.locator('button:has-text("Check my CV")')); await p.waitForLoadState('networkidle');
+  await caption(p, 'See the score, what is missing and how to fix it'); await pause(p, 1500);
+  await p.mouse.move(640, 400); for (let i = 0; i < 7; i++) { await p.mouse.wheel(0, 200); await pause(p, 420); }
+  await pause(p, 1200);
+  await finish(c, 'check');
+}
+
+// clip 7: find a role, save it and track it with one found elsewhere
+if (!only || only === 'jobs') {
+  const { c, p } = await ctx('jobs', SCHEME);
+  await p.goto(B + '/jobs');
+  await caption(p, 'Student roles in every field, gathered every night'); await pause(p, 1400);
+  await click(p, p.locator('a.tab-link:has-text("Internships")')); await p.waitForLoadState('networkidle'); await pause(p, 900);
+  const field = p.locator('#job-sector'); await point(p, field); await field.selectOption('hardware'); await pause(p, 400);
+  await click(p, p.locator('form[role=search] button[type=submit]')); await p.waitForLoadState('networkidle'); await pause(p, 900);
+  await caption(p, 'Save a role to your tracker in one click');
+  await click(p, p.locator('main form[action*="/save"] button').first()); await p.waitForLoadState('networkidle'); await pause(p, 1200);
+  await p.goto(B + '/applications');
+  await caption(p, 'Track every application in one place'); await pause(p, 1400);
+  // the role just saved from the jobs page, found by its title so the seeded order never matters
+  const update = p.getByRole('link', { name: 'Embedded Firmware Intern' }).locator('xpath=ancestor::*[.//details][1]').locator('details');
+  await click(p, update.locator('summary')); await pause(p, 500);
+  const status = update.locator('select[name=status]'); await point(p, status); await status.selectOption('applied'); await pause(p, 400);
+  await click(p, update.locator('button:has-text("Save changes")')); await p.waitForLoadState('networkidle'); await pause(p, 1000);
+  await caption(p, 'Add roles you found anywhere else');
+  await click(p, p.locator('summary:has-text("Add an application from somewhere else")')); await pause(p, 500);
+  await type(p, p.locator('#f-title'), 'Firmware Placement');
+  await type(p, p.locator('#f-company'), 'Example Instruments');
+  await p.locator('#f-status').selectOption('applied');
+  await click(p, p.locator('button:has-text("Add application")')); await p.waitForLoadState('networkidle'); await pause(p, 2400);
+  await finish(c, 'jobs');
+}
+
+// clip 8: open a support ticket and follow a reply
+if (!only || only === 'support') {
+  const { c, p } = await ctx('support', SCHEME);
+  await p.goto(B + '/support/new');
+  await caption(p, 'Need help? Open a support ticket'); await pause(p, 1200);
+  const cat = p.locator('[name=category]'); await point(p, cat); await cat.selectOption('cv'); await pause(p, 400);
+  await type(p, p.locator('[name=subject]'), 'Changing the order of CV sections');
+  await type(p, p.locator('[name=body]'), 'Can I move Projects above Experience on one CV only?', 25);
+  await click(p, p.locator('button:has-text("Open ticket")')); await p.waitForLoadState('networkidle');
+  await caption(p, 'Every ticket gets a reference and a confirmation email'); await pause(p, 2000);
+  await p.goto(B + '/support/tickets');
+  await caption(p, 'Follow each conversation until it is sorted'); await pause(p, 1200);
+  await click(p, p.locator('a:has-text("Adding a second email address")')); await p.waitForLoadState('networkidle'); await pause(p, 1200);
+  await p.mouse.move(640, 400); for (let i = 0; i < 2; i++) { await p.mouse.wheel(0, 160); await pause(p, 400); } await pause(p, 2000);
+  await finish(c, 'support');
+}
+
 // still screenshots, light and dark, at 2x for sharp README images
 if ((!only || only === 'shots') && SCHEME === 'light') {
   for (const scheme of ['light', 'dark']) {
@@ -140,7 +259,18 @@ if ((!only || only === 'shots') && SCHEME === 'light') {
     await p.waitForFunction(() => document.querySelector('iframe'), null, { timeout: 240000 });
     await p.waitForTimeout(3000); await p.locator('iframe').first().scrollIntoViewIfNeeded(); await p.mouse.wheel(0, 120); await p.waitForTimeout(1500);
     await shot(p, `latex-compiled-${scheme}`);
+    await s('/jobs', 'jobs');
+    await s('/applications', 'applications');
+    await s('/settings/connected', 'connected');
+    await p.goto(B + '/check'); await p.locator('[name=job_advert]').fill('Embedded Firmware Intern. C firmware on STM32 boards with FreeRTOS, Git, Python test rigs and Bluetooth Low Energy.');
+    await p.click('button:has-text("Check my CV")'); await p.waitForLoadState('networkidle');
+    // the report sits under the form, so the screenshot starts at the score
+    await p.locator('#result-title').evaluate(e => (e.closest('section') || e).scrollIntoView({ block: 'start' })); await pause(p, 500); await shot(p, `check-${scheme}`);
+    await p.goto(B + '/support/tickets'); await p.click('a:has-text("Adding a second email address")'); await p.waitForLoadState('networkidle'); await pause(p, 500); await shot(p, `support-${scheme}`);
     await c.close();
+    const out = await ctx(null, scheme, false);
+    await out.p.goto(B + '/register'); await out.p.waitForLoadState('networkidle'); await out.p.evaluate(() => document.getElementById('__cursor')?.remove()); await pause(out.p, 500); await shot(out.p, `signup-${scheme}`);
+    await out.c.close();
   }
 }
 await b.close();

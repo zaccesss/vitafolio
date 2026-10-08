@@ -1,4 +1,4 @@
-<x-help-page slug="sharing">
+<x-help-page slug="sharing" demo="share">
     <h2>{{ __('Links') }}</h2>
     <p>{!! __('Every CV has its own address. Copy it from the CV page with <strong>Copy link</strong>. Change the address under <strong>Look and privacy</strong> if you want something shorter.') !!}</p>
 

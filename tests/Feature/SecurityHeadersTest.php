@@ -32,10 +32,13 @@ class SecurityHeadersTest extends TestCase
         $this->assertStringContainsString("'wasm-unsafe-eval'", $csp);
     }
 
-    public function test_only_the_profile_page_may_preview_local_images(): void
+    public function test_only_the_photo_page_may_preview_local_images(): void
     {
-        $csp = $this->actingAs(User::factory()->create())->get(route('profile.edit'))->assertOk()->headers->get('Content-Security-Policy');
-
+        $user = User::factory()->create();
+        $csp = $this->actingAs($user)->get(route('settings.photo'))->assertOk()->headers->get('Content-Security-Policy');
         $this->assertMatchesRegularExpression('/img-src [^;]*blob:/', $csp);
+
+        $other = $this->actingAs($user)->get(route('profile.edit'))->assertOk()->headers->get('Content-Security-Policy');
+        $this->assertDoesNotMatchRegularExpression('/img-src [^;]*blob:/', $other);
     }
 }
