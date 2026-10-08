@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\ModerationController;
+use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\ContactController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\SocialAuthController;
+use App\Http\Controllers\SupportTicketController;
 use App\Http\Middleware\ConfirmPasswordFirst;
 use App\Support\HelpTopics;
 use Illuminate\Routing\RedirectController;
@@ -55,6 +57,12 @@ Route::post('/jobs/feed', JobFeedController::class)->middleware('throttle:6,1')-
 
 Route::view('/contact', 'pages.contact')->name('contact.show');
 Route::view('/support', 'pages.support')->name('support');
+Route::get('/support/new', [SupportTicketController::class, 'create'])->name('support.create');
+Route::post('/support', [SupportTicketController::class, 'store'])->middleware('throttle:tickets')->name('support.store');
+Route::view('/support/sent', 'support.sent')->name('support.sent');
+Route::get('/support/tickets/{ticket}', [SupportTicketController::class, 'show'])->middleware('throttle:60,1')->name('support.show');
+Route::post('/support/tickets/{ticket}/reply', [SupportTicketController::class, 'reply'])->middleware('throttle:tickets')->name('support.reply');
+Route::get('/support/files/{attachment}', [SupportTicketController::class, 'attachment'])->middleware('throttle:60,1')->name('support.attachment');
 Route::view('/copyright', 'pages.copyright')->name('copyright');
 Route::view('/contact/sent', 'pages.contact-sent')->name('contact.sent');
 Route::view('/features', 'pages.features')->name('features');
@@ -70,6 +78,7 @@ Route::post('/language', LocaleController::class)->middleware('throttle:30,1')->
 Route::post('/contact', [ContactController::class, 'site'])->middleware('throttle:messages')->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/support/tickets', [SupportTicketController::class, 'index'])->name('support.index');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/analytics', AnalyticsController::class)->name('analytics');
     Route::get('/check', [CvCheckController::class, 'show'])->name('check');
@@ -136,6 +145,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'verified', 'can:admin'])->prefix('/admin')->name('admin.')->group(function () {
     Route::get('/', [ModerationController::class, 'index'])->name('index');
+    Route::get('/support', [SupportController::class, 'index'])->name('support');
+    Route::post('/support/{ticket}/status', [SupportController::class, 'status'])->name('support.status');
     Route::post('/cvs/{cv}/hide', [ModerationController::class, 'hide'])->name('hide');
     Route::post('/cvs/{cv}/restore', [ModerationController::class, 'restore'])->name('restore');
     Route::post('/reports/{report}/dismiss', [ModerationController::class, 'dismiss'])->name('dismiss');

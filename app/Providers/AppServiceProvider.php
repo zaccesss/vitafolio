@@ -67,6 +67,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('admin', fn (User $user) => $user->isAdmin());
 
         RateLimiter::for('reports', fn (Request $request) => Limit::perHour(5)->by($request->ip()));
+        // tickets and replies: enough for a real conversation, too few for a flood
+        RateLimiter::for('tickets', fn (Request $request) => Limit::perHour(10)->by($request->user()?->id ?: $request->ip()));
         RateLimiter::for('messages', fn (Request $request) => [
             Limit::perHour(5)->by('ip:'.$request->ip()),
             Limit::perDay(20)->by('ip-day:'.$request->ip()),

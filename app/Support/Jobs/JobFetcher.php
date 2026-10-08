@@ -3,6 +3,7 @@
 namespace App\Support\Jobs;
 
 use App\Models\JobListing;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -37,15 +38,24 @@ class JobFetcher
     public function fetch(): array
     {
         $stored = [];
+        $this->loadKnown();
         foreach (['adzuna', 'reed'] as $source) {
             if (! $this->configured($source)) {
                 continue;
             }
             $stored[$source] = 0;
+            if ($source === 'adzuna') {
+                foreach ($this->adzunaAll() as $row) {
+                    $this->store($source, $row);
+                    $stored[$source]++;
+                }
+
+                continue;
+            }
             foreach (self::SEARCHES as $kind => $terms) {
                 foreach ($terms as $term) {
                     try {
-                        $rows = $source === 'adzuna' ? $this->adzuna($term, $kind) : $this->reed($term, $kind);
+                        $rows = $this->reed($term, $kind);
                     } catch (Throwable $e) {
                         report($e);
 
@@ -59,7 +69,31 @@ class JobFetcher
             }
         }
 
+        $this->flush();
+
         return $stored;
+    }
+
+    /** stored board listings' locations by source and key, read once per fetch */
+    private array $known = [];
+
+    /** roles the employer lists itself, by title and cleaned employer name */
+    private array $employerRoles = [];
+
+    /** listings waiting to be saved, by source and key */
+    private array $buffer = [];
+
+    /**
+     * Everything store() needs to decide, read in two queries. A lookup per listing against the
+     * remote database took longer than the minute the nightly request may run.
+     */
+    private function loadKnown(): void
+    {
+        $this->known = JobListing::whereIn('source', ['adzuna', 'reed'])->get(['source', 'external_id', 'location'])
+            ->mapWithKeys(fn ($l) => ["{$l->source}|{$l->external_id}" => $l->location])->all();
+        $this->employerRoles = JobListing::where('source', 'employer')->get(['title', 'company'])
+            ->mapWithKeys(fn ($l) => [mb_strtolower(trim($l->title)).'|'.self::employerKey((string) $l->company) => true])->all();
+        $this->buffer = [];
     }
 
     /**
@@ -72,17 +106,39 @@ class JobFetcher
     {
         $row['external_id'] = self::sameRole($row['title'], (string) $row['company']);
         // the employer's own listing links straight to the job with the full advert, so it wins
-        if (self::employerHas($row['title'], (string) $row['company'])) {
+        if (isset($this->employerRoles[mb_strtolower(trim($row['title'])).'|'.self::employerKey((string) $row['company'])])) {
             return;
         }
-        $existing = JobListing::where('source', $source)->where('external_id', $row['external_id'])->first();
-        if ($existing?->location) {
-            $known = array_map('mb_strtolower', array_map('trim', explode(';', $existing->location)));
-            $row['location'] = filled($row['location']) && ! in_array(mb_strtolower(trim($row['location'])), $known, true)
-                ? Str::limit($existing->location.'; '.$row['location'], 160, '...')
-                : $existing->location;
+        $key = "{$source}|{$row['external_id']}";
+        $existing = $this->buffer[$key]['location'] ?? $this->known[$key] ?? null;
+        if ($existing) {
+            $places = array_map('mb_strtolower', array_map('trim', explode(';', $existing)));
+            $row['location'] = filled($row['location']) && ! in_array(mb_strtolower(trim($row['location'])), $places, true)
+                ? Str::limit($existing.'; '.$row['location'], 160, '...')
+                : $existing;
         }
-        JobListing::updateOrCreate(['source' => $source, 'external_id' => $row['external_id']], $row);
+        $this->buffer[$key] = ['source' => $source] + $row;
+    }
+
+    /** saves the buffered listings in batches, inserting new ones and refreshing known ones */
+    private function flush(): void
+    {
+        $now = now();
+        $columns = ['source', 'external_id', 'kind', 'sector', 'title', 'company', 'location', 'salary_min', 'salary_max',
+            'description', 'url', 'posted_at', 'closes_at'];
+        $rows = array_map(function (array $row) use ($columns, $now) {
+            $out = [];
+            foreach ($columns as $c) {
+                $value = $row[$c] ?? null;
+                $out[$c] = $value instanceof \DateTimeInterface ? Carbon::instance($value)->toDateTimeString() : $value;
+            }
+
+            return $out + ['created_at' => $now, 'updated_at' => $now];
+        }, array_values($this->buffer));
+        foreach (array_chunk($rows, 200) as $chunk) {
+            JobListing::upsert($chunk, ['source', 'external_id'], array_diff(array_keys($chunk[0]), ['source', 'external_id', 'created_at']));
+        }
+        $this->buffer = [];
     }
 
     public function configured(string $source): bool
@@ -92,25 +148,52 @@ class JobFetcher
             : filled(config('services.reed.key'));
     }
 
-    /** @return list<array<string, mixed>> */
-    private function adzuna(string $term, string $kind): array
+    /** requests sent to Adzuna at once; each search's next page is asked for only when this one was full */
+    private const PARALLEL = 8;
+
+    /**
+     * Every Adzuna search, read page by page in parallel batches. One after another, the 30 or so
+     * searches took longer than the minute a web request may run.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function adzunaAll(): array
     {
+        $pending = [];
+        foreach (self::SEARCHES as $kind => $terms) {
+            foreach ($terms as $term) {
+                $pending[] = [$term, $kind, 1];
+            }
+        }
         $rows = [];
-        for ($page = 1; $page <= self::PAGES; $page++) {
-            $found = $this->adzunaPage($term, $kind, $page);
-            $rows = array_merge($rows, $found['rows']);
-            if ($found['count'] < self::PER_SEARCH) {
-                break;
+        while ($pending !== []) {
+            $batch = array_splice($pending, 0, self::PARALLEL);
+            $responses = Http::pool(fn ($pool) => array_map(
+                fn ($search) => $pool->timeout(20)->get("https://api.adzuna.com/v1/api/jobs/gb/search/{$search[2]}", $this->adzunaQuery($search[0], $search[1])),
+                $batch,
+            ));
+            foreach ($batch as $i => [$term, $kind, $page]) {
+                $response = $responses[$i];
+                if (! $response instanceof Response || $response->failed()) {
+                    report(new \RuntimeException("Adzuna search for {$term} page {$page} failed"));
+
+                    continue;
+                }
+                $found = $this->adzunaRows($response->json('results', []), $kind);
+                $rows = array_merge($rows, $found);
+                if (count($response->json('results', [])) === self::PER_SEARCH && $page < self::PAGES) {
+                    $pending[] = [$term, $kind, $page + 1];
+                }
             }
         }
 
         return $rows;
     }
 
-    /** @return array{rows: list<array<string, mixed>>, count: int} */
-    private function adzunaPage(string $term, string $kind, int $page): array
+    /** @return array<string, mixed> */
+    private function adzunaQuery(string $term, string $kind): array
     {
-        $response = Http::timeout(20)->retry(2, 500)->get("https://api.adzuna.com/v1/api/jobs/gb/search/{$page}", [
+        return [
             'app_id' => config('services.adzuna.app_id'),
             'app_key' => config('services.adzuna.app_key'),
             'what' => $term,
@@ -119,10 +202,17 @@ class JobFetcher
             'sort_by' => 'date',
             'content-type' => 'application/json',
             ...($kind === 'part-time' ? ['part_time' => 1] : []),
-        ])->throw();
+        ];
+    }
 
+    /**
+     * @param  list<array<string, mixed>>  $results
+     * @return list<array<string, mixed>>
+     */
+    private function adzunaRows(array $results, string $kind): array
+    {
         $rows = [];
-        foreach ($response->json('results', []) as $job) {
+        foreach ($results as $job) {
             $type = $this->kindOf((string) ($job['title'] ?? ''), $kind);
             if ($type === null || blank($job['redirect_url'] ?? null)) {
                 continue;
@@ -143,7 +233,7 @@ class JobFetcher
             ];
         }
 
-        return ['rows' => $rows, 'count' => count($response->json('results', []))];
+        return $rows;
     }
 
     /** @return list<array<string, mixed>> */

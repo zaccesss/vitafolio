@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SupportMessage;
+use App\Models\SupportTicket;
 use App\Models\User;
 use App\Support\JsonResume;
 use Illuminate\Http\JsonResponse;
@@ -107,6 +109,11 @@ class AccountController extends Controller
             'previous_handles' => DB::table('handle_history')->where('user_id', $user->id)->get(['handle', 'released_at']),
             'signed_in_devices' => self::sessionsFor($user)->map(fn ($s) => ['device' => $s->device, 'ip_address' => $s->ip_address, 'last_active' => $s->last_active]),
             'reports_made' => [],
+            'support_tickets' => SupportTicket::where('user_id', $user->id)->with('messages')->get()->map(fn (SupportTicket $t): array => [
+                'reference' => $t->reference(), 'subject' => $t->subject, 'category' => $t->category, 'status' => $t->status,
+                'opened' => $t->created_at?->toIso8601String(),
+                'messages' => $t->messages->map(fn (SupportMessage $m): array => ['from' => $m->from_staff ? 'support' : 'you', 'sent' => $m->created_at?->toIso8601String(), 'text' => $m->body])->all(),
+            ])->all(),
             // what this account wrote about other people's cvs; the other person's own details stay out
             'endorsements_written' => $user->endorsementsWritten->map(fn ($e) => ['cv_address' => $e->cv ? route('cv.show', $e->cv) : null] + $e->exportFields()),
             'cvs' => $user->cvs->map(fn ($cv) => [

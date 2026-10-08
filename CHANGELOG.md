@@ -18,6 +18,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Added
 
+- Support tickets. Anyone can open one from the Support page, signed in or not, with a category, a subject and a Markdown message of up to 5,000 characters plus up to three screenshots. Each ticket gets a reference such as VF-1042 and a confirmation email. Signed-in people see theirs under Your tickets; visitors use the private link they are emailed. Admins work through a support queue filtered by status and category. Every reply emails the other side. Screenshots are private files only the people on the ticket can open. A resolved ticket closes after 14 days without a reply. A closed ticket is deleted with its screenshots after a year. Deleting an account deletes its tickets. Tickets are in the data download and the privacy policy.
 - Apprenticeships as their own kind of role on the Jobs page, from school-leaver levels to degree apprenticeships in every field.
 - A Field filter on the Jobs page covering every area: software and IT, hardware and embedded, data and AI, engineering, finance, business, law, healthcare, science, creative and media, education, public sector and retail. Each listing shows its field. Adzuna's own category is used where it is specific; otherwise the field is read from the title.
 - Employer listings on the Jobs page, received at `/jobs/feed` from employers' own hiring systems such as Greenhouse, Lever and Workday, so each one links straight to the employer's application page. Every listing is checked again on arrival: its kind of role is read from its title, roles outside the 2026 to 2027 cycle, closed roles and unsafe links are refused. An employer's advert is used only to fill in Check a CV. A listing stops showing three days after the feed last sent it.
@@ -101,6 +102,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- The nightly job fetch no longer stops at the one-minute limit for a web request. Adzuna searches run eight at a time and listings are saved in batches of 200 after two up-front reads instead of three queries each. The nightly call may run for up to five minutes. Every workflow job also has a time limit.
 - The job advert box on Check a CV said optional twice.
 - Check a CV scored the selected Vitafolio CV instead of an uploaded file when the Vitafolio option was still chosen, so different uploads got the same score. Choosing a file now selects it, a sent file is always the one checked and the report names the CV it checked.
 - Check a CV finds a name written with a nickname in brackets or placed after the contact line, recognises more standard headings such as Research & Publications and Spoken Languages, ignores filler words in job adverts and matches singular and plural forms. Strong verbs in any tense now count.

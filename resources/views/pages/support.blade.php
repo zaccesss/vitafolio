@@ -2,6 +2,8 @@
     $routes = array_filter([
         [__('Help centre'), __('Guides for every part of the site, from your first CV to passkeys, with a search box.'), route('help'), __('Open the help centre')],
         [__('Frequently asked questions'), __('Short answers to the questions people ask most.'), route('help.topic', 'faq'), __('Read the FAQ')],
+        [__('Open a support ticket'), __('Describe the problem, add screenshots and follow the conversation until it is sorted. Replies arrive by email.'), route('support.create'), __('Open a ticket')],
+        auth()->check() ? [__('Your tickets'), __('See every ticket you have opened, its status and the latest replies.'), route('support.index'), __('See your tickets')] : null,
         [__('Contact'), __('Send a message and get a reply by email, usually within a few working days.'), route('contact.show'), __('Go to the contact page')],
         config('vitafolio.status_url') ? [__('Service status'), __('Is the site up? Check the status page and its history of incidents.'), config('vitafolio.status_url'), __('Open the status page')] : null,
         [__('Report a CV'), __('A CV that breaks the rules can be reported anonymously with the Report button at the bottom of that CV.'), route('terms').'#rules', __('Read the rules')],

@@ -2,6 +2,7 @@
     <div class="container-page py-8">
         <h1 class="text-3xl">{{ __('Moderation') }}</h1>
         <p class="mt-1 text-muted">{{ __('Reports from visitors, hidden CVs, hidden endorsements and account actions. Every action here is reversible except removing a photo.') }}</p>
+        <p class="mt-3"><a class="btn btn-secondary btn-sm" href="{{ route('admin.support') }}">{{ __('Support queue') }}</a></p>
 
         <dl class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             @foreach ($stats as $label => $value)
