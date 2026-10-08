@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use App\Models\SupportMessage;
 use App\Models\SupportTicket;
 use App\Models\User;
@@ -109,6 +110,7 @@ class AccountController extends Controller
             'previous_handles' => DB::table('handle_history')->where('user_id', $user->id)->get(['handle', 'released_at']),
             'signed_in_devices' => self::sessionsFor($user)->map(fn ($s) => ['device' => $s->device, 'ip_address' => $s->ip_address, 'last_active' => $s->last_active]),
             'reports_made' => [],
+            'applications' => Application::where('user_id', $user->id)->get(['title', 'company', 'location', 'url', 'status', 'applied_on', 'deadline', 'notes', 'created_at'])->toArray(),
             'support_tickets' => SupportTicket::where('user_id', $user->id)->with('messages')->get()->map(fn (SupportTicket $t): array => [
                 'reference' => $t->reference(), 'subject' => $t->subject, 'category' => $t->category, 'status' => $t->status,
                 'opened' => $t->created_at?->toIso8601String(),

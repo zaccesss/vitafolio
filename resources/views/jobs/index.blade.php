@@ -68,8 +68,13 @@
                             </p>
                             @if ($job->description && $job->source !== 'employer')<p class="mt-2 line-clamp-2 text-sm">{{ $job->description }}</p>@endif
                             <div class="mt-3 flex flex-wrap items-center gap-2">
-                                <a class="btn btn-primary btn-sm" href="{{ $job->url }}" target="_blank" rel="noopener nofollow">{{ __('View and apply') }}<x-new-tab /></a>
+                                <a class="btn btn-primary btn-sm" href="{{ route('jobs.go', $job) }}" target="_blank" rel="noopener nofollow">{{ __('View and apply') }}<x-new-tab /></a>
                                 @auth
+                                    @if (in_array($job->id, $saved, true))
+                                        <a class="btn btn-secondary btn-sm" href="{{ route('applications.index') }}">{{ __('Saved') }}<span aria-hidden="true"> ✓</span></a>
+                                    @else
+                                        <form method="POST" action="{{ route('jobs.save', $job) }}">@csrf<button type="submit" class="btn btn-secondary btn-sm">{{ __('Save') }}</button></form>
+                                    @endif
                                     @if ($job->description)
                                         <a class="btn btn-secondary btn-sm" href="{{ route('check', ['job' => $job->id]) }}">{{ __('Check my CV against this job') }}</a>
                                     @endif

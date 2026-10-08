@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Application;
 use App\Models\Cv;
 use App\Models\Endorsement;
 use App\Models\Report;
@@ -28,6 +29,15 @@ class ModerationController extends Controller
                 'Suspended accounts' => User::whereNotNull('suspended_at')->count(),
             ],
             'hidden' => Cv::with('user')->whereNotNull('hidden_at')->latest('hidden_at')->limit(20)->get(),
+            // apply clicks over the last 30 days: counts per listing only, never who clicked
+            'clicks' => DB::table('job_clicks')->where('clicked_on', '>=', now()->subDays(30)->toDateString())->sum('clicks'),
+            'topJobs' => DB::table('job_clicks')
+                ->join('job_listings', 'job_listings.id', '=', 'job_clicks.job_listing_id')
+                ->where('clicked_on', '>=', now()->subDays(30)->toDateString())
+                ->groupBy('job_listings.id', 'job_listings.title', 'job_listings.company')
+                ->selectRaw('job_listings.id, job_listings.title, job_listings.company, sum(job_clicks.clicks) as total')
+                ->orderByDesc('total')->limit(10)->get(),
+            'saved' => Application::count(),
             'hiddenEndorsements' => Endorsement::with(['cv', 'endorser'])->whereNotNull('hidden_at')->latest('hidden_at')->limit(20)->get(),
         ]);
     }

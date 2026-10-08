@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\ModerationController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CronController;
@@ -67,6 +68,7 @@ Route::view('/copyright', 'pages.copyright')->name('copyright');
 Route::view('/contact/sent', 'pages.contact-sent')->name('contact.sent');
 Route::view('/features', 'pages.features')->name('features');
 Route::get('/jobs', [JobController::class, 'index'])->middleware('throttle:60,1')->name('jobs');
+Route::get('/jobs/{job}/apply', [ApplicationController::class, 'go'])->middleware('throttle:60,1')->name('jobs.go');
 Route::view('/features/demo/{clip}', 'pages.demo')->whereIn('clip', ['build', 'share', 'compile'])->name('features.demo');
 Route::view('/changelog', 'pages.changelog')->name('changelog');
 Route::view('/docs', 'pages.docs')->name('docs');
@@ -79,6 +81,11 @@ Route::post('/contact', [ContactController::class, 'site'])->middleware('throttl
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/support/tickets', [SupportTicketController::class, 'index'])->name('support.index');
+    Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
+    Route::post('/applications', [ApplicationController::class, 'store'])->middleware('throttle:60,1')->name('applications.store');
+    Route::patch('/applications/{application}', [ApplicationController::class, 'update'])->name('applications.update');
+    Route::delete('/applications/{application}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
+    Route::post('/jobs/{job}/save', [ApplicationController::class, 'save'])->middleware('throttle:60,1')->name('jobs.save');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/analytics', AnalyticsController::class)->name('analytics');
     Route::get('/check', [CvCheckController::class, 'show'])->name('check');
