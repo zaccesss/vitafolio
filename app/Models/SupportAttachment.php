@@ -9,6 +9,7 @@ class SupportAttachment extends Model
 {
     protected $fillable = ['support_message_id', 'public_id', 'extension', 'original_name', 'size'];
 
+    /** @return BelongsTo<SupportMessage, $this> */
     public function message(): BelongsTo
     {
         return $this->belongsTo(SupportMessage::class, 'support_message_id');

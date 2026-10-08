@@ -55,7 +55,7 @@ class JobFetcher
             foreach (self::SEARCHES as $kind => $terms) {
                 foreach ($terms as $term) {
                     try {
-                        $rows = $source === 'adzuna' ? $this->adzuna($term, $kind) : $this->reed($term, $kind);
+                        $rows = $this->reed($term, $kind);
                     } catch (Throwable $e) {
                         report($e);
 

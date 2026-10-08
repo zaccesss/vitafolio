@@ -58,8 +58,8 @@ class SupportTicketController extends Controller
         $ticket = DB::transaction(function () use ($data, $user, $token, $request) {
             $ticket = SupportTicket::create([
                 'user_id' => $user?->id,
-                'name' => $user?->name ?? $data['name'],
-                'email' => $user?->email ?? $data['email'],
+                'name' => $user ? $user->name : $data['name'],
+                'email' => $user ? $user->email : $data['email'],
                 'category' => $data['category'],
                 'subject' => $data['subject'],
                 'status' => 'open',

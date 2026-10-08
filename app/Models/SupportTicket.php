@@ -55,11 +55,13 @@ class SupportTicket extends Model
         return 'VF-'.(1000 + $this->id);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** @return HasMany<SupportMessage, $this> */
     public function messages(): HasMany
     {
         return $this->hasMany(SupportMessage::class)->oldest();
