@@ -149,7 +149,7 @@ class JobFetcher
     }
 
     /** requests sent to Adzuna at once; each search's next page is asked for only when this one was full */
-    private const PARALLEL = 8;
+    private const PARALLEL = 4;
 
     /**
      * Every Adzuna search, read page by page in parallel batches. One after another, the 30 or so
@@ -166,6 +166,8 @@ class JobFetcher
             }
         }
         $rows = [];
+        $sent = 0;
+        $failed = [];
         while ($pending !== []) {
             $batch = array_splice($pending, 0, self::PARALLEL);
             $responses = Http::pool(fn ($pool) => array_map(
@@ -173,9 +175,15 @@ class JobFetcher
                 $batch,
             ));
             foreach ($batch as $i => [$term, $kind, $page]) {
+                $sent++;
                 $response = $responses[$i];
-                if (! $response instanceof Response || $response->failed()) {
-                    report(new \RuntimeException("Adzuna search for {$term} page {$page} failed"));
+                // a refused or dropped request is usually a short rate limit, so it is tried again after a pause
+                for ($try = 1; $this->adzunaFailed($response) && $try <= 2; $try++) {
+                    usleep(1_500_000 * $try);
+                    $response = rescue(fn () => Http::timeout(20)->get("https://api.adzuna.com/v1/api/jobs/gb/search/{$page}", $this->adzunaQuery($term, $kind)), null, false);
+                }
+                if ($this->adzunaFailed($response)) {
+                    $failed[] = "{$term} p{$page} (".($response instanceof Response ? $response->status() : 'no response').')';
 
                     continue;
                 }
@@ -187,7 +195,17 @@ class JobFetcher
             }
         }
 
+        // a lost search or two only means fewer listings tonight; an outage is when many fail
+        if (count($failed) > $sent / 4) {
+            report(new \RuntimeException('Adzuna searches failed: '.count($failed).' of '.$sent.', for example '.implode(', ', array_slice($failed, 0, 5))));
+        }
+
         return $rows;
+    }
+
+    private function adzunaFailed(mixed $response): bool
+    {
+        return ! $response instanceof Response || $response->failed();
     }
 
     /** @return array<string, mixed> */

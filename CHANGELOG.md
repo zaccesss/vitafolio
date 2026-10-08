@@ -102,6 +102,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- The nightly job fetch no longer emails an error for every Adzuna search that is briefly refused. A failed search is tried twice more after a short pause, four searches run at a time instead of eight and one alert is raised only when more than a quarter of searches fail, naming which ones and why.
 - The nightly job fetch no longer stops at the one-minute limit for a web request. Adzuna searches run eight at a time and listings are saved in batches of 200 after two up-front reads instead of three queries each. The nightly call may run for up to five minutes. Every workflow job also has a time limit.
 - The job advert box on Check a CV said optional twice.
 - Check a CV scored the selected Vitafolio CV instead of an uploaded file when the Vitafolio option was still chosen, so different uploads got the same score. Choosing a file now selects it, a sent file is always the one checked and the report names the CV it checked.

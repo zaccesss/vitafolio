@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Support\Jobs\JobFetcher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -80,6 +81,20 @@ class JobsTest extends TestCase
         // dozens of searches and a thousand results, saved without a query per listing
         $this->assertLessThan(20, count(DB::getQueryLog()));
         $this->assertSame(50, JobListing::where('source', 'adzuna')->count());
+    }
+
+    public function test_a_refused_adzuna_search_is_retried_and_a_single_failure_raises_no_alert(): void
+    {
+        config(['services.adzuna.app_id' => 'id', 'services.adzuna.app_key' => 'key']);
+        Http::fake(['api.adzuna.com/*' => Http::sequence()
+            ->push('rate limited', 429)
+            ->whenEmpty(Http::response(['results' => [['id' => 'r1', 'title' => 'Graduate Accountant', 'company' => ['display_name' => 'Firm'], 'location' => ['display_name' => 'Leeds'], 'redirect_url' => 'https://www.adzuna.co.uk/jobs/land/ad/r1']]]))]);
+        Exceptions::fake();
+
+        $this->artisan('vitafolio:fetch-jobs')->assertSuccessful();
+
+        Exceptions::assertNothingReported();
+        $this->assertDatabaseHas('job_listings', ['title' => 'Graduate Accountant']);
     }
 
     public function test_a_failing_board_never_stops_the_other(): void
