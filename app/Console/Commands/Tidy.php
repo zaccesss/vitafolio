@@ -35,6 +35,8 @@ class Tidy extends Command
             'closed tickets' => DB::table('support_tickets')->where('status', 'resolved')->where('last_activity_at', '<', now()->subDays(14))
                 ->update(['status' => 'closed', 'updated_at' => now()]),
             'old tickets' => $this->deleteOldTickets(),
+            // click counts are only charted for 30 days, so a year is plenty
+            'old apply clicks' => DB::table('job_clicks')->where('clicked_on', '<', now()->subYear()->toDateString())->delete(),
             'expired reset tokens' => DB::table('password_reset_tokens')
                 ->where('created_at', '<', now()->subMinutes((int) config('auth.passwords.users.expire', 60)))->delete(),
         ];

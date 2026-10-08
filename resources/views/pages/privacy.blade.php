@@ -24,6 +24,7 @@
         <li><strong>Language:</strong> the interface language you pick from the language menu, so the site and its emails use it on every device.</li>
         <li><strong>CVs:</strong> everything you add to a CV, such as its sections, skills, projects, images, videos, uploaded files and LaTeX source.</li>
         <li><strong>Messages and reports:</strong> what you write when you contact us, message a CV owner or report a CV or an endorsement.</li>
+        <li><strong>Applications:</strong> the roles you save from the Jobs page or add yourself, with their status, dates and your notes. Only you can see them.</li>
         <li><strong>Support tickets:</strong> your name, email address, the subject and category, every message in the conversation and any screenshots you attach. Screenshots are stored as private files that only you and the support team can open. If you are not signed in we also store a fingerprint of the private link we email you, never the link itself.</li>
         <li><strong>CV checks:</strong> a CV file you upload to Check a CV is read once to produce your report and is never stored. The report and the text it found are kept only in your signed-in session so you can download them. They are removed when the session ends.</li>
         <li><strong>Endorsements you write:</strong> the text, how you know the CV's owner and any role or context you add, linked to your account and the CV. Your name is shown beside it once the owner approves it.</li>
@@ -94,6 +95,8 @@
         <li><strong>Database backups:</strong> deleted data can remain in encrypted backups for a short time until they are replaced, usually within a few days.</li>
         <li><strong>Visit counts:</strong> 13 months, then deleted automatically.</li>
         <li><strong>Sessions and sign-in records:</strong> until they expire, usually within hours.</li>
+        <li><strong>Applications:</strong> until you remove them or delete your account.</li>
+        <li><strong>Apply clicks:</strong> when anyone opens a job through View and apply, we add one to that listing's count for the day. Nothing about who clicked is stored. Counts are deleted after a year.</li>
         <li><strong>Support tickets:</strong> a resolved ticket closes after 14 days without a reply. A closed ticket is deleted with its screenshots one year after its last message. Deleting your account deletes its tickets straight away.</li>
         <li><strong>CV check reports:</strong> for the length of your session. Uploaded CV files are not kept at all.</li>
         <li><strong>Old handles:</strong> 30 days after you change your handle, so nobody else can take it and pose as you.</li>

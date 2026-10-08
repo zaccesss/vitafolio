@@ -13,6 +13,18 @@
             @endforeach
         </dl>
 
+        <section class="mt-10" aria-labelledby="jobs-title">
+            <h2 id="jobs-title" class="text-2xl">{{ __('Jobs') }}</h2>
+            <p class="mt-1 text-muted">{{ __('Apply clicks in the last 30 days: :clicks. Applications people are tracking: :saved.', ['clicks' => number_format($clicks), 'saved' => number_format($saved)]) }}</p>
+            @if ($topJobs->isNotEmpty())
+                <ol class="card mt-4 grid gap-2 p-5">
+                    @foreach ($topJobs as $top)
+                        <li class="flex flex-wrap justify-between gap-2"><span>{{ $top->title }} <span class="text-muted">· {{ $top->company }}</span></span><span class="font-semibold">{{ number_format($top->total) }}</span></li>
+                    @endforeach
+                </ol>
+            @endif
+        </section>
+
         <section class="mt-10" aria-labelledby="reports-title">
             <h2 id="reports-title" class="text-2xl">{{ __('Open reports') }}</h2>
             @forelse ($reports as $report)

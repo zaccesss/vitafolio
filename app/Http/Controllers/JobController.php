@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use App\Models\JobListing;
 use App\Support\Jobs\Sector;
 use Illuminate\Http\Request;
@@ -29,6 +30,11 @@ class JobController extends Controller
             ->orderByDesc('posted_at')->orderByDesc('id')
             ->paginate(20)->withQueryString();
 
-        return view('jobs.index', compact('jobs', 'counts', 'kind', 'sector', 'q', 'where'));
+        // which listings on this page the person has already saved, so the button says so
+        $saved = $request->user()
+            ? Application::where('user_id', $request->user()->id)->whereIn('job_listing_id', $jobs->pluck('id'))->pluck('job_listing_id')->all()
+            : [];
+
+        return view('jobs.index', compact('jobs', 'counts', 'kind', 'sector', 'q', 'where', 'saved'));
     }
 }
