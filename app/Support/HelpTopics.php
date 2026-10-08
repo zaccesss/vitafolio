@@ -14,6 +14,9 @@ class HelpTopics
         'privacy' => ['Privacy and visibility', 'Who can see each CV and profile. How search engines treat them.'],
         'account-security' => ['Account security', 'Passwords, two-factor authentication, passkeys and connected accounts.'],
         'analytics' => ['Analytics', 'How views are counted and what the charts show.'],
+        'checking-a-cv' => ['Checking a CV', 'How Check a CV reads a CV the way tracking systems do, what the score means and how to use a job advert.'],
+        'jobs' => ['Jobs and applications', 'Finding internships, placements, graduate roles and apprenticeships, saving them and tracking each application.'],
+        'support-tickets' => ['Support tickets', 'Opening a ticket, adding screenshots, following the conversation and what happens to tickets over time.'],
         'faq' => ['Frequently asked questions', 'Short answers to the questions people ask most.'],
     ];
 }

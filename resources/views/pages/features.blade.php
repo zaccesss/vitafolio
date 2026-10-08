@@ -7,6 +7,10 @@
         [__('Share it anywhere'), __('A clean link, a QR code for printed copies, a polished PDF and a preview card when the link is posted.')],
         [__('Know what is working'), __('See views, PDF downloads, QR scans and where visitors came from, counted without tracking anyone.')],
         [__('Hear from employers'), __('Visitors can message you from your CV without seeing your email address. People you worked with can endorse it, shown only once you approve.')],
+        [__('Check before you apply'), __('See your CV the way an applicant tracking system reads it, with a score, what is missing and how to fix it. Paste a job advert to compare keywords. Uploads are never stored.')],
+        [__('Find your next role'), __('Internships, placement years, spring weeks, graduate roles, apprenticeships and part-time jobs in every field, gathered nightly from employers and job boards.')],
+        [__('Track every application'), __('Save jobs with one click or add roles found anywhere else. Move each from saved to offer with dates and notes, privately.')],
+        [__('Help when you need it'), __('Open a support ticket with screenshots and follow the conversation until it is sorted, with or without an account.')],
         [__('Safe by design'), __('Passkeys, two-factor authentication, breach-checked passwords and a strict security policy on every page.')],
         [__('Built for everyone'), __('Readable in light and dark mode, usable with a keyboard or screen reader, with a plain theme for applicant tracking systems.')],
         [__('In your language'), __('Use the site in English, Spanish, French, Brazilian Portuguese, Simplified Chinese, Arabic or Urdu, with Arabic and Urdu laid out right to left. Your CV is always shown as you wrote it.')],
@@ -17,7 +21,7 @@
         [__('Share'), __('Choose who can see it, then share the link, the QR code or the PDF.')],
     ];
 @endphp
-<x-layouts.app :title="__('Features')" :description="__('Everything Vitafolio does: several CVs per person, privacy for each, uploads, LaTeX, sharing and private analytics.')">
+<x-layouts.app :title="__('Features')" :description="__('Everything Vitafolio does: several CVs per person, privacy for each, uploads, LaTeX, sharing, private analytics, Check a CV, jobs and an application tracker.')">
     <div class="container-page py-12">
         <div class="max-w-3xl">
             <p class="text-sm font-semibold uppercase tracking-wider text-brass-text">{{ __('Features') }}</p>

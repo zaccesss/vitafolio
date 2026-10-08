@@ -40,6 +40,8 @@
                     <li class="flex gap-2"><span aria-hidden="true" class="text-ok">&#10003;</span> {{ __('Upload a PDF or Word file') }}</li>
                     <li class="flex gap-2"><span aria-hidden="true" class="text-ok">&#10003;</span> {{ __('Four themes and seven accents') }}</li>
                     <li class="flex gap-2"><span aria-hidden="true" class="text-ok">&#10003;</span> {{ __('Messages without sharing your email') }}</li>
+                    <li class="flex gap-2"><span aria-hidden="true" class="text-ok">&#10003;</span> {{ __('Check your CV the way tracking systems read it') }}</li>
+                    <li class="flex gap-2"><span aria-hidden="true" class="text-ok">&#10003;</span> {{ __('Student jobs and an application tracker') }}</li>
                 </ul>
             </div>
             {{-- decorative: three stacked cv sheets drawn with markup, so they stay sharp and follow the theme --}}
