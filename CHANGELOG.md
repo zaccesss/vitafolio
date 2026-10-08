@@ -106,6 +106,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- The contents links on the Documentation page jump to their sections. Its headings had no ids, so a link changed the address but the page stayed where it was. Changelog headings can now be linked to as well.
 - The photo crop tool shows the chosen photo again. The tool moved to Settings, Photo, but the content security policy still allowed a local preview only on the old profile page, so the framing circle never appeared and every photo was cropped to the centre.
 - The nightly job fetch no longer emails an error for every Adzuna search that is briefly refused. A failed search is tried twice more after a short pause, four searches run at a time instead of eight and one alert is raised only when more than a quarter of searches fail, naming which ones and why.
 - The nightly job fetch no longer stops at the one-minute limit for a web request. Adzuna searches run eight at a time and listings are saved in batches of 200 after two up-front reads instead of three queries each. The nightly call may run for up to five minutes. Every workflow job also has a time limit.

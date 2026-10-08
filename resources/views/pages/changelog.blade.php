@@ -1,7 +1,7 @@
 @php
     // the public changelog is the repository's own CHANGELOG.md, so the two can never disagree
     $path = base_path('CHANGELOG.md');
-    $html = is_file($path) ? Str::markdown((string) file_get_contents($path), ['html_input' => 'strip', 'allow_unsafe_links' => false]) : '';
+    $html = is_file($path) ? \App\Support\Markdown::document((string) file_get_contents($path)) : '';
 @endphp
 <x-layouts.app title="What is new" description="Every notable change to Vitafolio, newest first.">
     <div class="container-page py-12">

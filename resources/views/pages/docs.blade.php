@@ -4,7 +4,7 @@
     $markdown = is_file($path) ? (string) file_get_contents($path) : '';
     // links written for github are made to work from the site
     $markdown = str_replace(['](../', '](#'], ['](' . rtrim((string) config('vitafolio.source_url'), '/') . '/blob/main/', '](#'], $markdown);
-    $html = $markdown ? Str::markdown($markdown, ['html_input' => 'strip', 'allow_unsafe_links' => false]) : '';
+    $html = $markdown ? \App\Support\Markdown::document($markdown) : '';
 @endphp
 <x-layouts.app title="Documentation" description="How Vitafolio is built, how it keeps data safe and how to run your own copy.">
     <div class="container-page py-8">
