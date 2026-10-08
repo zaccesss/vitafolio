@@ -57,6 +57,9 @@ Each screenshot follows the light or dark theme GitHub is showing.
 | Files | Uploaded PDF and Word files. LaTeX compiled in the browser with pdfLaTeX, XeLaTeX or LuaLaTeX |
 | Sharing | A clean link, a QR code, generated PDF and Word files and a share image for each CV, plus private view counts. Generated PDFs are tagged PDF/UA-1 files that screen readers can follow. A cover letter shares its CV's link and privacy |
 | CV check | Scores any CV out of 100 the way an applicant tracking system reads it: a Vitafolio CV or an uploaded PDF or Word file. It shows what was found, what is missing, layout problems and fixes. A pasted job advert shows which of its keywords the CV has. Uploads are never stored. `php artisan cv:analyse resume.pdf` writes `parsed.json` and `report.md` |
+| Jobs | Internships, placement years, spring weeks, graduate roles, apprenticeships and part-time jobs for the current cycle, gathered nightly from Adzuna and from employers' own hiring systems. Filters by kind of role, field and location, with one listing per role and a View and apply link counted per day without recording who clicked |
+| My applications | A private tracker: save jobs with one click or add roles found elsewhere, then move each from saved to offer with dates and notes |
+| Support | Tickets with Markdown, up to three private screenshots, a reference and email updates, for visitors and signed-in people alike, plus an admin queue |
 | Endorsements | People who know the owner's work can endorse a CV. Each one shows only after the owner approves it and only where the CV is visible |
 | Directory | Public CVs listed with search, skill tags, availability and university filters |
 | Sign-in | Email and password, passkeys, two-factor authentication, plus Google, GitHub and Microsoft |

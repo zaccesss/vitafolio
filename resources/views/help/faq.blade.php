@@ -10,6 +10,11 @@
         [__('What happens if I delete my account?'), e(__('Your profile, CVs, files, photos and connected sign-ins are deleted straight away, including copies held by our file storage provider.'))],
         [__('Can I take my CV elsewhere?'), e(__('Yes. Export any CV as JSON Resume, an open format other tools can read. You can also download all your data at once from your settings.'))],
         [__('How do I see where my views come from?'), e(__('Open Analytics from the account menu. To name a link you share yourself, add ?utm_source= and a name to the end of it, for example ?utm_source=newsletter.'))],
+        [__('Is a CV I upload to Check a CV stored?'), e(__('No. The file is read once to produce your report and then discarded. Only the report is kept, in your signed-in session, so you can download it.'))],
+        [__('Where do the jobs come from?'), e(__('From job boards with official APIs and from employers\' own careers sites, gathered every night. You always apply on the employer\'s site or the board itself.'))],
+        [__('Can I track applications I found somewhere else?'), e(__('Yes. Add any role by hand on My applications, with its status, dates and notes. Only you can see your applications.'))],
+        [__('Does Vitafolio list apprenticeships?'), e(__('Yes. The Jobs page has its own Apprenticeships tab, from school-leaver levels to degree apprenticeships, in every field.'))],
+        [__('How do I get help with a problem?'), __('Open a :ticket from the Support page. You can add screenshots and follow the conversation until it is sorted.', ['ticket' => '<a href="'.e(route('support.create')).'">'.e(__('support ticket')).'</a>'])],
         [__('I found a problem. Where do I report it?'), __('Use the :contact. Report a CV that breaks the rules with the :report button on that CV.', ['contact' => '<a href="'.e(route('contact.show')).'">'.e(__('contact page')).'</a>', 'report' => '<strong>'.e(__('Report')).'</strong>'])],
     ];
 @endphp
