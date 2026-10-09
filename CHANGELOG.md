@@ -108,6 +108,7 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Fixed
 
+- A contact or CV message is no longer lost when its email fails. The visitor no longer sees an error page either. The message is held encrypted, retried by the nightly tidy-up and deleted once sent or after 14 days. The admin page counts unsent messages and the privacy policy says how long they are kept.
 - The nightly job fetch no longer fails when a role posted in many cities builds a location longer than the database allows. Long values are now cut to fit, dots included.
 - The contents links on the Documentation page jump to their sections. Its headings had no ids, so a link changed the address but the page stayed where it was. Changelog headings can now be linked to as well.
 - The photo crop tool shows the chosen photo again. The tool moved to Settings, Photo, but the content security policy still allowed a local preview only on the old profile page, so the framing circle never appeared and every photo was cropped to the centre.

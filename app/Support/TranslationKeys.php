@@ -86,7 +86,7 @@ class TranslationKeys
             ...array_values(Latex::TEMPLATES),
             ...array_merge(...array_values($constant(SendSecurityNotice::class, 'NOTICES'))),
             // moderation counts, analytics cards and the editor checklist
-            'Accounts', 'CVs', 'Public CVs', 'Open reports', 'Suspended accounts',
+            'Accounts', 'CVs', 'Public CVs', 'Open reports', 'Suspended accounts', 'Unsent messages',
             'CV views', 'Profile views', 'PDF downloads', 'QR code scans',
             'Headline', 'Summary', 'Skills', 'Experience', 'Projects', 'Education', 'Profile photo', 'Uploaded or LaTeX file',
             'New sign-in', 'Your account was signed in from a browser it has not used before: :agent.',
