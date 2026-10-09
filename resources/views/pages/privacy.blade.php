@@ -3,7 +3,7 @@
     $email = config('vitafolio.contact_email');
     $sections = ['who' => 'Who is responsible', 'what' => 'What we collect', 'why' => 'Why we use it and our legal bases', 'visitors' => 'People who visit a CV', 'sharing' => 'Who we share it with', 'transfers' => 'Transfers outside the UK', 'keep' => 'How long we keep it', 'rights' => 'Your rights', 'security' => 'How we protect it', 'children' => 'Children', 'changes' => 'Changes to this policy', 'contact' => 'Contact and complaints'];
 @endphp
-<x-prose-page english-only title="Privacy policy" intro="What {{ config('app.name') }} collects, why, who sees it and the rights you have over it." updated="8 October 2026">
+<x-prose-page english-only title="Privacy policy" intro="What {{ config('app.name') }} collects, why, who sees it and the rights you have over it." updated="10 October 2026">
     <nav aria-labelledby="privacy-contents" class="not-prose card p-5">
         <h2 id="privacy-contents" class="text-lg">Contents</h2>
         <ol class="mt-2 grid gap-1 text-sm sm:grid-cols-2">
@@ -98,6 +98,7 @@
         <li><strong>Applications:</strong> until you remove them or delete your account.</li>
         <li><strong>Apply clicks:</strong> when anyone opens a job through View and apply, we add one to that listing's count for the day. Nothing about who clicked is stored. Counts are deleted after a year.</li>
         <li><strong>Support tickets:</strong> a resolved ticket closes after 14 days without a reply. A closed ticket is deleted with its screenshots one year after its last message. Deleting your account deletes its tickets straight away.</li>
+        <li><strong>Messages that could not be sent:</strong> if an email fails, the message is held encrypted and retried each night. It is deleted once sent or after 14 days.</li>
         <li><strong>CV check reports:</strong> for the length of your session. Uploaded CV files are not kept at all.</li>
         <li><strong>Old handles:</strong> 30 days after you change your handle, so nobody else can take it and pose as you.</li>
         <li><strong>Endorsements:</strong> until the writer withdraws it, the CV's owner deletes it or either of them deletes their account. Deleting the CV deletes its endorsements too.</li>

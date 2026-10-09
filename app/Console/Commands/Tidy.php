@@ -2,16 +2,18 @@
 
 namespace App\Console\Commands;
 
+use App\Models\PendingMessage;
 use App\Models\SupportAttachment;
 use App\Models\SupportTicket;
 use App\Support\Cloudinary;
+use App\Support\MessageRelay;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 #[Signature('vitafolio:tidy')]
-#[Description('Clear expired sessions, cache rows, reset tokens, released handles and old view stats')]
+#[Description('Clear expired sessions, cache rows, reset tokens, released handles and old view stats; retry unsent messages')]
 class Tidy extends Command
 {
     /** view stats older than this are dropped; the owner's charts only ever show the last year */
@@ -37,6 +39,9 @@ class Tidy extends Command
             'old tickets' => $this->deleteOldTickets(),
             // click counts are only charted for 30 days, so a year is plenty
             'old apply clicks' => DB::table('job_clicks')->where('clicked_on', '<', now()->subYear()->toDateString())->delete(),
+            // messages whose email failed get one more try a night, then go once they are two weeks old
+            'resent messages' => MessageRelay::retry(),
+            'expired messages' => PendingMessage::where('created_at', '<', now()->subDays(PendingMessage::KEEP_DAYS))->delete(),
             'expired reset tokens' => DB::table('password_reset_tokens')
                 ->where('created_at', '<', now()->subMinutes((int) config('auth.passwords.users.expire', 60)))->delete(),
         ];

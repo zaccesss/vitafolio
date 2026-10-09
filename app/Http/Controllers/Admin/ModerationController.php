@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Cv;
 use App\Models\Endorsement;
+use App\Models\PendingMessage;
 use App\Models\Report;
 use App\Models\User;
 use App\Support\Audit;
@@ -27,6 +28,8 @@ class ModerationController extends Controller
                 'Public CVs' => Cv::listed()->count(),
                 'Open reports' => Report::whereNull('resolved_at')->count(),
                 'Suspended accounts' => User::whereNotNull('suspended_at')->count(),
+                // contact and cv messages waiting for their email to go out
+                'Unsent messages' => PendingMessage::count(),
             ],
             'hidden' => Cv::with('user')->whereNotNull('hidden_at')->latest('hidden_at')->limit(20)->get(),
             // apply clicks over the last 30 days: counts per listing only, never who clicked
