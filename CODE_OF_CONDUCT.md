@@ -13,7 +13,7 @@ private information without consent. That includes details taken from someone's 
 ## Enforcement
 
 > [!NOTE]
-> Report unacceptable behaviour to vitafolio@isaacadjei.me or via
+> Report unacceptable behaviour to team@vitafolio.isaacadjei.me or via
 > [isaacadjei.me/contact](https://isaacadjei.me/contact). Reports are reviewed and appropriate action
 > is taken, including removing comments or blocking users where necessary.
 
