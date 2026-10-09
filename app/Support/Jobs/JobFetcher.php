@@ -6,7 +6,6 @@ use App\Models\JobListing;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Throwable;
 
 /**
@@ -114,7 +113,7 @@ class JobFetcher
         if ($existing) {
             $places = array_map('mb_strtolower', array_map('trim', explode(';', $existing)));
             $row['location'] = filled($row['location']) && ! in_array(mb_strtolower(trim($row['location'])), $places, true)
-                ? Str::limit($existing.'; '.$row['location'], 160, '...')
+                ? self::fit($existing.'; '.$row['location'], 160)
                 : $existing;
         }
         $this->buffer[$key] = ['source' => $source] + $row;
@@ -302,7 +301,16 @@ class JobFetcher
         }
         $text = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
 
-        return Str::limit($text, $limit, '...');
+        return self::fit($text, $limit);
+    }
+
+    /**
+     * Shortens text to at most $limit characters including the trailing dots. Str::limit adds the
+     * dots after the limit, which ran three characters past the column and failed the nightly save.
+     */
+    private static function fit(string $text, int $limit): string
+    {
+        return mb_strlen($text) <= $limit ? $text : rtrim(mb_substr($text, 0, $limit - 3)).'...';
     }
 
     /** one role at one employer, whichever board or city it came through */

@@ -55,6 +55,20 @@ class JobsTest extends TestCase
         Http::assertSent(fn ($request) => str_contains($request->url(), 'reed.co.uk') && $request->hasHeader('Authorization'));
     }
 
+    public function test_a_role_in_many_cities_stays_within_the_location_column(): void
+    {
+        config(['services.adzuna.app_id' => 'id', 'services.adzuna.app_key' => 'key']);
+        $cities = array_map(fn ($n) => "Townshire {$n}", range(1, 30));
+        $ad = fn ($n) => ['id' => "c{$n}", 'title' => 'Graduate Surveyor', 'company' => ['display_name' => 'Gamma'], 'location' => ['display_name' => $cities[$n]], 'redirect_url' => "https://www.adzuna.co.uk/jobs/land/ad/c{$n}"];
+        Http::fake(['api.adzuna.com/*' => Http::response(['results' => array_map($ad, array_keys($cities))])]);
+
+        $this->artisan('vitafolio:fetch-jobs')->assertSuccessful();
+
+        $location = (string) JobListing::where('title', 'Graduate Surveyor')->value('location');
+        $this->assertLessThanOrEqual(160, mb_strlen($location));
+        $this->assertStringEndsWith('...', $location);
+    }
+
     public function test_one_role_posted_for_several_cities_is_one_listing(): void
     {
         config(['services.adzuna.app_id' => 'id', 'services.adzuna.app_key' => 'key']);
