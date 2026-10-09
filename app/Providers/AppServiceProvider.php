@@ -12,6 +12,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Events\DiagnosingHealth;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -49,6 +50,15 @@ class AppServiceProvider extends ServiceProvider
 
         // the health check fails when the database cannot answer, not only when php boots
         Event::listen(DiagnosingHealth::class, fn () => DB::select('select 1'));
+
+        // replies to automated mail reach a monitored inbox. a global reply-to in config/mail.php
+        // would be added beside a contact message's own reply-to, so it is filled only when empty
+        Event::listen(function (MessageSending $event): void {
+            $replyTo = config('vitafolio.reply_to');
+            if (filled($replyTo) && $event->message->getReplyTo() === []) {
+                $event->message->replyTo((string) $replyTo);
+            }
+        });
 
         // microsoft sign-in comes from the socialite providers package rather than socialite itself
         Event::listen(fn (SocialiteWasCalled $event) => $event->extendSocialite('microsoft', MicrosoftProvider::class));

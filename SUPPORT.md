@@ -8,7 +8,7 @@
 - **Have an idea?** Share it in [Ideas](https://github.com/zaccesss/vitafolio/discussions/categories/ideas).
 - **Found a bug?** Open an [issue](https://github.com/zaccesss/vitafolio/issues/new/choose).
 - **Problem with your account on the live site?** Use the contact form on the site's About page, or
-  email support@isaacadjei.me. Never post account details in a public issue.
+  email support@vitafolio.isaacadjei.me. Never post account details in a public issue.
 
 > [!IMPORTANT]
 > For a security issue, follow [SECURITY.md](SECURITY.md) rather than posting publicly.

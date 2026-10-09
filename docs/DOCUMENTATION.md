@@ -441,6 +441,7 @@ Copy `.env.example` to `.env`. Laravel's own settings are documented there; thes
 | --- | --- |
 | `SITE_OWNER_NAME`, `SITE_OWNER_URL` | Who runs this copy of the site, shown in the footer |
 | `SITE_CONTACT_EMAIL`, `SITE_SECURITY_EMAIL` | Where contact messages go and the address in `security.txt` |
+| `MAIL_REPLY_TO_ADDRESS` | Where replies to automated emails go; leave blank to reply to the sender |
 | `SITE_SOURCE_URL` | The public source code, used by the security policy, the contact page's issue link and the documentation page |
 | `MYSQL_ATTR_SSL_CA` | Path to the database's CA certificate when the host requires TLS |
 | `RESEND_API_KEY` | Mail delivery when `MAIL_MAILER=resend` |

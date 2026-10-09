@@ -35,7 +35,7 @@ Only the latest release on `main` and the live site receive fixes.
 > [!IMPORTANT]
 > Report privately, never in a public issue. Use
 > [GitHub private vulnerability reporting](https://github.com/zaccesss/vitafolio/security/advisories/new)
-> or email vitafolio@isaacadjei.me with the steps to reproduce and the impact. Expect an
+> or email dev@vitafolio.isaacadjei.me with the steps to reproduce and the impact. Expect an
 > acknowledgement within a few days. Please give reasonable time for a fix before sharing details.
 
 Test only with accounts you own. Never access or keep data that belongs to someone else.

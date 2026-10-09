@@ -15,6 +15,9 @@ return [
     // where messages from the public contact form are delivered
     'contact_email' => env('SITE_CONTACT_EMAIL'),
 
+    // where replies to automated emails go; a message that already names its own reply-to keeps it
+    'reply_to' => env('MAIL_REPLY_TO_ADDRESS'),
+
     'source_url' => env('SITE_SOURCE_URL'),
     // the project's linkedin page, linked from the footer and the site's structured data
     'linkedin_url' => env('SITE_LINKEDIN_URL'),
