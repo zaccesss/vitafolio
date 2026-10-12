@@ -27,7 +27,7 @@ COPY scripts/fetch-pdf-fonts.sh /src/scripts/fetch-pdf-fonts.sh
 RUN mkdir -p /src/resources/pdf/fonts && sh /src/scripts/fetch-pdf-fonts.sh
 
 # php with the extensions the app needs, shared by the dependency stage and the final image
-FROM dunglas/frankenphp:1-php8.4-alpine AS base
+FROM dunglas/frankenphp:1.13.1-php8.4-alpine AS base
 RUN install-php-extensions gd pdo_mysql zip intl bcmath opcache
 
 FROM base AS vendor
