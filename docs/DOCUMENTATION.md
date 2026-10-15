@@ -59,6 +59,14 @@ Each CV has seven tabs:
 | Look and privacy | Title, address, theme, accent colour, font, document language, whether to show your email and who can see the CV |
 | Import and export | Import a JSON Resume file, export this CV as JSON Resume, duplicate it or delete it |
 
+The Content tab offers ten sector templates: finance and accounting, technology and software,
+engineering, healthcare, education, hospitality, retail and customer service, creative and media, law
+and the public sector. Choosing one fills the form with a structure for that sector, written as
+[square bracket] placeholders, plus the skills employers in that sector commonly ask for. Nothing is
+saved until the owner presses Save content. A CV that already has content shows a warning with a way
+back. The templates live in `app/Support/CvTemplates.php` and stay in English, like the letter
+templates.
+
 Themes are Classic, Modern, Minimal and Plain. Plain is designed to be read easily by screen readers
 and the applicant tracking systems employers use to scan CVs.
 

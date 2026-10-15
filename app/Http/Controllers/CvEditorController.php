@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cv;
+use App\Support\CvTemplates;
 use App\Support\JsonResume;
 use App\Support\LetterTemplates;
 use App\Support\Locales;
@@ -47,6 +48,9 @@ class CvEditorController extends Controller
         // owner presses Save, so their current letter is safe if they change their mind
         $template = $tab === 'letter' && LetterTemplates::exists($request->query('template'))
             ? $request->query('template') : null;
+        // a sector template fills the details form the same way: shown, never saved until Save content
+        $cvTemplate = $tab === 'details' && CvTemplates::exists($request->query('template'))
+            ? $request->query('template') : null;
 
         return view('cv.edit', [
             'cv' => $cv,
@@ -54,6 +58,8 @@ class CvEditorController extends Controller
             'user' => $request->user(),
             'template' => $template,
             'templateBody' => $template ? LetterTemplates::body($template, $cv->user->name) : null,
+            'cvTemplate' => $cvTemplate,
+            'cvTemplateFields' => $cvTemplate ? CvTemplates::fields($cvTemplate) : null,
         ]);
     }
 

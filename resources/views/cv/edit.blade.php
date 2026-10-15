@@ -42,18 +42,35 @@
 
                 @if ($tab === 'details')
                     <p class="alert alert-info mb-6">{!! __('Your name, photo, location, university and links come from :profile and are shared by all your CVs.', ['profile' => '<a href="'.e(route('profile.edit')).'" target="_blank" rel="noopener">'.e(__('your profile')).$newTab.'</a>']) !!}</p>
+                    @php($tf = $cvTemplateFields ?? null)
+                    <nav class="card mb-6 p-6" aria-labelledby="cv-templates-title">
+                        <h2 id="cv-templates-title" class="text-xl">{{ __('Start from a template') }}</h2>
+                        <p class="mt-1 text-muted">{{ __('A starting structure for the sector you are applying to. Every part in [square brackets] is for you to replace.') }}</p>
+                        <ul class="mt-3 flex flex-wrap gap-2">
+                            @foreach (\App\Support\CvTemplates::labels() as $kind => $label)
+                                <li><a class="btn btn-secondary btn-sm" href="{{ route('cvs.edit', [$cv, 'details']) }}?template={{ $kind }}" @if($cvTemplate === $kind) aria-current="true" @endif>{{ $label }}</a></li>
+                            @endforeach
+                        </ul>
+                        <x-english-only class="mt-3" />
+                        @if ($cvTemplate)
+                            <p class="alert alert-info mt-3">{{ __('The template is in the form below. Replace everything in [square brackets] and keep only the skills you can show, then save. Nothing changes until you press Save.') }}</p>
+                            @if (filled($cv->profile) || filled($cv->experience) || filled($cv->education))
+                                <p class="alert alert-info mt-3">{{ __('Saving will replace the content you already have.') }} <a href="{{ route('cvs.edit', [$cv, 'details']) }}">{{ __('Keep my current content') }}</a></p>
+                            @endif
+                        @endif
+                    </nav>
                     <form method="POST" action="{{ route('cvs.details', $cv) }}" class="card grid gap-5 p-6 sm:grid-cols-2">
                         @csrf @method('PUT')
-                        <x-field name="headline" :label="__('Headline for this CV')" :value="$cv->headline" maxlength="120"
+                        <x-field name="headline" :label="__('Headline for this CV')" :value="$tf['headline'] ?? $cv->headline" maxlength="120"
                                  :hint="$user->headline ? __('Leave empty to use your profile headline: :headline.', ['headline' => $user->headline]) : __('Leave empty to use your profile headline.')" dir="auto" />
-                        <x-field name="key_language" :label="__('Main language or tool')" :value="$cv->key_language" maxlength="60" :hint="__('For example: Python')" />
-                        <x-field class="sm:col-span-2" name="profile" :label="__('Profile')" type="textarea" :value="$cv->profile" rows="5" maxlength="3000" counter
+                        <x-field name="key_language" :label="__('Main language or tool')" :value="$tf['key_language'] ?? $cv->key_language" maxlength="60" :hint="__('For example: Python')" />
+                        <x-field class="sm:col-span-2" name="profile" :label="__('Profile')" type="textarea" :value="$tf['profile'] ?? $cv->profile" rows="5" maxlength="3000" counter
                                  :hint="__('A short summary aimed at the roles this CV is for.')" />
-                        <x-field class="sm:col-span-2" name="skills" :label="__('Skills')" :value="\App\Support\Tags::toText($cv)" maxlength="1500"
+                        <x-field class="sm:col-span-2" name="skills" :label="__('Skills')" :value="$tf['skills'] ?? \App\Support\Tags::toText($cv)" maxlength="1500"
                                  :hint="__('Separate skills with commas, for example: Python, SQL, Figma. Each becomes a searchable tag.')" />
-                        <x-field class="sm:col-span-2" name="experience" :label="__('Experience')" type="textarea" :value="$cv->experience" rows="8" maxlength="5000" counter
+                        <x-field class="sm:col-span-2" name="experience" :label="__('Experience')" type="textarea" :value="$tf['experience'] ?? $cv->experience" rows="8" maxlength="5000" counter
                                  :hint="__('Roles and what you achieved. Start a line with a dash and a space for a bullet point.')" />
-                        <x-field class="sm:col-span-2" name="education" :label="__('Education')" type="textarea" :value="$cv->education" rows="5" maxlength="5000" counter />
+                        <x-field class="sm:col-span-2" name="education" :label="__('Education')" type="textarea" :value="$tf['education'] ?? $cv->education" rows="5" maxlength="5000" counter />
                         <div class="flex flex-wrap gap-3 sm:col-span-2">
                             <button type="submit" class="btn btn-primary">{{ __('Save content') }}</button>
                             <a class="btn btn-secondary" href="{{ route('cv.show', $cv) }}" target="_blank" rel="noopener">{{ __('Preview') }}<x-new-tab /></a>

@@ -3,6 +3,8 @@
     <p>{{ __('The Content tab holds a headline for this CV, your main language, a profile summary, experience, education and skills. Leave any section empty and it is left out of the CV.') }}</p>
     <p>{!! __('A CV can use its own headline. That lets one CV say <em>Embedded software engineer</em> while another says <em>Research assistant</em>, without changing your profile.') !!}</p>
 
+    <p>{!! __('Not sure where to start? Choose a sector under <strong>Start from a template</strong> on the Content tab. It fills the form with a structure for that sector. Replace everything in [square brackets], keep only the skills you can show and save. Nothing changes until you press Save content.') !!}</p>
+
     <h2>{{ __('Skills') }}</h2>
     <p>{!! __('Type skills separated by commas. Common spellings are joined together, so <em>JS</em> and <em>JavaScript</em> become one skill. Skills on public CVs appear as filters in the directory, which helps people find you.') !!}</p>
 
