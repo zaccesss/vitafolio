@@ -28,7 +28,9 @@ RUN mkdir -p /src/resources/pdf/fonts && sh /src/scripts/fetch-pdf-fonts.sh
 
 # php with the extensions the app needs, shared by the dependency stage and the final image
 FROM dunglas/frankenphp:1.13.1-php8.4-alpine AS base
-RUN install-php-extensions gd pdo_mysql zip intl bcmath opcache
+# picks up alpine security fixes published after the base image was built, so the image scan
+# does not fail on a library that already has a patched release
+RUN apk upgrade --no-cache && install-php-extensions gd pdo_mysql zip intl bcmath opcache
 
 FROM base AS vendor
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
