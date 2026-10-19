@@ -6,6 +6,7 @@ use App\Mail\ReportReceived;
 use App\Models\Cv;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -25,8 +26,19 @@ class BackgroundJobsTest extends TestCase
 
         $user = User::factory()->create();
         DB::table('handle_history')->insert(['user_id' => $user->id, 'handle' => 'old-one', 'released_at' => now()->subDay()]);
-        $this->withToken('a-long-shared-secret')->post(route('cron'))->assertOk()->assertJson(['ok' => true]);
+        $this->withToken('a-long-shared-secret')->post(route('cron'))->assertAccepted()->assertJson(['ok' => true, 'started' => true]);
         $this->assertDatabaseCount('handle_history', 0);
+    }
+
+    public function test_cron_turns_away_a_second_call_while_one_is_running(): void
+    {
+        config(['vitafolio.cron_token' => 'a-long-shared-secret']);
+        $lock = Cache::lock('vitafolio-cron', 600);
+        $lock->get();
+
+        $this->withToken('a-long-shared-secret')->post(route('cron'))->assertAccepted()->assertJson(['running' => true]);
+
+        $lock->release();
     }
 
     public function test_search_engines_hear_about_public_changes_only(): void

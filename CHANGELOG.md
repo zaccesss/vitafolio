@@ -4,6 +4,10 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+### Fixed
+
+- The nightly `/cron` call answers at once and runs the tidy-up and job fetch after the response behind a lock. A slow job fetch used to outlast the caller's 90 second wait. The retry then started a second run that filled the free plan's request threads until the host restarted the site.
+
 ### Changed
 
 - The production Docker image pins FrankenPHP to 1.13.1-php8.4-alpine instead of the floating 1-php8.4-alpine tag, pulling a binary built with golang.org/x/net 0.61.0 to clear CVE-2026-78669.
