@@ -4,6 +4,8 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+## 0.0.1 - 2026-10-22
+
 ### Fixed
 
 - The nightly `/cron` call answers at once and runs the tidy-up and job fetch after the response behind a lock. A slow job fetch used to outlast the caller's 90 second wait. The retry then started a second run that filled the free plan's request threads until the host restarted the site.
