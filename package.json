@@ -35,7 +35,7 @@
         "gsap": "^3.15.0",
         "mermaid": "^12.2.0",
         "sortablejs": "^1.15.7",
-        "texlyre-busytex": "^1.4.0",
+        "texlyre-busytex": "^1.4.1",
         "vue": "^3.5.44"
     },
     "overrides": {
