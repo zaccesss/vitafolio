@@ -4,6 +4,10 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+### Security
+
+- DOMPurify, which Mermaid pulls in, updates from 3.4.16 to 3.4.17 to fix a critical advisory. Until then `npm audit` failed the front-end build on every pull request.
+
 ## 0.0.1 - 2026-10-22
 
 ### Fixed
