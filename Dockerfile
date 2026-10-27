@@ -3,7 +3,8 @@
 # was chosen after scanning: it carries far fewer known vulnerabilities than apache on debian.
 
 # front-end assets
-FROM node:26-alpine AS assets
+# pinned by digest, so a rebuild always uses the same release; dependabot moves the tag and the digest together
+FROM node:26.12.1-alpine@sha256:40cd011b55415bc894e45b02fdd5a5dfde056921b7d23a64c74f80497af48797 AS assets
 WORKDIR /app
 COPY package.json package-lock.json .npmrc ./
 RUN npm ci --no-audit --no-fund
@@ -27,7 +28,7 @@ COPY scripts/fetch-pdf-fonts.sh /src/scripts/fetch-pdf-fonts.sh
 RUN mkdir -p /src/resources/pdf/fonts && sh /src/scripts/fetch-pdf-fonts.sh
 
 # php with the extensions the app needs, shared by the dependency stage and the final image
-FROM dunglas/frankenphp:1.13.1-php8.4-alpine AS base
+FROM dunglas/frankenphp:1.13.4-php8.4-alpine@sha256:64607d4d22bc747e7e7183ffff11620decd23112b50cb7008c9b48547bd34e2d AS base
 # picks up alpine security fixes published after the base image was built, so the image scan
 # does not fail on a library that already has a patched release
 RUN apk upgrade --no-cache && install-php-extensions gd pdo_mysql zip intl bcmath opcache

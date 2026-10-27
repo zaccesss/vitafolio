@@ -4,6 +4,16 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+### Fixed
+
+- The site no longer restarts in a loop when its database is unreachable. `/up` answers without touching the database, so the host's health check every few seconds no longer queries it. A new `/up/db` reports the database alone with a JSON 200 or 503 and never starts a session. When the database cannot be reached at start-up the container still starts, shows the maintenance page with a `Retry-After` header and logs a warning instead of exiting. The next `/cron` call runs any waiting migrations and brings the site back once the database answers, with no redeploy. A maintenance page put up by hand is left alone. Maintenance state is always kept in a file, since the database is what is missing.
+
+### Changed
+
+- Far fewer database requests, so the database's free monthly allowance lasts. Crawlers, link previews and machine fetches of `robots.txt`, the sitemap, CV preview images and QR codes get a session in memory with no cookie instead of a stored one. People keep stored sessions, so the signed-in devices list and ending other sessions work as before. The documented cache store is now `file`. The Jobs page reads only the columns a card shows with the advert cut to its two-line preview, keeps the tab counts for ten minutes and gains indexes on the closing date and on the kind of role with the posting date. The View and apply redirect reads only the listing's address. `robots.txt` keeps `/jobs` open to crawlers but turns them away from its filtered pages and apply redirects. Filtered and later Jobs pages carry `noindex, follow`.
+- The nightly tidy-up workflow no longer runs on its own schedule, since the external scheduler already calls `/cron` each night. It can still be run by hand.
+- The production image pins FrankenPHP 1.13.4-php8.4-alpine and Node 26.12.1-alpine by digest. PHP's native session upload progress is turned off.
+
 ### Security
 
 - DOMPurify, which Mermaid pulls in, updates from 3.4.16 to 3.4.17 to fix a critical advisory. Until then `npm audit` failed the front-end build on every pull request.

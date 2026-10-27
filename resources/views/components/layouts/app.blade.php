@@ -23,7 +23,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $fullTitle }}</title>
     <meta name="description" content="{{ $description }}">
-    @if ($noindex)<meta name="robots" content="noindex">@endif
+    {{-- noindex is true for a plain noindex or a full robots value such as "noindex, follow" --}}
+    @if ($noindex)<meta name="robots" content="{{ is_string($noindex) ? $noindex : 'noindex' }}">@endif
     @if ($canonical)<link rel="canonical" href="{{ $canonical }}">@endif
     <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:title" content="{{ $fullTitle }}">

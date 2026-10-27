@@ -69,7 +69,7 @@ Route::view('/copyright', 'pages.copyright')->name('copyright');
 Route::view('/contact/sent', 'pages.contact-sent')->name('contact.sent');
 Route::view('/features', 'pages.features')->name('features');
 Route::get('/jobs', [JobController::class, 'index'])->middleware('throttle:60,1')->name('jobs');
-Route::get('/jobs/{job}/apply', [ApplicationController::class, 'go'])->middleware('throttle:60,1')->name('jobs.go');
+Route::get('/jobs/{job}/apply', [ApplicationController::class, 'go'])->whereNumber('job')->middleware('throttle:60,1')->name('jobs.go');
 Route::view('/features/demo/{clip}', 'pages.demo')->whereIn('clip', Demos::CLIPS)->name('features.demo');
 Route::view('/changelog', 'pages.changelog')->name('changelog');
 Route::view('/docs', 'pages.docs')->name('docs');

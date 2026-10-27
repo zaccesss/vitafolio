@@ -1,15 +1,14 @@
 name: Nightly tidy-up
 
-# the free hosting plan runs no scheduled jobs, so this calls the site's /cron address once a night.
-# an external scheduler starts it at 03:30 London; the schedule below is a backup in case that run
-# never arrives. The tidy-up is idempotent, so a second run the same night finds nothing to clear.
+# the free hosting plan runs no scheduled jobs, so an external scheduler calls the site's /cron address
+# at 03:30 London each night. this workflow makes the same call by hand: to rerun a missed night or to
+# bring the site out of maintenance mode once its database answers again. it has no schedule of its
+# own, since a second nightly run only spends the database's monthly request allowance.
 # it needs the CRON_TOKEN secret and the SITE_URL variable; without them it skips quietly.
 
 permissions: {}
 
 on:
-  schedule:
-    - cron: "30 2 * * *"
   workflow_dispatch:
 
 jobs:

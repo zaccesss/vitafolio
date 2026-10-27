@@ -78,15 +78,18 @@ class ApplicationController extends Controller
      * The apply link: counts the click for the listing (a number per day, never who) and sends the
      * person on to the employer or board.
      */
-    public function go(JobListing $job): RedirectResponse
+    public function go(int $job): RedirectResponse
     {
+        // bound by hand so only the address is read, never the full advert text
+        $listing = JobListing::query()->select(['id', 'url'])->findOrFail($job);
+
         DB::table('job_clicks')->upsert(
-            [['job_listing_id' => $job->id, 'clicked_on' => now()->toDateString(), 'clicks' => 1]],
+            [['job_listing_id' => $listing->id, 'clicked_on' => now()->toDateString(), 'clicks' => 1]],
             ['job_listing_id', 'clicked_on'],
             ['clicks' => DB::raw('clicks + 1')],
         );
 
-        return redirect()->away($job->url);
+        return redirect()->away($listing->url);
     }
 
     /** @return array<string, mixed> */
