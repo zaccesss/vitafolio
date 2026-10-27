@@ -10,10 +10,8 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Foundation\Events\DiagnosingHealth;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Events\MessageSending;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
@@ -48,8 +46,9 @@ class AppServiceProvider extends ServiceProvider
             Event::listen($event, SendSecurityNotice::class);
         }
 
-        // the health check fails when the database cannot answer, not only when php boots
-        Event::listen(DiagnosingHealth::class, fn () => DB::select('select 1'));
+        // /up stays free of the database on purpose: the host polls it every few seconds, so a database
+        // query there spends the database's monthly allowance and turns a database outage into a
+        // restart loop. /up/db checks the database separately for monitors that need it
 
         // replies to automated mail reach a monitored inbox. a global reply-to in config/mail.php
         // would be added beside a contact message's own reply-to, so it is filled only when empty

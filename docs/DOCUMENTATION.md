@@ -330,7 +330,7 @@ editor for anyone who finds it easier with a screen reader.
 | Headers | `X-Frame-Options: DENY`, `nosniff`, a strict referrer policy, cross-origin opener isolation and HSTS over HTTPS |
 | Uploaded files | Served with a sandbox policy, so a script inside a PDF cannot reach the site |
 | Links | Only `http` and `https` links are kept. Each is labelled from its real address, so a lookalike cannot pose as a known site |
-| Sessions | Stored in the database, encrypted and ended everywhere on suspension |
+| Sessions | Stored in the database, encrypted and ended everywhere on suspension. Crawlers and machine fetches of site files without a session cookie get one in memory only, so they write nothing |
 | Spam | Cloudflare Turnstile on sign-up, contact, report and endorsement forms, a hidden honeypot field and rate limits |
 | Container | Runs as an unprivileged user. CI scans the image, the PHP packages and the npm packages for known vulnerabilities on every pull request |
 | Sessions and devices | Remember-me cookies last 30 days. A password reset signs every device out; a password change signs every other device out. Settings lists every signed-in device and can end any one |
@@ -494,9 +494,11 @@ The [README](../README.md#running-it-locally) has the quick start. A few more de
 The `Dockerfile` builds a production image in three stages: front-end assets with Node, PHP
 dependencies with Composer, then a final FrankenPHP image on Alpine Linux that runs as an unprivileged
 user. The final image also carries the Typst binary from Typst's official image, pinned by digest, which
-renders the tagged PDFs. On every start, `docker/start.sh` caches the configuration, routes, views and events, runs any
-new migrations and then starts the server on `PORT`. A failed migration stops the start, so a broken
-release never serves traffic.
+renders the tagged PDFs. On every start, `docker/start.sh` caches the configuration, routes, views and events, checks
+the database with `php artisan vitafolio:db-check`, runs any new migrations and then starts the server on `PORT`. A
+failed migration stops the start, so a broken release never serves traffic. When the database cannot be reached the
+server still starts in maintenance mode with a `Retry-After` header, so the host's health check passes instead of
+restarting the container in a loop. The next `/cron` call brings the site back once the database answers.
 
 To deploy on a container host such as Render:
 
@@ -508,7 +510,7 @@ To deploy on a container host such as Render:
 4. If the database requires TLS, point `MYSQL_ATTR_SSL_CA` at its CA certificate. A host with a publicly
    trusted certificate, such as TiDB Cloud, works with the container's own bundle at
    `/etc/ssl/certs/ca-certificates.crt`. Otherwise upload the CA as a secret file and point at that.
-5. Set the health check path to `/up`.
+5. Set the health check path to `/up`. It never touches the database, so frequent checks cost no database requests.
 6. After the first deploy, open a shell and run `php artisan vitafolio:make-admin you@example.com`.
 
 > [!WARNING]
@@ -539,13 +541,13 @@ release. Host them anywhere that serves static files with CORS allowed, such as 
 
 | Task | How |
 | --- | --- |
-| Nightly tidy-up | `POST /cron` with `Authorization: Bearer <CRON_TOKEN>` runs `vitafolio:tidy`, which clears released handles, view stats older than 13 months, expired sessions, cache rows and reset tokens. It also retries contact and CV messages whose email failed: they are held encrypted in `pending_messages`, deleted once sent or after 14 days and counted on the admin page as Unsent messages. The call answers `202` at once and the tidy-up and job fetch run after the response. A slow job board never holds the caller. A second call while a run is going gets `202` with `running: true` and starts nothing. The [nightly workflow](../.github/workflows/nightly-tidy.yml) calls it |
+| Nightly tidy-up | `POST /cron` with `Authorization: Bearer <CRON_TOKEN>` runs `vitafolio:tidy`, which clears released handles, view stats older than 13 months, expired sessions, cache rows and reset tokens. It also retries contact and CV messages whose email failed: they are held encrypted in `pending_messages`, deleted once sent or after 14 days and counted on the admin page as Unsent messages. The call answers `202` at once and the tidy-up and job fetch run after the response. A slow job board never holds the caller. A second call while a run is going gets `202` with `running: true` and starts nothing. If the site started in maintenance mode because the database was unreachable, the call first checks the database: it answers `503` while the database is still down, otherwise it runs any waiting migrations and brings the site back. An external scheduler calls it at 03:30 London each night; the [nightly workflow](../.github/workflows/nightly-tidy.yml) makes the same call by hand |
 | Employer job feed | `POST /jobs/feed` with `Authorization: Bearer <JOBS_FEED_TOKEN>` and `{"jobs": [{"title", "company", "url", "location", "board", "deadline", "opened", "description", "category"}]}`, up to 1,000 at a time. Each listing is classified again from its title by `App\Support\Jobs\RoleType`, which matches whole words only, leaves out staff, senior and apprenticeship roles and rejects any year outside the cycle or a spring or summer season that has ended. Links must use https and a passed deadline is refused. The reply counts what was stored and why the rest were skipped. The description is kept only to fill in Check a CV and is never shown. `App\Support\Jobs\Sector` gives each listing a field from the sender's category or its title. A listing the feed has not sent for three days is removed by the tidy-up |
 | My applications | `/applications` (`ApplicationController`) lists a person's applications with status tabs. `POST /jobs/{job}/save` saves a listing, copying its title, employer, location, link and closing date so the record outlives the listing (`job_listing_id` is set to null when the listing is tidied away). `GET /jobs/{job}/apply` adds one to that listing's `job_clicks` row for the day and redirects to the advert |
 | Support tickets | `/support/new` opens a ticket (`SupportTicketController`). Messages are Markdown rendered with raw HTML stripped and unsafe links removed. Screenshots go to Cloudinary as authenticated raw files and are served through `/support/files/{attachment}` only to the ticket's owner, an admin or a visitor holding the private link. Only a SHA-256 hash of that link's token is stored. `/admin/support` is the queue. The tidy-up closes resolved tickets after 14 quiet days and deletes closed ones after a year |
-| Uptime | `/up` answers 200 when the app boots and the database answers a query, for an uptime monitor. Checking it every few minutes also stops a free host from putting the app to sleep |
+| Uptime | `/up` answers 200 when the app boots, for the host's health check and an uptime monitor, without touching the database. Checking it every few minutes also stops a free host from putting the app to sleep. `/up/db` answers JSON 200 when the database answers a query and 503 when it does not, without starting a session. Both answer during maintenance mode |
 | Errors | Sent to Sentry when `SENTRY_LARAVEL_DSN` is set, without personal data. Content security policy breaks are reported there too when `CSP_REPORT_URI` is set |
-| Maintenance mode | From a shell on the host: `php artisan down --retry=120 --secret=<word>` shows the maintenance page to everyone except visitors who first open `/<word>`. `php artisan up` ends it. The cache driver with the database store means it applies to every copy of the app and survives a redeploy |
+| Maintenance mode | From a shell on the host: `php artisan down --retry=120 --secret=<word>` shows the maintenance page to everyone except visitors who first open `/<word>`. `php artisan up` ends it. The state is a file in the running container, so the maintenance page still shows while the database is unreachable; a redeploy starts without it |
 | Audit log | Every sign-in, failed sign-in, lockout, sign-out, sign-in change and moderation action is one `audit.*` line in the log, with ids rather than personal details. Account holders are also emailed about every sign-in change and about sign-ins from a browser they have not used before |
 | Moderation | `/admin` lists open reports and hidden CVs. Admins can hide or restore a CV, remove a photo, dismiss a report and suspend or reinstate an account. Admins are emailed when a report arrives |
 | Admins | `php artisan vitafolio:make-admin <email>`, with `--revoke` to remove the role |

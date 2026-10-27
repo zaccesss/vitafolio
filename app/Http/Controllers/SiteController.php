@@ -42,7 +42,9 @@ class SiteController extends Controller
         foreach (['GPTBot', 'CCBot', 'Google-Extended', 'Bytespider', 'Applebot-Extended', 'meta-externalagent'] as $bot) {
             array_push($lines, 'User-agent: '.$bot, 'Disallow: /', '');
         }
-        array_push($lines, 'User-agent: *', 'Disallow: /dashboard', 'Disallow: /cvs/', 'Disallow: /settings', 'Disallow: /admin', 'Disallow: /analytics', '', 'Sitemap: '.route('sitemap'));
+        // /jobs itself stays indexable. its filtered and paged copies and the apply redirects are not
+        // pages to index; following them only spends requests on the database
+        array_push($lines, 'User-agent: *', 'Disallow: /dashboard', 'Disallow: /cvs/', 'Disallow: /settings', 'Disallow: /admin', 'Disallow: /analytics', 'Disallow: /jobs/*/apply', 'Disallow: /jobs?', '', 'Sitemap: '.route('sitemap'));
 
         return response(implode("\n", $lines)."\n", 200, ['Content-Type' => 'text/plain; charset=utf-8', 'Cache-Control' => 'public, max-age=86400']);
     }

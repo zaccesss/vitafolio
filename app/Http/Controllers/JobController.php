@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\JobListing;
 use App\Support\Jobs\Sector;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class JobController extends Controller
@@ -23,9 +24,19 @@ class JobController extends Controller
             // the search box looks for a job title or employer only, so an advert's small print never matches
             ->when($q !== '', fn ($query) => $query->where(fn ($inner) => $inner->where('title', 'like', "%{$q}%")->orWhere('company', 'like', "%{$q}%")))
             ->when($where !== '', fn ($query) => $query->where('location', 'like', "%{$where}%"));
-        $counts = (clone $filtered)->selectRaw('kind, count(*) as total')->groupBy('kind')->pluck('total', 'kind');
+        // listings change once a night, so the tab counts can be ten minutes old. the cache holds plain
+        // arrays because it refuses to unserialise objects
+        $counts = collect(Cache::remember(
+            'jobs:counts:'.md5($sector."\n".$q."\n".$where),
+            now()->addMinutes(10),
+            fn () => (clone $filtered)->selectRaw('kind, count(*) as total')->groupBy('kind')->pluck('total', 'kind')->map(fn ($total) => (int) $total)->all(),
+        ));
 
+        // only what a card shows. an employer's advert can run to many thousands of characters, so the
+        // description comes back cut to the two-line preview, which is also enough to tell whether there is one
         $jobs = (clone $filtered)
+            ->select(['id', 'source', 'kind', 'sector', 'title', 'company', 'location', 'salary_min', 'salary_max', 'posted_at', 'closes_at'])
+            ->selectRaw('substr(description, 1, 400) as description')
             ->when($kind !== '', fn ($query) => $query->where('kind', $kind))
             ->orderByDesc('posted_at')->orderByDesc('id')
             ->paginate(20)->withQueryString();

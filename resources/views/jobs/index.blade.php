@@ -1,4 +1,5 @@
-<x-layouts.app :title="__('Jobs')">
+{{-- filtered and later pages repeat the main list, so only the first unfiltered page is indexed --}}
+<x-layouts.app :title="__('Jobs')" :noindex="$kind !== '' || $sector !== '' || $q !== '' || $where !== '' || $jobs->currentPage() > 1 ? 'noindex, follow' : false">
     @php
         $filters = array_filter(['sector' => $sector, 'q' => $q, 'where' => $where]);
         $kinds = \App\Models\JobListing::kindLabels();
