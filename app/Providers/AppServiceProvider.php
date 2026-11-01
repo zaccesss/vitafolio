@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Listeners\SendSecurityNotice;
 use App\Models\User;
+use App\Support\LazyDatabaseSessionHandler;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Auth\Events\Login;
@@ -15,6 +16,7 @@ use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -45,6 +47,14 @@ class AppServiceProvider extends ServiceProvider
         ] as $event) {
             Event::listen($event, SendSecurityNotice::class);
         }
+
+        // database sessions skip the write when nothing changed, which saves most of their requests
+        Session::extend('database', fn ($app) => new LazyDatabaseSessionHandler(
+            $app['db']->connection(config('session.connection')),
+            config('session.table'),
+            (int) config('session.lifetime'),
+            $app,
+        ));
 
         // /up stays free of the database on purpose: the host polls it every few seconds, so a database
         // query there spends the database's monthly allowance and turns a database outage into a

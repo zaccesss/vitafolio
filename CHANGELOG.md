@@ -11,12 +11,14 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 ### Changed
 
 - Far fewer database requests, so the database's free monthly allowance lasts. Crawlers, link previews and machine fetches of `robots.txt`, the sitemap, CV preview images and QR codes get a session in memory with no cookie instead of a stored one. People keep stored sessions, so the signed-in devices list and ending other sessions work as before. The documented cache store is now `file`. The Jobs page reads only the columns a card shows with the advert cut to its two-line preview, keeps the tab counts for ten minutes and gains indexes on the closing date and on the kind of role with the posting date. The View and apply redirect reads only the listing's address. `robots.txt` keeps `/jobs` open to crawlers but turns them away from its filtered pages and apply redirects. Filtered and later Jobs pages carry `noindex, follow`.
+- Stored sessions are written only when something in them changes instead of on every page. An unchanged session is still refreshed every five minutes to keep the signed-in devices list current. A changed sign-in, address or browser is still written at once. Expired sessions are cleared by the nightly tidy-up alone, so requests no longer sweep them.
 - The nightly tidy-up workflow no longer runs on its own schedule, since the external scheduler already calls `/cron` each night. It can still be run by hand.
 - The production image pins FrankenPHP 1.13.4-php8.4-alpine and Node 26.12.1-alpine by digest. PHP's native session upload progress is turned off.
 
 ### Security
 
 - DOMPurify, which Mermaid pulls in, updates from 3.4.16 to 3.4.17 to fix a critical advisory. Until then `npm audit` failed the front-end build on every pull request.
+- symfony/mime updates from 8.1.7 to 8.1.10 to fix an email header injection advisory (CVE-2026-45070) that failed `composer audit`.
 
 ## 0.0.1 - 2026-10-22
 
