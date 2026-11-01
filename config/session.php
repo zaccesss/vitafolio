@@ -112,9 +112,12 @@ return [
     | rid of old sessions from storage. Here are the chances that it will
     | happen on a given request. By default, the odds are 2 out of 100.
     |
+    | the nightly tidy-up already deletes expired sessions, so requests never
+    | sweep them: each sweep is a database request against the free allowance
+    |
     */
 
-    'lottery' => [2, 100],
+    'lottery' => [0, 100],
 
     /*
     |--------------------------------------------------------------------------
