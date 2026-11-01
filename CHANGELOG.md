@@ -4,6 +4,8 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+## 0.0.2 - 2026-11-01
+
 ### Fixed
 
 - The site no longer restarts in a loop when its database is unreachable. `/up` answers without touching the database, so the host's health check every few seconds no longer queries it. A new `/up/db` reports the database alone with a JSON 200 or 503 and never starts a session. When the database cannot be reached at start-up the container still starts, shows the maintenance page with a `Retry-After` header and logs a warning instead of exiting. The next `/cron` call runs any waiting migrations and brings the site back once the database answers, with no redeploy. A maintenance page put up by hand is left alone. Maintenance state is always kept in a file, since the database is what is missing.
