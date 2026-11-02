@@ -139,23 +139,23 @@ class PdfCv
     {
         $blocks = [];
         $current = null;
+        $items = [];
         foreach (preg_split('/\R/u', trim((string) $text)) ?: [] as $line) {
             $line = trim($line);
             $type = $line === '' ? null : (str_starts_with($line, '- ') ? 'list' : 'p');
-            if ($type !== ($current['type'] ?? null) && $current !== null) {
-                $blocks[] = $current;
-                $current = null;
+            if ($type !== $current) {
+                if ($current !== null) {
+                    $blocks[] = ['type' => $current, $current === 'list' ? 'items' : 'lines' => $items];
+                }
+                $current = $type;
+                $items = [];
             }
-            if ($type === 'list') {
-                $current ??= ['type' => 'list', 'items' => []];
-                $current['items'][] = trim(substr($line, 2));
-            } elseif ($type === 'p') {
-                $current ??= ['type' => 'p', 'lines' => []];
-                $current['lines'][] = $line;
+            if ($type !== null) {
+                $items[] = $type === 'list' ? trim(substr($line, 2)) : $line;
             }
         }
         if ($current !== null) {
-            $blocks[] = $current;
+            $blocks[] = ['type' => $current, $current === 'list' ? 'items' : 'lines' => $items];
         }
 
         return $blocks;
