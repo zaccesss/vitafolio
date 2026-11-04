@@ -1,8 +1,11 @@
 # Vitafolio
 
 [![CI](https://github.com/zaccesss/vitafolio/actions/workflows/ci.yml/badge.svg)](https://github.com/zaccesss/vitafolio/actions/workflows/ci.yml)
+[![Markdown Lint](https://github.com/zaccesss/vitafolio/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/zaccesss/vitafolio/actions/workflows/markdownlint.yml)
+[![Gitleaks](https://github.com/zaccesss/vitafolio/actions/workflows/gitleaks-scan.yml/badge.svg)](https://github.com/zaccesss/vitafolio/actions/workflows/gitleaks-scan.yml)
+[![Release](https://img.shields.io/github/v/release/zaccesss/vitafolio?label=release)](https://github.com/zaccesss/vitafolio/releases/latest)
+[![Licence: MIT](https://img.shields.io/badge/licence-MIT-green.svg)](LICENSE)
 [![Uptime](https://incidents.betterstack.com/status-badges/v2/monitor/2zqfn.svg)](https://vitafolio.isaacadjei.me)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Build, store and share every version of a CV, each with its own theme, privacy setting and link.
 

@@ -4,9 +4,16 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+## 0.1.0 - 2026-11-03
+
+### Added
+
+- Markdown Lint, Gitleaks and release badges in the README.
+
 ### Changed
 
 - Community files follow the [AI policy](https://github.com/zaccesss/ai-policy): pull requests declare AI use and issue forms ask whether AI helped.
+- Routine tidy-up.
 
 ## 0.0.2 - 2026-11-01
 
