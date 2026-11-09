@@ -6,6 +6,9 @@ use GdImage;
 
 class Images
 {
+    /** 50 megapixels is well past any phone camera */
+    private const MAX_PIXELS = 50_000_000;
+
     /**
      * re-encodes an upload as a square jpeg. this strips location and camera data, drops anything
      * hidden inside the file and caps the size, so the stored copy is always small and clean.
@@ -16,6 +19,11 @@ class Images
     public static function squareJpeg(string $path, int $size, ?array $crop = null): ?string
     {
         $bytes = (string) file_get_contents($path);
+        // decoding needs memory for every pixel, so a tiny file can claim a huge picture
+        $dimensions = @getimagesizefromstring($bytes);
+        if ($dimensions === false || $dimensions[0] * $dimensions[1] > self::MAX_PIXELS) {
+            return null;
+        }
         $source = @imagecreatefromstring($bytes);
         if ($source === false) {
             return null;

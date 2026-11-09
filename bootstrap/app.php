@@ -7,6 +7,7 @@ use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\StatelessForCrawlers;
 use App\Http\Middleware\ThrottleAuthForms;
+use App\Http\Middleware\UseRealClientAddress;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -29,6 +30,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // could otherwise become the host used in password reset links
         $middleware->trustProxies(at: '*', headers: Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_PORT);
         $middleware->prepend(RedirectToCanonicalHost::class);
+        // runs first, so every rate limit and log line after it sees the visitor's real address
+        $middleware->prepend(UseRealClientAddress::class);
         $middleware->append(ThrottleAuthForms::class);
         // decides which session store a request gets, so it has to run before the session starts
         $middleware->prependToGroup('web', StatelessForCrawlers::class);

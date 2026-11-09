@@ -46,10 +46,18 @@ final readonly class ResumeText
         ]);
     }
 
+    private const MAX_DOCX_PART_BYTES = 20 * 1024 * 1024;
+
+    private const MAX_DOCX_HEADER_BYTES = 1024 * 1024;
+
     public static function fromDocx(string $path): self
     {
         $zip = new ZipArchive;
-        if ($zip->open($path) !== true || ($xml = $zip->getFromName('word/document.xml')) === false) {
+        // a small zip can expand to gigabytes, so only this much of any part is ever read
+        $limit = self::MAX_DOCX_PART_BYTES + 1;
+        if ($zip->open($path) !== true
+            || ($zip->statName('word/document.xml')['size'] ?? $limit) >= $limit
+            || ($xml = $zip->getFromName('word/document.xml', $limit)) === false || strlen($xml) >= $limit) {
             throw new UnreadableResume('This Word file could not be read. Save it as .docx and try again.');
         }
 
@@ -57,7 +65,7 @@ final readonly class ResumeText
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $name = (string) $zip->getNameIndex($i);
             if (preg_match('#^word/header\d*\.xml$#', $name)) {
-                $headers .= self::docxText((string) $zip->getFromName($name)).' ';
+                $headers .= self::docxText(substr((string) $zip->getFromName($name, self::MAX_DOCX_HEADER_BYTES), 0, self::MAX_DOCX_HEADER_BYTES)).' ';
             }
         }
         $zip->close();

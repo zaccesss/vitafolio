@@ -14,6 +14,12 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ### Security
 
+- Rate limits and logs now use the visitor's real address.
+- Word files are limited in how far they can expand and images in how many pixels they can claim, so a crafted upload cannot use up the server's memory.
+- PHP's shell functions and opening URLs as files are switched off in the production image.
+- The production image connects to the database over TLS by default and session data is encrypted by default.
+- `/up/db` asks the database at most once every 15 seconds, so a flood of requests cannot use up its free allowance.
+- A test now stops a translation adding HTML that the English text does not have.
 - Symfony packages and the FrankenPHP base image updated past their published advisories.
 
 ### Changed
