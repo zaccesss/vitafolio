@@ -44,7 +44,8 @@ RUN composer dump-autoload --optimize --classmap-authoritative --no-dev \
 
 # the image render runs
 FROM base
-ENV APP_ENV=production APP_DEBUG=false LOG_CHANNEL=stderr PORT=10000
+# the database connection uses tls even if the host forgets to name a certificate bundle
+ENV APP_ENV=production APP_DEBUG=false LOG_CHANNEL=stderr PORT=10000 MYSQL_ATTR_SSL_CA=/etc/ssl/certs/ca-certificates.crt
 COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY docker/php.ini "$PHP_INI_DIR/conf.d/zz-vitafolio.ini"
 COPY docker/start.sh /usr/local/bin/start
