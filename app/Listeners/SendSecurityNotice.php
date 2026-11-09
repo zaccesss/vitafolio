@@ -10,6 +10,9 @@ use Illuminate\Auth\Events\Lockout;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\SessionGuard;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Fortify\Events\PasswordUpdatedViaController;
@@ -26,6 +29,18 @@ use Laravel\Passkeys\Events\PasskeyRegistered;
  */
 class SendSecurityNotice
 {
+    /** the cookie that lets a browser be recognised after its sessions have been cleared away */
+    public const DEVICE_COOKIE = 'known_device';
+
+    /** 400 days is the longest a browser keeps a cookie */
+    private const DEVICE_COOKIE_MINUTES = 400 * 24 * 60;
+
+    /** accounts one browser remembers, so a shared computer cannot grow the cookie without limit */
+    private const DEVICE_COOKIE_ACCOUNTS = 5;
+
+    /** a sign-in this soon after sign-up is the new account's owner, who has nothing to be warned about */
+    private const NEW_ACCOUNT_MINUTES = 10;
+
     /** @var array<class-string, array{string, string}> event => [headline, detail] */
     private const NOTICES = [
         PasswordReset::class => ['Password reset', 'Your password was reset using a link sent to your email address. Every other device has been signed out.'],
@@ -59,7 +74,7 @@ class SendSecurityNotice
         }
 
         match (true) {
-            $event instanceof Login => $this->login($user),
+            $event instanceof Login => $this->login($user, $event->guard),
             $event instanceof Logout => Audit::log('logout', ['user' => $user->id]),
             $event instanceof TwoFactorAuthenticationFailed => Audit::log('two_factor.failed', ['user' => $user->id]),
             $event instanceof Failed => Audit::log('login.failed', ['user' => $user->id]),
@@ -75,15 +90,52 @@ class SendSecurityNotice
     }
 
     /** a browser the account has not signed in from before gets a notice; known ones only get logged */
-    private function login(User $user): void
+    private function login(User $user, string $guard): void
     {
         $request = request();
+        $auth = Auth::guard($guard);
+
+        // the framework fires Login when a remember-me cookie restores an expired session. Nobody
+        // signed in: the same browser came back, so a notice here would arrive on an ordinary visit
+        if ($auth instanceof SessionGuard && $auth->viaRemember()) {
+            Audit::log('login.restored', ['user' => $user->id]);
+            $this->rememberDevice($user);
+
+            return;
+        }
+
         $agent = (string) $request->userAgent();
-        $known = DB::table('sessions')->where('user_id', $user->id)
-            ->where('user_agent', $agent)->where('id', '<>', $request->session()->getId())->exists();
+        $known = in_array($user->id, $this->rememberedAccounts(), true)
+            || DB::table('sessions')->where('user_id', $user->id)
+                ->where('user_agent', $agent)->where('id', '<>', $request->session()->getId())->exists();
         Audit::log('login', ['user' => $user->id, 'new_device' => ! $known]);
-        if (! $known) {
+        $this->rememberDevice($user);
+
+        if (! $known && ! $user->created_at?->gt(now()->subMinutes(self::NEW_ACCOUNT_MINUTES))) {
             self::send($user, 'New sign-in', 'Your account was signed in from a browser it has not used before: :agent.', ['agent' => $agent ?: 'unknown browser']);
         }
+    }
+
+    /** @return list<int> */
+    private function rememberedAccounts(): array
+    {
+        $ids = json_decode((string) request()->cookie(self::DEVICE_COOKIE), true);
+
+        return is_array($ids) ? array_values(array_filter($ids, 'is_int')) : [];
+    }
+
+    private function rememberDevice(User $user): void
+    {
+        $accounts = array_values(array_unique([$user->id, ...$this->rememberedAccounts()]));
+
+        // encrypted by the web middleware like every other cookie, so it cannot be forged to hide a sign-in
+        Cookie::queue(Cookie::make(
+            self::DEVICE_COOKIE,
+            (string) json_encode(array_slice($accounts, 0, self::DEVICE_COOKIE_ACCOUNTS)),
+            self::DEVICE_COOKIE_MINUTES,
+            secure: config('session.secure'),
+            httpOnly: true,
+            sameSite: 'lax',
+        ));
     }
 }
