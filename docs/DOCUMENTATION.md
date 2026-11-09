@@ -333,7 +333,7 @@ editor for anyone who finds it easier with a screen reader.
 | Sessions | Stored in the database, encrypted and ended everywhere on suspension. Crawlers and machine fetches of site files without a session cookie get one in memory only, so they write nothing |
 | Spam | Cloudflare Turnstile on sign-up, contact, report and endorsement forms, a hidden honeypot field and rate limits |
 | Container | Runs as an unprivileged user. CI scans the image, the PHP packages and the npm packages for known vulnerabilities on every pull request |
-| Sessions and devices | Remember-me cookies last 30 days. A password reset signs every device out; a password change signs every other device out. Settings lists every signed-in device and can end any one |
+| Sessions and devices | Remember-me cookies last 30 days. A password reset signs every device out; a password change signs every other device out. Settings lists every signed-in device and can end any one. A sign-in from a browser the account has not used is emailed, recognised through the encrypted `known_device` cookie. A remember-me cookie restoring a session is logged but not emailed. A new account gets no notice for its first sign-in |
 
 | Rate limit | Allowance |
 | --- | --- |

@@ -4,6 +4,23 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+## 0.2.0 - 2026-11-09
+
+### Fixed
+
+- Returning to the site no longer emails a new sign-in alert. A remember-me cookie restoring an expired session is logged but not emailed.
+- A browser that has signed in before is recognised through an encrypted `known_device` cookie, so an alert only goes out for a browser the account has not used. A browser update or expired sessions no longer set one off.
+- A new account no longer gets an alert for its own first sign-in.
+
+### Security
+
+- Symfony packages and the FrankenPHP base image updated past their published advisories.
+
+### Changed
+
+- Dependency updates for the PHP packages, the front-end packages and the Crowdin action.
+- The cookie policy lists `known_device`.
+
 ## 0.1.0 - 2026-11-03
 
 ### Added
