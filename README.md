@@ -118,7 +118,7 @@ Together they mean "the pages of a life": one place that holds every version of 
 
 ### Application
 
-| <img src="docs/assets/stack/laravel.svg" alt="Laravel" width="60"> | <img src="docs/assets/stack/php.svg" alt="PHP 8.4" width="60"> | <img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="MySQL" width="60"> | <img src="docs/assets/stack/latex.svg" alt="LaTeX" width="60"> |
+| <img src="docs/assets/stack/laravel.svg" alt="Laravel" width="60"> | <img src="docs/assets/stack/php.svg" alt="PHP 8.4" width="60"> | <img src="https://cdn.jsdelivr.net/gh/qkrdmstlr3/techstack-generator@1a8656741692dfe08effc82600f4d0d4bb87d420/static/mysql-icon.svg" alt="MySQL" width="60"> | <img src="docs/assets/stack/latex.svg" alt="LaTeX" width="60"> |
 | :---: | :---: | :---: | :---: |
 | **Laravel** | **PHP 8.4** | **MySQL** | **LaTeX** |
 
@@ -130,7 +130,7 @@ Together they mean "the pages of a life": one place that holds every version of 
 
 ### Hosting and storage
 
-| <img src="https://techstack-generator.vercel.app/docker-icon.svg" alt="Docker" width="60"> | <img src="docs/assets/stack/render.svg" alt="Render" width="60"> | <img src="docs/assets/stack/cloudflare.svg" alt="Cloudflare" width="60"> | <img src="docs/assets/stack/cloudinary.svg" alt="Cloudinary" width="60"> |
+| <img src="https://cdn.jsdelivr.net/gh/qkrdmstlr3/techstack-generator@1a8656741692dfe08effc82600f4d0d4bb87d420/static/docker-icon.svg" alt="Docker" width="60"> | <img src="docs/assets/stack/render.svg" alt="Render" width="60"> | <img src="docs/assets/stack/cloudflare.svg" alt="Cloudflare" width="60"> | <img src="docs/assets/stack/cloudinary.svg" alt="Cloudinary" width="60"> |
 | :---: | :---: | :---: | :---: |
 | **Docker** | **Render** | **Cloudflare** | **Cloudinary** |
 
