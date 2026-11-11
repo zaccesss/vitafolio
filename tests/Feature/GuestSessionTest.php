@@ -72,11 +72,33 @@ class GuestSessionTest extends TestCase
         }
     }
 
-    public function test_a_visitor_with_no_session_changes_language_through_the_language_page(): void
+    public function test_a_visitor_with_no_session_changes_language_in_one_press(): void
+    {
+        $this->from(route('about'))->get(route('locale.choose', ['locale' => 'fr']))
+            ->assertRedirect(route('about'))
+            ->assertCookie(Locales::COOKIE, 'fr');
+    }
+
+    public function test_an_unknown_language_changes_nothing(): void
+    {
+        $this->from(route('about'))->get(route('locale.choose', ['locale' => 'xx']))->assertOk()
+            ->assertCookieMissing(Locales::COOKIE);
+    }
+
+    public function test_a_signed_in_person_is_never_switched_by_a_link(): void
+    {
+        $user = User::factory()->create(['locale' => 'en']);
+
+        $this->actingAs($user)->get(route('locale.choose', ['locale' => 'fr']))->assertOk()
+            ->assertCookieMissing(Locales::COOKIE);
+        $this->assertSame('en', $user->fresh()->locale);
+    }
+
+    public function test_a_visitor_with_no_session_can_still_use_the_language_page(): void
     {
         $this->enforceFormTokens();
 
-        $page = $this->from(route('about'))->get(route('locale.choose', ['locale' => 'fr']))->assertOk();
+        $page = $this->from(route('about'))->get(route('locale.choose'))->assertOk();
         $page->assertSee('name="from" value="'.route('about').'"', false);
         // the page that prints the token is the one that stores the session
         $this->assertDatabaseCount('sessions', 1);

@@ -2,8 +2,8 @@
 @php
     $current = app()->getLocale();
     $languages = \App\Support\Locales::ALL;
-    // a form token only works once the session is stored. a visitor with no stored session is sent to the
-    // language page instead, which prints the token and so starts the session only when it is wanted
+    // a form token only works once the session is stored. a visitor with no stored session sends the choice
+    // as a link instead, which sets the language cookie and needs no token, so the menu alone stores nothing
     $direct = \App\Http\Middleware\GuestSessionOnDemand::tokenWillLast(request());
     $method = $direct ? 'POST' : 'GET';
     $action = $direct ? route('locale') : route('locale.choose');

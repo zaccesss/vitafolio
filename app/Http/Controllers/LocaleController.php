@@ -27,15 +27,27 @@ class LocaleController extends Controller
     }
 
     /**
-     * the language menu sends a visitor with no stored session here. this page prints the form token,
-     * so the session is stored from here on and the choice can be posted safely
+     * the language menu sends a visitor with no stored session here, with the language they pressed.
+     * with no language named this page prints the form token and lists the languages. someone signed
+     * in always gets the page
      */
-    public function choose(Request $request): View
+    public function choose(Request $request): View|RedirectResponse
     {
         $asked = $request->query('locale');
+        $chosen = is_string($asked) && isset(Locales::ALL[$asked]) ? $asked : null;
+
+        // a signed-out visitor's choice only sets a preference cookie, so it is applied at once and the
+        // menu stays one press. an account's language is changed by the posted form alone, behind its token
+        if ($chosen !== null && $request->user() === null) {
+            app()->setLocale($chosen);
+
+            return redirect()->to(self::safeReturn(url()->previous()))
+                ->withCookie(cookie(Locales::COOKIE, $chosen, 60 * 24 * 365))
+                ->with('status', __('The language is now :name.', ['name' => Locales::ALL[$chosen]['name']]));
+        }
 
         return view('pages.language', [
-            'chosen' => is_string($asked) && isset(Locales::ALL[$asked]) ? $asked : null,
+            'chosen' => $chosen,
             // the page the visitor came from, carried through the form so they land back on it
             'from' => self::safeReturn(url()->previous()),
         ]);
