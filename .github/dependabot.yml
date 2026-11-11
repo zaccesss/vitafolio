@@ -1,9 +1,13 @@
 version: 2
+# every ecosystem is checked in one slot, every Sunday at 18:00 UK time, so updates arrive together
 updates:
   - package-ecosystem: "composer"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: weekly
+      day: sunday
+      time: "18:00"
+      timezone: Europe/London
     open-pull-requests-limit: 5
     labels: ["dependencies"]
     commit-message:
@@ -16,7 +20,10 @@ updates:
   - package-ecosystem: "npm"
     directories: ["/", "/scripts/demo"]
     schedule:
-      interval: "weekly"
+      interval: weekly
+      day: sunday
+      time: "18:00"
+      timezone: Europe/London
     open-pull-requests-limit: 5
     labels: ["dependencies"]
     commit-message:
@@ -31,17 +38,29 @@ updates:
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: weekly
+      day: sunday
+      time: "18:00"
+      timezone: Europe/London
     labels: ["dependencies"]
     commit-message:
       prefix: "chore"
       include: "scope"
+    groups:
+      docker:
+        patterns: ["*"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: weekly
+      day: sunday
+      time: "18:00"
+      timezone: Europe/London
     labels: ["dependencies"]
     commit-message:
       prefix: "chore"
       include: "scope"
+    groups:
+      actions:
+        patterns: ["*"]

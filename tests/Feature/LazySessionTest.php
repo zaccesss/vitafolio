@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use App\Support\LazyDatabaseSessionHandler;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -24,9 +25,10 @@ class LazySessionTest extends TestCase
         return new LazyDatabaseSessionHandler(DB::connection(), 'sessions', 120, $this->app);
     }
 
+    /** the session text as the framework's encrypted store hands it to the handler */
     private function payload(array $data): string
     {
-        return encrypt(json_encode($data), false);
+        return encrypt(json_encode($data));
     }
 
     private function lastActivity(string $id): int
@@ -102,6 +104,64 @@ class LazySessionTest extends TestCase
 
         $this->assertDatabaseMissing('sessions', ['id' => 'old']);
         $this->assertDatabaseHas('sessions', ['id' => 'new']);
+    }
+
+    /** one request whose page carried no form token */
+    private function readerRequest(string $id, array $data): void
+    {
+        $handler = $this->handler();
+        $handler->read($id);
+        $handler->markTokenUnsent();
+        $handler->write($id, $this->payload($data));
+    }
+
+    public function test_a_reader_with_only_bookkeeping_in_the_session_gets_no_row(): void
+    {
+        config(['session.encrypt' => true]);
+        $this->readerRequest('abc', ['_token' => 't', '_previous' => ['url' => 'https://example.test/a'], '_flash' => ['old' => [], 'new' => []]]);
+
+        $this->assertDatabaseCount('sessions', 0);
+    }
+
+    public function test_a_session_holding_anything_real_is_written_for_a_reader_too(): void
+    {
+        config(['session.encrypt' => true]);
+        // the state of a sign-in through another site, the page wanted after sign-in and a flashed message
+        $this->readerRequest('oauth', ['_token' => 't', 'state' => 'abc123']);
+        $this->readerRequest('intended', ['_token' => 't', 'url' => ['intended' => 'https://example.test/dashboard']]);
+        $this->readerRequest('flash', ['_token' => 't', '_flash' => ['old' => ['status'], 'new' => []], 'status' => 'saved']);
+
+        $this->assertDatabaseCount('sessions', 3);
+    }
+
+    public function test_a_session_is_written_unless_the_page_is_known_to_carry_no_token(): void
+    {
+        config(['session.encrypt' => true]);
+        $this->request('abc', ['_token' => 't']);
+
+        $this->assertDatabaseHas('sessions', ['id' => 'abc']);
+    }
+
+    public function test_a_signed_in_reader_keeps_a_row(): void
+    {
+        config(['session.encrypt' => true]);
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $this->readerRequest('abc', ['_token' => 't']);
+
+        $this->assertDatabaseHas('sessions', ['id' => 'abc', 'user_id' => $user->id]);
+    }
+
+    public function test_a_stored_session_is_still_refreshed_for_a_reader(): void
+    {
+        config(['session.encrypt' => true]);
+        Carbon::setTestNow('2026-11-01 10:00:00');
+        $this->request('abc', ['_token' => 't']);
+
+        Carbon::setTestNow(Carbon::parse('2026-11-01 10:00:00')->addSeconds(LazyDatabaseSessionHandler::REFRESH_SECONDS));
+        $this->readerRequest('abc', ['_token' => 't']);
+
+        $this->assertSame(Carbon::now()->getTimestamp(), $this->lastActivity('abc'));
     }
 
     public function test_requests_never_sweep_sessions(): void

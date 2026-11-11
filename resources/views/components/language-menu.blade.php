@@ -2,12 +2,17 @@
 @php
     $current = app()->getLocale();
     $languages = \App\Support\Locales::ALL;
+    // a form token only works once the session is stored. a visitor with no stored session is sent to the
+    // language page instead, which prints the token and so starts the session only when it is wanted
+    $direct = \App\Http\Middleware\GuestSessionOnDemand::tokenWillLast(request());
+    $method = $direct ? 'POST' : 'GET';
+    $action = $direct ? route('locale') : route('locale.choose');
 @endphp
 {{-- each language is named in its own script and marked with its own lang, so a screen reader
      says it properly. plain buttons in a form: it works without javascript and from the keyboard --}}
 @if ($placement === 'footer')
-    <form method="POST" action="{{ route('locale') }}" class="flex flex-wrap items-center gap-x-3 gap-y-1">
-        @csrf
+    <form method="{{ $method }}" action="{{ $action }}" class="flex flex-wrap items-center gap-x-3 gap-y-1">
+        @if ($direct) @csrf @endif
         <h2 id="footer-language" class="text-sm font-semibold">{{ __('Language') }}</h2>
         <ul class="flex flex-wrap gap-x-3 gap-y-1" aria-labelledby="footer-language">
             @foreach ($languages as $code => $language)
@@ -27,8 +32,8 @@
             <span class="sr-only">{{ __('Language') }}</span>
         </button>
         <div id="language-menu" class="account-menu" :hidden="closed" hidden>
-            <form method="POST" action="{{ route('locale') }}">
-                @csrf
+            <form method="{{ $method }}" action="{{ $action }}">
+                @if ($direct) @csrf @endif
                 <ul class="py-2">
                     @foreach ($languages as $code => $language)
                         <li>

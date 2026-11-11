@@ -113,8 +113,8 @@ class DatabaseResilienceTest extends TestCase
         $this->withHeader('User-Agent', self::BROWSER)->get(route('robots'))->assertOk()->assertCookieMissing(config('session.cookie'));
         $this->assertDatabaseCount('sessions', 0);
 
-        // a person's first visit still gets a stored session, so the signed-in devices list keeps working
-        $this->withHeader('User-Agent', self::BROWSER)->get(route('home'))->assertOk()->assertCookie(config('session.cookie'));
+        // a person keeps the database driver, which stores their session on the first page that needs one
+        $this->withHeader('User-Agent', self::BROWSER)->get(route('login'))->assertOk()->assertCookie(config('session.cookie'));
         $this->assertDatabaseCount('sessions', 1);
     }
 

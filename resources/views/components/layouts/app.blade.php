@@ -20,7 +20,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- a token printed here makes the session worth storing, so a visitor with no stored session gets none --}}
+    @if (\App\Http\Middleware\GuestSessionOnDemand::tokenWillLast(request()))<meta name="csrf-token" content="{{ csrf_token() }}">@endif
     <title>{{ $fullTitle }}</title>
     <meta name="description" content="{{ $description }}">
     {{-- noindex is true for a plain noindex or a full robots value such as "noindex, follow" --}}

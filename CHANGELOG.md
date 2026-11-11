@@ -4,6 +4,18 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+## 0.3.0 - 2026-11-11
+
+### Changed
+
+- A signed-out visitor who is only reading no longer gets a row in the sessions table. The session is stored from the first request that needs it: a page with a form, a message shown after a redirect, the start of a sign-in or anything else kept in the session. Signed-in sessions, the devices list and the security emails work as before.
+- For a visitor with no stored session, the language menu opens a short Language page that confirms the choice. Once a session is stored the menu changes the language in one step, as it always did.
+- Dependabot checks every ecosystem in one slot, every Sunday at 18:00 UK time. Docker and GitHub Actions updates each arrive as a single grouped pull request.
+
+### Fixed
+
+- An unchanged encrypted session is now recognised as unchanged, so moving between pages no longer rewrites its row on every page view.
+
 ## 0.2.0 - 2026-11-09
 
 ### Fixed

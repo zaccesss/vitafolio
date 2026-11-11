@@ -9,8 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * crawlers, link previews and machine fetches of site files never come back with a session cookie,
  * so a database session would be written for every one of them and never read again. for those
- * requests the session lives in memory only. real visitors keep database sessions, because the
- * signed-in devices list, ending other sessions and the security emails all read the sessions table
+ * requests the session lives in memory only. real visitors keep the database driver, because the
+ * signed-in devices list, ending other sessions and the security emails all read the sessions table.
+ * a signed-out visitor still gets no row until one is needed, see GuestSessionOnDemand
  */
 class StatelessForCrawlers
 {
