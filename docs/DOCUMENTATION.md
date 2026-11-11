@@ -330,7 +330,7 @@ editor for anyone who finds it easier with a screen reader.
 | Headers | `X-Frame-Options: DENY`, `nosniff`, a strict referrer policy, cross-origin opener isolation and HSTS over HTTPS |
 | Uploaded files | Served with a sandbox policy, so a script inside a PDF cannot reach the site |
 | Links | Only `http` and `https` links are kept. Each is labelled from its real address, so a lookalike cannot pose as a known site |
-| Sessions | Stored in the database, encrypted and ended everywhere on suspension. Crawlers and machine fetches of site files without a session cookie get one in memory only, so they write nothing |
+| Sessions | Stored in the database, encrypted and ended everywhere on suspension. A signed-out visitor who is only reading has no stored session: the row is written by the first request that needs it, which is a page that prints a form token, a message flashed for the next page, the start of a sign-in or anything else put in the session. Until then the language menu changes the language through a link that sets the language cookie. The Language page, which prints the token, is the form behind it. A form token is only ever accepted against a stored session. Crawlers and machine fetches of site files without a session cookie get a session in memory only, so they write nothing |
 | Spam | Cloudflare Turnstile on sign-up, contact, report and endorsement forms, a hidden honeypot field and rate limits |
 | Rate limits | Keyed on the visitor's real address, taken from `CF-Connecting-IP`. Failing that, the last `X-Forwarded-For` entry is used, since a visitor can write the earlier ones |
 | PHP | Shell functions and opening URLs as files are switched off in `docker/php.ini`. Word files and images are size-checked before they are expanded |
@@ -556,7 +556,7 @@ release. Host them anywhere that serves static files with CORS allowed, such as 
 | Admins | `php artisan vitafolio:make-admin <email>`, with `--revoke` to remove the role |
 | Brand images | Edit the SVGs in `resources/brand`, then run `scripts/brand-assets.sh` |
 | Demo clips and screenshots | After an interface change, run `scripts/demo/record.sh` and then `scripts/demo/build-assets.sh`, as the [kit's guide](../scripts/demo/README.md) explains |
-| Dependencies | Dependabot opens weekly pull requests for Composer, npm, the Docker images and GitHub Actions |
+| Dependencies | Dependabot checks Composer, npm, the Docker images and GitHub Actions every Sunday at 18:00 UK time. Docker and GitHub Actions updates each arrive as one grouped pull request |
 
 ## Incident response
 

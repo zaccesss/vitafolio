@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DatabaseHealthController;
 use App\Http\Middleware\EnsureAccountIsUsable;
+use App\Http\Middleware\GuestSessionOnDemand;
 use App\Http\Middleware\RedirectToCanonicalHost;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
@@ -36,6 +37,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // decides which session store a request gets, so it has to run before the session starts
         $middleware->prependToGroup('web', StatelessForCrawlers::class);
         $middleware->prependToPriorityList(StartSession::class, StatelessForCrawlers::class);
+        // inside the session, so it sees the finished page before the session is saved
+        $middleware->appendToGroup('web', GuestSessionOnDemand::class);
         $middleware->appendToGroup('web', EnsureAccountIsUsable::class);
         $middleware->appendToGroup('web', SetLocale::class);
         $middleware->append(SecurityHeaders::class);

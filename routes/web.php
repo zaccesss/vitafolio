@@ -78,6 +78,8 @@ Route::get('/help/{topic}', fn (string $topic) => view('help.'.$topic))
     ->whereIn('topic', array_keys(HelpTopics::ALL))->name('help.topic');
 // the language menu posts here; guests keep the choice in a cookie, accounts save it as well
 Route::post('/language', LocaleController::class)->middleware('throttle:30,1')->name('locale');
+// a visitor with no stored session confirms the choice here, where the form token is printed
+Route::get('/language', [LocaleController::class, 'choose'])->middleware('throttle:60,1')->name('locale.choose');
 Route::post('/contact', [ContactController::class, 'site'])->middleware('throttle:messages')->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {
