@@ -4,7 +4,7 @@
 
 # front-end assets
 # pinned by digest, so a rebuild always uses the same release; dependabot moves the tag and the digest together
-FROM node:26.13.0-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216 AS assets
+FROM node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 AS assets
 WORKDIR /app
 COPY package.json package-lock.json .npmrc ./
 RUN npm ci --no-audit --no-fund
@@ -28,7 +28,7 @@ COPY scripts/fetch-pdf-fonts.sh /src/scripts/fetch-pdf-fonts.sh
 RUN mkdir -p /src/resources/pdf/fonts && sh /src/scripts/fetch-pdf-fonts.sh
 
 # php with the extensions the app needs, shared by the dependency stage and the final image
-FROM dunglas/frankenphp:1.13.5-php8.4-alpine@sha256:2a0633266ba2c821ad3cabb88caa30792a81e2d6c3c3a0720906114c660ede08 AS base
+FROM dunglas/frankenphp:1.13.5-php8.4-alpine@sha256:0b9e020d7c3c17157d8fb051f67ce329b816fcbba456a19c45613fe0ef9fcb78 AS base
 # picks up alpine security fixes published after the base image was built, so the image scan
 # does not fail on a library that already has a patched release
 RUN apk upgrade --no-cache && install-php-extensions gd pdo_mysql zip intl bcmath opcache
