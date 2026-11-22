@@ -4,6 +4,10 @@ All notable changes are recorded here. The format follows Keep a Changelog with 
 
 ## Unreleased
 
+### Fixed
+
+- Dependency updates no longer fail the image scan every week. The image's Alpine security update now runs again each day in CI, where it used to come from an older cached build and miss fixes published since (#248).
+
 ## 0.3.0 - 2026-11-11
 
 ### Changed

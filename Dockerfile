@@ -29,9 +29,7 @@ RUN mkdir -p /src/resources/pdf/fonts && sh /src/scripts/fetch-pdf-fonts.sh
 
 # php with the extensions the app needs, shared by the dependency stage and the final image
 FROM dunglas/frankenphp:1.13.5-php8.4-alpine@sha256:7b057eed5b9a1a67e3911ae83015963fc181a0ad886679f8f1b25dabad8873c4 AS base
-# picks up alpine security fixes published after the base image was built, so the image scan
-# does not fail on a library that already has a patched release
-RUN apk upgrade --no-cache && install-php-extensions gd pdo_mysql zip intl bcmath opcache
+RUN install-php-extensions gd pdo_mysql zip intl bcmath opcache
 
 FROM base AS vendor
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -54,6 +52,11 @@ COPY --from=vendor /app ./
 COPY --from=assets /app/public/build ./public/build
 COPY --from=typst /bin/typst /usr/local/bin/typst
 COPY --from=pdf-fonts /src/resources/pdf/fonts/NotoSansSC-Regular.otf /src/resources/pdf/fonts/NotoSansSC-Bold.otf ./resources/pdf/fonts/
+# picks up alpine security fixes published after the base image was built, so the image scan does not
+# fail on a library that already has a patched release. ci passes the day's date: a changed value reruns
+# this step, where a layer cached from an older build would keep that day's packages
+ARG OS_PATCH_DATE
+RUN apk upgrade --no-cache
 # everything runs as an unprivileged user on an unprivileged port, so nothing needs root. the
 # binary's port-binding capability is removed too: hosts that start containers with no extra
 # privileges, such as render, refuse to run a binary that asks for one

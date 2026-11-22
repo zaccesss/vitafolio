@@ -98,6 +98,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
+      # the date reruns the image's os update step once a day, see OS_PATCH_DATE in the Dockerfile
+      - name: Date for the os update step
+        id: patch-date
+        run: echo "date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+
       # built but never pushed: the host builds its own image from the repository
       - name: Build the image
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
@@ -106,6 +111,7 @@ jobs:
           push: false
           load: true
           tags: vitafolio:ci
+          build-args: OS_PATCH_DATE=${{ steps.patch-date.outputs.date }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
