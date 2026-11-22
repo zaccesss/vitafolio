@@ -28,7 +28,7 @@ COPY scripts/fetch-pdf-fonts.sh /src/scripts/fetch-pdf-fonts.sh
 RUN mkdir -p /src/resources/pdf/fonts && sh /src/scripts/fetch-pdf-fonts.sh
 
 # php with the extensions the app needs, shared by the dependency stage and the final image
-FROM dunglas/frankenphp:1.13.5-php8.4-alpine@sha256:0b9e020d7c3c17157d8fb051f67ce329b816fcbba456a19c45613fe0ef9fcb78 AS base
+FROM dunglas/frankenphp:1.13.5-php8.4-alpine@sha256:7b057eed5b9a1a67e3911ae83015963fc181a0ad886679f8f1b25dabad8873c4 AS base
 # picks up alpine security fixes published after the base image was built, so the image scan
 # does not fail on a library that already has a patched release
 RUN apk upgrade --no-cache && install-php-extensions gd pdo_mysql zip intl bcmath opcache
